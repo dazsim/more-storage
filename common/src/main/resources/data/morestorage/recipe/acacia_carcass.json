@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:acacia_planks",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "morestorage:acacia_carcass",
+    "count": 1
+  }
+}

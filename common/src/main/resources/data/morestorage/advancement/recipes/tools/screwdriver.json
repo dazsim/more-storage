@@ -7,12 +7,12 @@
         "recipe": "morestorage:screwdriver"
       }
     },
-    "has_cupboard": {
+    "has_item": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": "#morestorage:cupboards"
+            "items": "#morestorage:carcasses"
           }
         ]
       }
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_cupboard"
+      "has_item"
     ]
   ],
   "rewards": {

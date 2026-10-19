@@ -2,7 +2,14 @@ package com.workshopcraft.morestorage.block;
 
 import com.workshopcraft.morestorage.registry.ModContent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -31,6 +38,8 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     public static final int SETTLE_TICKS = 6;
     public long settleEnd;
     private long settleStart = -1;
+    private String body = "oak";
+    private String top = "oak";
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private final ChestLidController door = new ChestLidController();
     private final ContainerOpenersCounter openers = new ContainerOpenersCounter() {
@@ -65,8 +74,32 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         level.playSound(null, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, event, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 1.0F);
     }
 
+    public String body() { return body; }
+
+    public String top() { return top; }
+
+    public boolean hasTop() { return !top.isEmpty(); }
+
+    public void setFinishes(String body, String top) {
+        this.body = body;
+        this.top = top;
+        if (top.isEmpty()) settleEnd = 0;
+        setChanged();
+        if (level != null) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+    }
+
+    private boolean assembled() {
+        return getBlockState().getBlock() instanceof CupboardBlock && getBlockState().getValue(CupboardBlock.ASSEMBLED);
+    }
+
     @Override
     public int getContainerSize() { return 27; }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) { return assembled(); }
+
+    @Override
+    public boolean stillValid(Player player) { return assembled() && super.stillValid(player); }
 
     @Override
     protected Component getDefaultName() { return Component.translatable("container.morestorage.cupboard"); }
@@ -80,6 +113,9 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+        body = input.getStringOr("Body", "oak");
+        top = input.getStringOr("Top", "");
+        if (top.isEmpty()) settleStart = -1;
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         if (!tryLoadLootTable(input)) ContainerHelper.loadAllItems(input, items);
     }
@@ -87,7 +123,45 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
+        output.putString("Body", body);
+        output.putString("Top", top);
         if (!trySaveLootTable(output)) ContainerHelper.saveAllItems(output, items);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder b) {
+        super.collectImplicitComponents(b);
+        b.set(ModContent.BODY, body);
+        if (hasTop()) b.set(ModContent.TOP, top);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter in) {
+        super.applyImplicitComponents(in);
+        String b = in.get(ModContent.BODY);
+        String t = in.get(ModContent.TOP);
+        if (b != null) body = b;
+        if (t != null) top = t;
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput out) {
+        super.removeComponentsFromTag(out);
+        out.discard("Body");
+        out.discard("Top");
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("Body", body);
+        tag.putString("Top", top);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override

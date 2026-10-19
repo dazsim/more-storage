@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:cherry_planks",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "morestorage:cherry_carcass",
+    "count": 1
+  }
+}

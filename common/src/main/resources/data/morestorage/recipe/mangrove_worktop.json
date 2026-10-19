@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:mangrove_slab"
+  },
+  "result": {
+    "id": "morestorage:mangrove_worktop",
+    "count": 1
+  }
+}

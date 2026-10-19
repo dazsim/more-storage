@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:crimson_slab"
+  },
+  "result": {
+    "id": "morestorage:crimson_worktop",
+    "count": 1
+  }
+}

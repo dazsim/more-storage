@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:cyan_concrete",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "morestorage:cyan_concrete_carcass",
+    "count": 1
+  }
+}

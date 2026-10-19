@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:pink_concrete",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "morestorage:pink_concrete_carcass",
+    "count": 1
+  }
+}

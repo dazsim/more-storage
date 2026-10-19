@@ -18,6 +18,7 @@ public class MoreStorageNeoForge {
     }
 
     private static void onRegister(RegisterEvent e) {
+        e.register(Registries.DATA_COMPONENT_TYPE, h -> ModContent.registerDataComponents(h::register));
         e.register(Registries.BLOCK, h -> ModContent.registerBlocks(h::register));
         e.register(Registries.ITEM, h -> ModContent.registerItems(h::register));
         e.register(Registries.BLOCK_ENTITY_TYPE, h -> ModContent.registerBlockEntities(h::register));

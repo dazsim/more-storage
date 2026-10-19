@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:cherry_slab"
+  },
+  "result": {
+    "id": "morestorage:cherry_worktop",
+    "count": 1
+  }
+}

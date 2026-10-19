@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:smooth_stone_slab"
+  },
+  "result": {
+    "id": "morestorage:smooth_stone_worktop",
+    "count": 1
+  }
+}

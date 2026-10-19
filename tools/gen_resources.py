@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
-# writes the cupboard json files, keep FINISHES in sync with Finish.java, run from repo root
-import json, os
+# writes the json files, keep the finish lists in sync with Finishes.java, run from repo root
+import json, os, shutil
 
 MOD = "morestorage"
 ROOT = "common/src/main/resources"
 A, D = f"{ROOT}/assets/{MOD}", f"{ROOT}/data/{MOD}"
 
-STONE = "minecraft:smooth_stone_slab"
-# id, display name, panel textures, stone top, top slab, panel material
-FINISHES = [
-    ("white", "White", "white", True, STONE, "minecraft:white_concrete"),
-    ("oak", "Oak", "oak", False, "minecraft:oak_slab", "minecraft:oak_planks"),
-    ("spruce", "Spruce", "spruce", False, "minecraft:spruce_slab", "minecraft:spruce_planks"),
-    ("dark_oak", "Dark Oak", "dark_oak", False, "minecraft:dark_oak_slab", "minecraft:dark_oak_planks"),
-    ("stone_top_oak", "Stone Top Oak", "oak", True, STONE, "minecraft:oak_planks"),
-    ("stone_top_spruce", "Stone Top Spruce", "spruce", True, STONE, "minecraft:spruce_planks"),
-    ("stone_top_dark_oak", "Stone Top Dark Oak", "dark_oak", True, STONE, "minecraft:dark_oak_planks"),
-]
+WOODS = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak", "bamboo", "crimson", "warped"]
+COLOURS = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan",
+           "purple", "blue", "brown", "green", "red", "black"]
+STONES = ["smooth_stone", "granite", "polished_granite", "polished_diorite", "polished_andesite"]
+BODIES = WOODS + [c + "_concrete" for c in COLOURS]
+TOPS = WOODS + STONES + [c + "_concrete" for c in COLOURS]
+
+def label(name):
+    return " ".join(p.capitalize() for p in name.split("_"))
 
 def w(path, obj):
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -24,89 +22,63 @@ def w(path, obj):
         json.dump(obj, f, indent=2)
         f.write("\n")
 
-def el(frm, to, faces):
-    return {"from": frm, "to": to, "faces": {d: {"uv": uv, "texture": t} for d, (t, uv) in faces.items()}}
+for sub in ["assets/" + MOD + "/blockstates", "assets/" + MOD + "/items", "assets/" + MOD + "/models",
+            "data/" + MOD + "/recipe", "data/" + MOD + "/advancement", "data/" + MOD + "/loot_table",
+            "data/" + MOD + "/tags", "data/minecraft"]:
+    shutil.rmtree(f"{ROOT}/{sub}", ignore_errors=True)
 
-CARCASS = [
-    el([0, 14, 0], [16, 16, 16], {"up": ("#top", [0, 0, 16, 16]), "down": ("#inside", [0, 0, 16, 16]),
-        "north": ("#top", [0, 0, 16, 2]), "south": ("#top", [0, 14, 16, 16]),
-        "east": ("#top", [0, 0, 16, 2]), "west": ("#top", [0, 0, 16, 2])}),
-    el([0, 2, 2], [1, 14, 16], {"west": ("#side", [2, 2, 16, 14]), "east": ("#inside", [2, 2, 16, 14]),
-        "north": ("#side", [0, 2, 1, 14]), "south": ("#side", [15, 2, 16, 14]), "down": ("#side", [0, 0, 1, 14])}),
-    el([15, 2, 2], [16, 14, 16], {"east": ("#side", [0, 2, 14, 14]), "west": ("#inside", [0, 2, 14, 14]),
-        "north": ("#side", [15, 2, 16, 14]), "south": ("#side", [0, 2, 1, 14]), "down": ("#side", [15, 0, 16, 14])}),
-    el([1, 2, 15], [15, 14, 16], {"north": ("#inside", [1, 2, 15, 14]), "south": ("#side", [1, 2, 15, 14])}),
-    el([1, 2, 2], [15, 3, 15], {"up": ("#inside", [1, 2, 15, 15]), "north": ("#side", [1, 13, 15, 14]),
-        "down": ("#side", [1, 1, 15, 14])}),
-    el([1, 8, 3], [15, 9, 15], {"up": ("#inside", [1, 3, 15, 15]), "down": ("#inside", [1, 1, 15, 13]),
-        "north": ("#inside", [1, 7, 15, 8])}),
-    el([0, 0, 3], [16, 2, 16], {"north": ("#plinth", [0, 14, 16, 16]), "south": ("#plinth", [0, 14, 16, 16]),
-        "east": ("#plinth", [0, 14, 13, 16]), "west": ("#plinth", [3, 14, 16, 16]), "down": ("#plinth", [0, 0, 16, 13])}),
-]
+def advancement(path, recipe, unlock):
+    crit = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": recipe}},
+            "has_item": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": unlock}]}}}
+    w(path, {"parent": "minecraft:recipes/root", "criteria": crit, "requirements": [list(crit)], "rewards": {"recipes": [recipe]}})
 
-# the renderer draws the same door in code, this copy is only for the item
-DOOR = [
-    el([0, 2, 1], [16, 14, 2], {"north": ("#door", [0, 2, 16, 14]), "south": ("#side", [0, 2, 16, 14]),
-        "up": ("#side", [0, 0, 16, 1]), "down": ("#side", [0, 15, 16, 16]),
-        "west": ("#side", [0, 2, 1, 14]), "east": ("#side", [15, 2, 16, 14])}),
-    el([1, 6, 0], [2, 11, 1], {d: ("#handle", [7, 5, 8, 10]) for d in ["north", "up", "down", "east", "west"]}),
-]
+def recipe(name, pattern, key, count=1, category="misc", unlock=None):
+    w(f"{D}/recipe/{name}.json", {"type": "minecraft:crafting_shaped", "category": category, "pattern": pattern,
+        "key": key, "result": {"id": f"{MOD}:{name}", "count": count}})
+    advancement(f"{D}/advancement/recipes/{category}/{name}.json", f"{MOD}:{name}", unlock)
 
-# loose worktops are drawn by the renderer, so the loose model leaves the top off and closes the panel tops
-LOOSE = [dict(e, faces=dict(e["faces"])) for e in CARCASS[1:]]
-for e, uv in [(LOOSE[0], [0, 2, 1, 16]), (LOOSE[1], [15, 2, 16, 16]), (LOOSE[2], [1, 15, 15, 16])]:
-    e["faces"]["up"] = {"uv": uv, "texture": "#side"}
+# the renderer draws everything, the block models only carry the break particles
+w(f"{A}/blockstates/cupboard.json", {"variants": {
+    "concrete=false": {"model": f"{MOD}:block/cupboard_wood"},
+    "concrete=true": {"model": f"{MOD}:block/cupboard_concrete"}}})
+w(f"{A}/models/block/cupboard_wood.json", {"textures": {"particle": "minecraft:block/oak_planks"}})
+w(f"{A}/models/block/cupboard_concrete.json", {"textures": {"particle": "minecraft:block/light_gray_concrete"}})
+w(f"{A}/models/item/cupboard.json", {"parent": "minecraft:block/block", "textures": {"particle": "minecraft:block/oak_planks"}})
 
-w(f"{A}/models/block/cupboard_loose.json", {"parent": f"{MOD}:block/cupboard", "elements": LOOSE})
-w(f"{A}/models/block/cupboard.json", {"parent": "minecraft:block/block",
-    "textures": {"particle": "#side", "plinth": "#side", "handle": f"{MOD}:block/cupboard_handle"}, "elements": CARCASS})
-w(f"{A}/models/block/cupboard_closed.json", {"parent": f"{MOD}:block/cupboard", "elements": CARCASS + DOOR})
+def special(name):
+    w(f"{A}/items/{name}.json", {"model": {"type": "minecraft:special", "base": f"{MOD}:item/cupboard",
+        "model": {"type": f"{MOD}:cupboard"}}})
 
-lang = {f"itemGroup.{MOD}": "More Storage", f"container.{MOD}.cupboard": "Cupboard"}
-axe, pickaxe = [], []
-for name, label, panels, stone, slab, panel in FINISHES:
-    bid = f"{name}_cupboard"
-    (pickaxe if stone else axe).append(f"{MOD}:{bid}")
-    tex = {k: f"{MOD}:block/{panels}_cupboard_{k}" for k in ["side", "inside", "door"]}
-    tex["top"] = f"{MOD}:block/{'stone' if stone else panels}_cupboard_top"
-    rot = {"north": 0, "east": 90, "south": 180, "west": 270}
-    variants = {}
-    for f, y in rot.items():
-        for loose, model in [("false", bid), ("true", f"{bid}_loose")]:
-            v = {"model": f"{MOD}:block/{model}"}
-            if y:
-                v["y"] = y
-            variants[f"facing={f},loose={loose}"] = v
-    w(f"{A}/blockstates/{bid}.json", {"variants": variants})
-    w(f"{A}/models/block/{bid}.json", {"parent": f"{MOD}:block/cupboard", "textures": tex})
-    w(f"{A}/models/block/{bid}_loose.json", {"parent": f"{MOD}:block/cupboard_loose", "textures": tex})
-    w(f"{A}/models/block/{bid}_closed.json", {"parent": f"{MOD}:block/cupboard_closed", "textures": tex})
-    w(f"{A}/items/{bid}.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:block/{bid}_closed"}})
-    w(f"{D}/loot_table/blocks/{bid}.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "bonus_rolls": 0,
-        "entries": [{"type": "minecraft:item", "name": f"{MOD}:{bid}",
-        "functions": [{"function": "minecraft:copy_components", "source": "block_entity", "include": ["minecraft:custom_name"]}]}],
-        "conditions": [{"condition": "minecraft:survives_explosion"}]}], "random_sequence": f"{MOD}:blocks/{bid}"})
-    w(f"{D}/recipe/{bid}.json", {"type": "minecraft:crafting_shaped", "category": "misc", "group": f"{MOD}:cupboard",
-        "pattern": ["TTT", "PCP", "PPP"], "key": {"T": slab, "P": panel, "C": "#c:chests/wooden"},
-        "result": {"id": f"{MOD}:{bid}", "count": 1}})
-    crit = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": f"{MOD}:{bid}"}},
-            "has_chest": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": "minecraft:chest"}]}}}
-    w(f"{D}/advancement/recipes/misc/{bid}.json", {"parent": "minecraft:recipes/root", "criteria": crit,
-        "requirements": [list(crit)], "rewards": {"recipes": [f"{MOD}:{bid}"]}})
-    lang[f"block.{MOD}.{bid}"] = f"{label} Cupboard"
+lang = {f"itemGroup.{MOD}": "More Storage", f"container.{MOD}.cupboard": "Cupboard",
+        f"block.{MOD}.cupboard": "Cupboard", f"item.{MOD}.cupboard": "Cupboard",
+        f"tooltip.{MOD}.body": "Body: %s", f"tooltip.{MOD}.top": "Top: %s"}
+special("cupboard")
 
+for body in BODIES:
+    name = f"{body}_carcass"
+    special(name)
+    panel = f"minecraft:{body}_planks" if body in WOODS else f"minecraft:{body}"
+    recipe(name, ["PPP", "PCP", "PPP"], {"P": panel, "C": "#c:chests/wooden"}, unlock="minecraft:chest")
+    lang[f"item.{MOD}.{name}"] = f"{label(body)} Carcass"
 
-w(f"{ROOT}/data/minecraft/tags/block/mineable/axe.json", {"values": axe})
-w(f"{ROOT}/data/minecraft/tags/block/mineable/pickaxe.json", {"values": pickaxe})
+for top in TOPS:
+    name = f"{top}_worktop"
+    special(name)
+    if top in COLOURS or top.endswith("_concrete"):
+        recipe(name, ["CCC"], {"C": f"minecraft:{top}"}, 2, unlock=f"minecraft:{top}")
+    elif top == "granite":
+        recipe(name, ["ADA"], {"A": "minecraft:polished_andesite_slab", "D": "minecraft:polished_diorite_slab"},
+               unlock="minecraft:polished_diorite_slab")
+    else:
+        recipe(name, ["SSS"], {"S": f"minecraft:{top}_slab"}, unlock=f"minecraft:{top}_slab")
+    lang[f"item.{MOD}.{name}"] = f"{label(top)} Worktop"
 
+for f in dict.fromkeys(BODIES + TOPS):
+    lang[f"finish.{MOD}.{f}"] = label(f)
+
+w(f"{D}/tags/item/carcasses.json", {"values": [f"{MOD}:{b}_carcass" for b in BODIES]})
 w(f"{A}/models/item/screwdriver.json", {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{MOD}:item/screwdriver"}})
 w(f"{A}/items/screwdriver.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/screwdriver"}})
-w(f"{D}/recipe/screwdriver.json", {"type": "minecraft:crafting_shaped", "category": "tools", "pattern": ["I", "S"],
-    "key": {"I": "#c:ingots/iron", "S": "minecraft:stick"}, "result": {"id": f"{MOD}:screwdriver", "count": 1}})
-crit = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": f"{MOD}:screwdriver"}},
-        "has_cupboard": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": "#" + MOD + ":cupboards"}]}}}
-w(f"{D}/advancement/recipes/tools/screwdriver.json", {"parent": "minecraft:recipes/root", "criteria": crit,
-    "requirements": [list(crit)], "rewards": {"recipes": [f"{MOD}:screwdriver"]}})
-w(f"{D}/tags/item/cupboards.json", {"values": axe + pickaxe})
+recipe("screwdriver", ["I", "S"], {"I": "#c:ingots/iron", "S": "minecraft:stick"}, category="tools", unlock=f"#{MOD}:carcasses")
 lang[f"item.{MOD}.screwdriver"] = "Screwdriver"
 w(f"{A}/lang/en_us.json", lang)
