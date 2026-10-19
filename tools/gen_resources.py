@@ -52,6 +52,12 @@ DOOR = [
     el([1, 6, 0], [2, 11, 1], {d: ("#handle", [7, 5, 8, 10]) for d in ["north", "up", "down", "east", "west"]}),
 ]
 
+# loose worktops are drawn by the renderer, so the loose model leaves the top off and closes the panel tops
+LOOSE = [dict(e, faces=dict(e["faces"])) for e in CARCASS[1:]]
+for e, uv in [(LOOSE[0], [0, 2, 1, 16]), (LOOSE[1], [15, 2, 16, 16]), (LOOSE[2], [1, 15, 15, 16])]:
+    e["faces"]["up"] = {"uv": uv, "texture": "#side"}
+
+w(f"{A}/models/block/cupboard_loose.json", {"parent": f"{MOD}:block/cupboard", "elements": LOOSE})
 w(f"{A}/models/block/cupboard.json", {"parent": "minecraft:block/block",
     "textures": {"particle": "#side", "plinth": "#side", "handle": f"{MOD}:block/cupboard_handle"}, "elements": CARCASS})
 w(f"{A}/models/block/cupboard_closed.json", {"parent": f"{MOD}:block/cupboard", "elements": CARCASS + DOOR})
@@ -64,8 +70,16 @@ for name, label, panels, stone, slab, panel in FINISHES:
     tex = {k: f"{MOD}:block/{panels}_cupboard_{k}" for k in ["side", "inside", "door"]}
     tex["top"] = f"{MOD}:block/{'stone' if stone else panels}_cupboard_top"
     rot = {"north": 0, "east": 90, "south": 180, "west": 270}
-    w(f"{A}/blockstates/{bid}.json", {"variants": {f"facing={f}": ({"model": f"{MOD}:block/{bid}", "y": y} if y else {"model": f"{MOD}:block/{bid}"}) for f, y in rot.items()}})
+    variants = {}
+    for f, y in rot.items():
+        for loose, model in [("false", bid), ("true", f"{bid}_loose")]:
+            v = {"model": f"{MOD}:block/{model}"}
+            if y:
+                v["y"] = y
+            variants[f"facing={f},loose={loose}"] = v
+    w(f"{A}/blockstates/{bid}.json", {"variants": variants})
     w(f"{A}/models/block/{bid}.json", {"parent": f"{MOD}:block/cupboard", "textures": tex})
+    w(f"{A}/models/block/{bid}_loose.json", {"parent": f"{MOD}:block/cupboard_loose", "textures": tex})
     w(f"{A}/models/block/{bid}_closed.json", {"parent": f"{MOD}:block/cupboard_closed", "textures": tex})
     w(f"{A}/items/{bid}.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:block/{bid}_closed"}})
     w(f"{D}/loot_table/blocks/{bid}.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "bonus_rolls": 0,

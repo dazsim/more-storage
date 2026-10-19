@@ -12,6 +12,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -29,7 +30,9 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -39,23 +42,24 @@ public class CupboardBlock extends BaseEntityBlock {
     public static final MapCodec<CupboardBlock> CODEC = simpleCodec(p -> new CupboardBlock(Finish.OAK, p));
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
+    public static final BooleanProperty LOOSE = BooleanProperty.create("loose");
     public final Finish finish;
 
     public CupboardBlock(Finish finish, Properties props) {
         super(props);
         this.finish = finish;
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HINGE, DoorHingeSide.LEFT));
+        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HINGE, DoorHingeSide.LEFT).setValue(LOOSE, false));
     }
 
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> b) { b.add(FACING, HINGE); }
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> b) { b.add(FACING, HINGE, LOOSE); }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
+        return defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite()).setValue(LOOSE, true);
     }
 
     @Override
@@ -96,7 +100,19 @@ public class CupboardBlock extends BaseEntityBlock {
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (level.getBlockEntity(pos) instanceof CupboardBlockEntity cupboard) cupboard.recheckOpen();
+        if (!(level.getBlockEntity(pos) instanceof CupboardBlockEntity cupboard)) return;
+        cupboard.recheckOpen();
+        if (state.getValue(LOOSE) && cupboard.settleEnd > 0) {
+            long left = cupboard.settleEnd - level.getGameTime();
+            if (left > 0) {
+                level.scheduleTick(pos, this, (int) left);
+                return;
+            }
+            cupboard.settleEnd = 0;
+            level.setBlock(pos, state.setValue(LOOSE, false), 3);
+            SoundType sound = finish.stoneTop ? SoundType.STONE : SoundType.WOOD;
+            level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.1F);
+        }
     }
 
     @Override

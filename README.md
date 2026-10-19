@@ -4,7 +4,7 @@ Kitchen cupboards that hold 27 stacks, same as a chest. The door swings open on 
 
 Finishes: white with a stone top, oak, spruce and dark oak, each wood also with a stone top.
 
-A screwdriver (iron ingot over a stick) swaps the door hinge between left and right.
+A placed cupboard has a loose worktop. Use a screwdriver (iron ingot over a stick) on it to screw the top down, after that the screwdriver swaps the door hinge between left and right.
 
 Minecraft 26.1 to 26.1.2, NeoForge and Fabric.
 

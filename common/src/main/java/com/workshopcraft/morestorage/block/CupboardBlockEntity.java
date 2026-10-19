@@ -27,6 +27,10 @@ import java.util.List;
 
 public class CupboardBlockEntity extends RandomizableContainerBlockEntity implements LidBlockEntity {
     private static final int EVENT_OPEN_COUNT = 1;
+    private static final int EVENT_SETTLE = 2;
+    public static final int SETTLE_TICKS = 6;
+    public long settleEnd;
+    private long settleStart = -1;
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private final ChestLidController door = new ChestLidController();
     private final ContainerOpenersCounter openers = new ContainerOpenersCounter() {
@@ -92,6 +96,10 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
             door.shouldBeOpen(value > 0);
             return true;
         }
+        if (id == EVENT_SETTLE) {
+            if (level != null) settleStart = level.getGameTime();
+            return true;
+        }
         return super.triggerEvent(id, value);
     }
 
@@ -112,6 +120,20 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     @Override
     public List<ContainerUser> getEntitiesWithContainerOpen() {
         return openers.getEntitiesWithContainerOpen(getLevel(), getBlockPos());
+    }
+
+    public boolean startSettle() {
+        if (level == null || settleEnd > 0) return false;
+        settleEnd = level.getGameTime() + SETTLE_TICKS;
+        level.blockEvent(getBlockPos(), getBlockState().getBlock(), EVENT_SETTLE, 0);
+        level.scheduleTick(getBlockPos(), getBlockState().getBlock(), SETTLE_TICKS);
+        return true;
+    }
+
+    // 0 while loose, rising to 1 as the worktop drops into place
+    public float settleProgress(float partialTick) {
+        if (settleStart < 0 || level == null) return 0F;
+        return Math.min(1F, (level.getGameTime() - settleStart + partialTick) / SETTLE_TICKS);
     }
 
     public void recheckOpen() {

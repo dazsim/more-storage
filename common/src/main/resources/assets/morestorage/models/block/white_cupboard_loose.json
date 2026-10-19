@@ -1,0 +1,9 @@
+{
+  "parent": "morestorage:block/cupboard_loose",
+  "textures": {
+    "side": "morestorage:block/white_cupboard_side",
+    "inside": "morestorage:block/white_cupboard_inside",
+    "door": "morestorage:block/white_cupboard_door",
+    "top": "morestorage:block/stone_cupboard_top"
+  }
+}

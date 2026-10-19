@@ -1,6 +1,7 @@
 package com.workshopcraft.morestorage.item;
 
 import com.workshopcraft.morestorage.block.CupboardBlock;
+import com.workshopcraft.morestorage.block.CupboardBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -22,8 +23,15 @@ public class ScrewdriverItem extends Item {
         BlockState state = level.getBlockState(pos);
         if (!(state.getBlock() instanceof CupboardBlock)) return InteractionResult.PASS;
         if (!level.isClientSide()) {
-            level.setBlock(pos, state.cycle(CupboardBlock.HINGE), 3);
-            level.playSound(null, pos, SoundEvents.TRIPWIRE_CLICK_ON, SoundSource.BLOCKS, 0.6F, 1.6F);
+            if (state.getValue(CupboardBlock.LOOSE)) {
+                if (level.getBlockEntity(pos) instanceof CupboardBlockEntity be && be.startSettle()) {
+                    level.playSound(null, pos, SoundEvents.TRIPWIRE_CLICK_ON, SoundSource.BLOCKS, 0.6F, 1.2F);
+                    level.playSound(null, pos, SoundEvents.CROSSBOW_LOADING_MIDDLE.value(), SoundSource.BLOCKS, 0.5F, 1.6F);
+                }
+            } else {
+                level.setBlock(pos, state.cycle(CupboardBlock.HINGE), 3);
+                level.playSound(null, pos, SoundEvents.TRIPWIRE_CLICK_ON, SoundSource.BLOCKS, 0.6F, 1.6F);
+            }
         }
         return InteractionResult.SUCCESS;
     }

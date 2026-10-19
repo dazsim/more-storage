@@ -36,6 +36,9 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         Direction facing = Direction.NORTH;
         Finish finish = Finish.OAK;
         boolean rightHinge;
+        boolean loose;
+        float settle;
+        int topLight;
         float open;
         int frontLight;
     }
@@ -51,9 +54,12 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         s.facing = be.getBlockState().getValue(CupboardBlock.FACING);
         if (be.getBlockState().getBlock() instanceof CupboardBlock block) s.finish = block.finish;
         s.rightHinge = be.getBlockState().getValue(CupboardBlock.HINGE) == DoorHingeSide.RIGHT;
+        s.loose = be.getBlockState().getValue(CupboardBlock.LOOSE);
+        s.settle = be.settleProgress(partialTick);
         float o = 1F - be.getOpenNess(partialTick);
         s.open = 1F - o * o * o;
         s.frontLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
+        s.topLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().above());
     }
 
     @Override
@@ -67,6 +73,7 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         pose.translate(0.5F, 0, 0.5F);
         pose.mulPose(Axis.YP.rotationDegrees(180F - s.facing.toYRot()));
         pose.translate(-0.5F, 0, -0.5F);
+        if (s.loose) submitWorktop(s, pose, out);
         pose.translate(hingeX, 0, 1 / 16F);
         pose.mulPose(Axis.YP.rotationDegrees((s.rightHinge ? MAX_ANGLE : -MAX_ANGLE) * s.open));
         pose.translate(-hingeX, 0, -1 / 16F);
@@ -78,6 +85,36 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
                     drawDoor(new Box(p, new SheetedDecalTextureGenerator(vc, crack.cameraPose(), 1F), light), door, side, handle, handleX));
         }
         pose.popPose();
+    }
+
+    // a loose worktop sits a little high and askew, then drops flat while it is screwed down
+    private void submitWorktop(State s, PoseStack pose, SubmitNodeCollector out) {
+        TextureAtlasSprite top = sprite((s.finish.stoneTop ? "stone" : s.finish.panels) + "_cupboard_top");
+        TextureAtlasSprite inside = sprite(s.finish.panels + "_cupboard_inside");
+        float k = 1F - s.settle * s.settle;
+        pose.pushPose();
+        pose.translate(0.5F + 0.6F / 16 * k, 15 / 16F + 1.5F / 16 * k, 0.5F + 0.4F / 16 * k);
+        pose.mulPose(Axis.YP.rotationDegrees(4F * k));
+        pose.mulPose(Axis.ZP.rotationDegrees(-2F * k));
+        pose.mulPose(Axis.XP.rotationDegrees(1F * k));
+        pose.translate(-0.5F, -15 / 16F, -0.5F);
+        int light = s.topLight;
+        out.submitCustomGeometry(pose, Sheets.cutoutBlockSheet(), (p, vc) -> drawWorktop(new Box(p, vc, light), top, inside));
+        if (s.breakProgress != null) {
+            ModelFeatureRenderer.CrumblingOverlay crack = s.breakProgress;
+            out.submitCustomGeometry(pose, ModelBakery.DESTROY_TYPES.get(crack.progress()), (p, vc) ->
+                    drawWorktop(new Box(p, new SheetedDecalTextureGenerator(vc, crack.cameraPose(), 1F), light), top, inside));
+        }
+        pose.popPose();
+    }
+
+    private static void drawWorktop(Box d, TextureAtlasSprite top, TextureAtlasSprite inside) {
+        d.face(Direction.UP, 0, 14, 0, 16, 16, 16, top, 0, 0, 16, 16);
+        d.face(Direction.DOWN, 0, 14, 0, 16, 16, 16, inside, 0, 0, 16, 16);
+        d.face(Direction.NORTH, 0, 14, 0, 16, 16, 16, top, 0, 0, 16, 2);
+        d.face(Direction.SOUTH, 0, 14, 0, 16, 16, 16, top, 0, 14, 16, 16);
+        d.face(Direction.EAST, 0, 14, 0, 16, 16, 16, top, 0, 0, 16, 2);
+        d.face(Direction.WEST, 0, 14, 0, 16, 16, 16, top, 0, 0, 16, 2);
     }
 
     private static void drawDoor(Box d, TextureAtlasSprite door, TextureAtlasSprite side, TextureAtlasSprite handle, float handleX) {
