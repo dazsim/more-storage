@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:acacia_slab"
+  },
+  "result": {
+    "id": "muchmorestorage:acacia_worktop",
+    "count": 1
+  }
+}

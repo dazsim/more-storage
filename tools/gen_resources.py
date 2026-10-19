@@ -2,7 +2,7 @@
 # writes the json files, keep the finish lists in sync with Finishes.java, run from repo root
 import json, os, shutil
 
-MOD = "morestorage"
+MOD = "muchmorestorage"
 ROOT = "common/src/main/resources"
 A, D = f"{ROOT}/assets/{MOD}", f"{ROOT}/data/{MOD}"
 
@@ -49,7 +49,7 @@ def special(name):
     w(f"{A}/items/{name}.json", {"model": {"type": "minecraft:special", "base": f"{MOD}:item/cupboard",
         "model": {"type": f"{MOD}:cupboard"}}})
 
-lang = {f"itemGroup.{MOD}": "More Storage", f"container.{MOD}.cupboard": "Cupboard",
+lang = {f"itemGroup.{MOD}": "Much More Storage", f"container.{MOD}.cupboard": "Cupboard",
         f"block.{MOD}.cupboard": "Cupboard", f"item.{MOD}.cupboard": "Cupboard",
         f"tooltip.{MOD}.body": "Body: %s", f"tooltip.{MOD}.top": "Top: %s"}
 special("cupboard")

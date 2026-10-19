@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC"
+  ],
+  "key": {
+    "C": "minecraft:black_concrete"
+  },
+  "result": {
+    "id": "muchmorestorage:black_concrete_worktop",
+    "count": 2
+  }
+}

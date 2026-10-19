@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:light_gray_concrete",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "muchmorestorage:light_gray_concrete_carcass",
+    "count": 1
+  }
+}

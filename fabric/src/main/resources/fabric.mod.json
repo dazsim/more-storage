@@ -9,13 +9,13 @@
     ],
     "license": "${license}",
     "environment": "*",
-    "accessWidener": "morestorage.accesswidener",
+    "accessWidener": "muchmorestorage.accesswidener",
     "entrypoints": {
         "client": [
-            "com.workshopcraft.morestorage.fabric.MoreStorageFabricClient"
+            "com.workshopcraft.muchmorestorage.fabric.MuchMoreStorageFabricClient"
         ],
         "main": [
-            "com.workshopcraft.morestorage.fabric.MoreStorageFabric"
+            "com.workshopcraft.muchmorestorage.fabric.MuchMoreStorageFabric"
         ]
     },
     "depends": {

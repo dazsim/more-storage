@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "concrete=false": {
+      "model": "muchmorestorage:block/cupboard_wood"
+    },
+    "concrete=true": {
+      "model": "muchmorestorage:block/cupboard_concrete"
+    }
+  }
+}

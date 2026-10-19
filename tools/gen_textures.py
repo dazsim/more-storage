@@ -3,8 +3,8 @@
 import os, random
 from PIL import Image
 
-OUT = "common/src/main/resources/assets/morestorage/textures/block"
-ITEMS = "common/src/main/resources/assets/morestorage/textures/item"
+OUT = "common/src/main/resources/assets/muchmorestorage/textures/block"
+ITEMS = "common/src/main/resources/assets/muchmorestorage/textures/item"
 
 def hexc(s):
     return tuple(int(s[i:i + 2], 16) for i in (0, 2, 4)) + (255,)

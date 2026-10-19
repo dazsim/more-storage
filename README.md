@@ -1,4 +1,4 @@
-# More Storage
+# Much More Storage
 
 Kitchen cupboards that hold 27 stacks, same as a chest. The door swings open on its hinge when you use one.
 

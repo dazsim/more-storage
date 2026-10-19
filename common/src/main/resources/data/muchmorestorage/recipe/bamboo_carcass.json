@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:bamboo_planks",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "muchmorestorage:bamboo_carcass",
+    "count": 1
+  }
+}
