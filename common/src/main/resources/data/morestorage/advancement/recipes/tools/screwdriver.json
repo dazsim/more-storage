@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "morestorage:screwdriver"
+      }
+    },
+    "has_cupboard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#morestorage:cupboards"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cupboard"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "morestorage:screwdriver"
+    ]
+  }
+}

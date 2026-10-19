@@ -1,6 +1,7 @@
 package com.workshopcraft.morestorage.block;
 
 import com.mojang.serialization.MapCodec;
+import com.workshopcraft.morestorage.item.ScrewdriverItem;
 import com.workshopcraft.morestorage.registry.Finish;
 import com.workshopcraft.morestorage.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -9,10 +10,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -26,6 +29,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
@@ -33,19 +38,20 @@ import org.jspecify.annotations.Nullable;
 public class CupboardBlock extends BaseEntityBlock {
     public static final MapCodec<CupboardBlock> CODEC = simpleCodec(p -> new CupboardBlock(Finish.OAK, p));
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
     public final Finish finish;
 
     public CupboardBlock(Finish finish, Properties props) {
         super(props);
         this.finish = finish;
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HINGE, DoorHingeSide.LEFT));
     }
 
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> b) { b.add(FACING); }
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> b) { b.add(FACING, HINGE); }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
@@ -56,7 +62,10 @@ public class CupboardBlock extends BaseEntityBlock {
     protected BlockState rotate(BlockState s, Rotation r) { return s.setValue(FACING, r.rotate(s.getValue(FACING))); }
 
     @Override
-    protected BlockState mirror(BlockState s, Mirror m) { return s.rotate(m.getRotation(s.getValue(FACING))); }
+    protected BlockState mirror(BlockState s, Mirror m) {
+        BlockState r = s.rotate(m.getRotation(s.getValue(FACING)));
+        return m == Mirror.NONE ? r : r.cycle(HINGE);
+    }
 
     @Override
     protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
@@ -67,6 +76,12 @@ public class CupboardBlock extends BaseEntityBlock {
     @Override
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return level.isClientSide() ? createTickerHelper(type, ModContent.CUPBOARD_BE, CupboardBlockEntity::clientTick) : null;
+    }
+
+    @Override
+    protected InteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player,
+                                          InteractionHand hand, BlockHitResult hit) {
+        return held.getItem() instanceof ScrewdriverItem ? InteractionResult.PASS : InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

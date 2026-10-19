@@ -1,9 +1,9 @@
 {
   "parent": "morestorage:block/cupboard_closed",
   "textures": {
-    "top": "morestorage:block/dark_oak_cupboard_top",
     "side": "morestorage:block/dark_oak_cupboard_side",
     "inside": "morestorage:block/dark_oak_cupboard_inside",
-    "door": "morestorage:block/dark_oak_cupboard_door"
+    "door": "morestorage:block/dark_oak_cupboard_door",
+    "top": "morestorage:block/dark_oak_cupboard_top"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "tools",
+  "pattern": [
+    "I",
+    "S"
+  ],
+  "key": {
+    "I": "#c:ingots/iron",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "morestorage:screwdriver",
+    "count": 1
+  }
+}

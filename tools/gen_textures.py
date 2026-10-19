@@ -4,6 +4,7 @@ import os, random
 from PIL import Image
 
 OUT = "common/src/main/resources/assets/morestorage/textures/block"
+ITEMS = "common/src/main/resources/assets/morestorage/textures/item"
 
 def hexc(s):
     return tuple(int(s[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
@@ -130,15 +131,52 @@ def handle():
     px[7, 6] = hexc(STEEL[0])
     return im
 
+def screwdriver():
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = im.load()
+    OUTLINE = hexc("2b1d14")
+    RED, RED_LIT, RED_DARK = hexc("b8322a"), hexc("e0574a"), hexc("7a1d17")
+    METAL, METAL_LIT, METAL_DARK = hexc("a8a8a8"), hexc("e6e6e6"), hexc("5a5a5a")
+    # handle, a fat diagonal from the bottom left
+    for i in range(2, 8):
+        x, y = i, 15 - i
+        for dx, dy, c in [(0, 0, RED), (-1, 0, RED_LIT), (0, 1, RED_DARK), (1, 1, RED_DARK), (-1, -1, RED_LIT)]:
+            px[x + dx, y + dy] = c
+    for i in range(2, 8):
+        x, y = i, 15 - i
+        for dx, dy in [(-2, 0), (-2, -1), (-1, -2), (0, 2), (1, 2), (2, 1), (2, 2)]:
+            a, b = x + dx, y + dy
+            if 0 <= a < 16 and 0 <= b < 16 and px[a, b][3] == 0:
+                px[a, b] = OUTLINE
+    for a, b in [(1, 15), (0, 14), (1, 14), (0, 13)]:
+        px[a, b] = OUTLINE
+    px[1, 13] = RED_DARK
+    px[2, 14] = RED_DARK
+    # ferrule and shaft
+    for i in range(8, 14):
+        x, y = i, 15 - i
+        px[x, y] = METAL if i < 13 else METAL_DARK
+        px[x - 1, y] = METAL_LIT if i < 13 else METAL
+        for a, b in [(x - 1, y - 1), (x + 1, y), (x, y + 1)]:
+            if 0 <= a < 16 and 0 <= b < 16 and px[a, b][3] == 0:
+                px[a, b] = OUTLINE
+    px[8, 7] = METAL_DARK
+    px[9, 7] = METAL_DARK
+    px[14, 1] = OUTLINE
+    return im
+
 def main():
     os.makedirs(OUT, exist_ok=True)
-    finishes = [("white", WHITE, False, "granite")] + [(w, p, True, "wood") for w, p in WOODS.items()]
-    for name, pal, wood, top in finishes:
+    finishes = [("white", WHITE, False)] + [(w, p, True) for w, p in WOODS.items()]
+    for name, pal, wood in finishes:
         rng = random.Random(name)
         door(rng, pal, wood).save(f"{OUT}/{name}_cupboard_door.png")
         side(rng, pal, wood).save(f"{OUT}/{name}_cupboard_side.png")
         inside(rng, pal if wood else WHITE, wood).save(f"{OUT}/{name}_cupboard_inside.png")
-        (granite(rng) if top == "granite" else butcher_block(rng, pal)).save(f"{OUT}/{name}_cupboard_top.png")
+        top = butcher_block(rng, pal) if wood else granite(rng)
+        top.save(f"{OUT}/{name if wood else 'stone'}_cupboard_top.png")
     handle().save(f"{OUT}/cupboard_handle.png")
+    os.makedirs(ITEMS, exist_ok=True)
+    screwdriver().save(f"{ITEMS}/screwdriver.png")
 
 main()

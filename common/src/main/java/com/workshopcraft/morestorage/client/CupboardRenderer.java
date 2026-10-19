@@ -1,6 +1,7 @@
 package com.workshopcraft.morestorage.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.workshopcraft.morestorage.MoreStorage;
@@ -19,8 +20,10 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -32,6 +35,7 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
     public static class State extends BlockEntityRenderState {
         Direction facing = Direction.NORTH;
         Finish finish = Finish.OAK;
+        boolean rightHinge;
         float open;
         int frontLight;
     }
@@ -46,6 +50,7 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         BlockEntityRenderer.super.extractRenderState(be, s, partialTick, camera, breaking);
         s.facing = be.getBlockState().getValue(CupboardBlock.FACING);
         if (be.getBlockState().getBlock() instanceof CupboardBlock block) s.finish = block.finish;
+        s.rightHinge = be.getBlockState().getValue(CupboardBlock.HINGE) == DoorHingeSide.RIGHT;
         float o = 1F - be.getOpenNess(partialTick);
         s.open = 1F - o * o * o;
         s.frontLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
@@ -53,30 +58,38 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
 
     @Override
     public void submit(State s, PoseStack pose, SubmitNodeCollector out, CameraRenderState camera) {
-        TextureAtlasSprite door = sprite(s.finish.blockId() + "_door");
-        TextureAtlasSprite side = sprite(s.finish.blockId() + "_side");
+        TextureAtlasSprite door = sprite(s.finish.panels + "_cupboard_door");
+        TextureAtlasSprite side = sprite(s.finish.panels + "_cupboard_side");
         TextureAtlasSprite handle = sprite("cupboard_handle");
+        float hingeX = s.rightHinge ? 0F : 1F;
+        float handleX = s.rightHinge ? 14F : 1F;
         pose.pushPose();
         pose.translate(0.5F, 0, 0.5F);
         pose.mulPose(Axis.YP.rotationDegrees(180F - s.facing.toYRot()));
         pose.translate(-0.5F, 0, -0.5F);
-        pose.translate(1F, 0, 1 / 16F);
-        pose.mulPose(Axis.YP.rotationDegrees(-MAX_ANGLE * s.open));
-        pose.translate(-1F, 0, -1 / 16F);
+        pose.translate(hingeX, 0, 1 / 16F);
+        pose.mulPose(Axis.YP.rotationDegrees((s.rightHinge ? MAX_ANGLE : -MAX_ANGLE) * s.open));
+        pose.translate(-hingeX, 0, -1 / 16F);
         int light = s.frontLight;
-        out.submitCustomGeometry(pose, Sheets.cutoutBlockSheet(), (p, vc) -> {
-            Box d = new Box(p, vc, light);
-            d.face(Direction.NORTH, 0, 2, 1, 16, 14, 2, door, 0, 2, 16, 14);
-            d.face(Direction.SOUTH, 0, 2, 1, 16, 14, 2, side, 0, 2, 16, 14);
-            d.face(Direction.UP, 0, 2, 1, 16, 14, 2, side, 0, 0, 16, 1);
-            d.face(Direction.DOWN, 0, 2, 1, 16, 14, 2, side, 0, 15, 16, 16);
-            d.face(Direction.WEST, 0, 2, 1, 16, 14, 2, side, 0, 2, 1, 14);
-            d.face(Direction.EAST, 0, 2, 1, 16, 14, 2, side, 15, 2, 16, 14);
-            for (Direction dir : Direction.values()) {
-                if (dir != Direction.SOUTH) d.face(dir, 1, 6, 0, 2, 11, 1, handle, 7, 5, 8, 10);
-            }
-        });
+        out.submitCustomGeometry(pose, Sheets.cutoutBlockSheet(), (p, vc) -> drawDoor(new Box(p, vc, light), door, side, handle, handleX));
+        if (s.breakProgress != null) {
+            ModelFeatureRenderer.CrumblingOverlay crack = s.breakProgress;
+            out.submitCustomGeometry(pose, ModelBakery.DESTROY_TYPES.get(crack.progress()), (p, vc) ->
+                    drawDoor(new Box(p, new SheetedDecalTextureGenerator(vc, crack.cameraPose(), 1F), light), door, side, handle, handleX));
+        }
         pose.popPose();
+    }
+
+    private static void drawDoor(Box d, TextureAtlasSprite door, TextureAtlasSprite side, TextureAtlasSprite handle, float handleX) {
+        d.face(Direction.NORTH, 0, 2, 1, 16, 14, 2, door, 0, 2, 16, 14);
+        d.face(Direction.SOUTH, 0, 2, 1, 16, 14, 2, side, 0, 2, 16, 14);
+        d.face(Direction.UP, 0, 2, 1, 16, 14, 2, side, 0, 0, 16, 1);
+        d.face(Direction.DOWN, 0, 2, 1, 16, 14, 2, side, 0, 15, 16, 16);
+        d.face(Direction.WEST, 0, 2, 1, 16, 14, 2, side, 0, 2, 1, 14);
+        d.face(Direction.EAST, 0, 2, 1, 16, 14, 2, side, 15, 2, 16, 14);
+        for (Direction dir : Direction.values()) {
+            if (dir != Direction.SOUTH) d.face(dir, handleX, 6, 0, handleX + 1, 11, 1, handle, 7, 5, 8, 10);
+        }
     }
 
     private static TextureAtlasSprite sprite(String name) {

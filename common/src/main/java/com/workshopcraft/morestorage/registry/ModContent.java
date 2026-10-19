@@ -3,6 +3,7 @@ package com.workshopcraft.morestorage.registry;
 import com.workshopcraft.morestorage.MoreStorage;
 import com.workshopcraft.morestorage.block.CupboardBlock;
 import com.workshopcraft.morestorage.block.CupboardBlockEntity;
+import com.workshopcraft.morestorage.item.ScrewdriverItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -26,6 +28,7 @@ public final class ModContent {
     public static final Map<Finish, CupboardBlock> CUPBOARDS = new EnumMap<>(Finish.class);
     public static BlockEntityType<CupboardBlockEntity> CUPBOARD_BE;
     public static CreativeModeTab TAB;
+    public static ScrewdriverItem SCREWDRIVER;
 
     private ModContent() {}
 
@@ -35,7 +38,7 @@ public final class ModContent {
             CupboardBlock block = new CupboardBlock(finish, BlockBehaviour.Properties.of()
                     .setId(ResourceKey.create(Registries.BLOCK, id))
                     .mapColor(finish.mapColor)
-                    .sound(finish.sound)
+                    .sound(SoundType.WOOD)
                     .strength(2.5F)
                     .ignitedByLava()
                     .noOcclusion());
@@ -49,6 +52,9 @@ public final class ModContent {
             Identifier id = MoreStorage.id(finish.blockId());
             r.accept(id, new BlockItem(block, new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix()));
         });
+        Identifier id = MoreStorage.id("screwdriver");
+        SCREWDRIVER = new ScrewdriverItem(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).stacksTo(1));
+        r.accept(id, SCREWDRIVER);
     }
 
     public static void registerBlockEntities(BiConsumer<Identifier, BlockEntityType<?>> r) {
@@ -60,7 +66,10 @@ public final class ModContent {
         TAB = CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                 .title(Component.translatable("itemGroup." + MoreStorage.MOD_ID))
                 .icon(() -> new ItemStack(CUPBOARDS.get(Finish.OAK)))
-                .displayItems((params, out) -> CUPBOARDS.values().forEach(out::accept))
+                .displayItems((params, out) -> {
+                    CUPBOARDS.values().forEach(out::accept);
+                    out.accept(SCREWDRIVER);
+                })
                 .build();
         r.accept(MoreStorage.id("main"), TAB);
     }

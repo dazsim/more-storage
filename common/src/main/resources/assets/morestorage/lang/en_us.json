@@ -4,5 +4,9 @@
   "block.morestorage.white_cupboard": "White Cupboard",
   "block.morestorage.oak_cupboard": "Oak Cupboard",
   "block.morestorage.spruce_cupboard": "Spruce Cupboard",
-  "block.morestorage.dark_oak_cupboard": "Dark Oak Cupboard"
+  "block.morestorage.dark_oak_cupboard": "Dark Oak Cupboard",
+  "block.morestorage.stone_top_oak_cupboard": "Stone Top Oak Cupboard",
+  "block.morestorage.stone_top_spruce_cupboard": "Stone Top Spruce Cupboard",
+  "block.morestorage.stone_top_dark_oak_cupboard": "Stone Top Dark Oak Cupboard",
+  "item.morestorage.screwdriver": "Screwdriver"
 }

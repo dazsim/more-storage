@@ -6,12 +6,16 @@ MOD = "morestorage"
 ROOT = "common/src/main/resources"
 A, D = f"{ROOT}/assets/{MOD}", f"{ROOT}/data/{MOD}"
 
-# id, display name, top slab, panel material
+STONE = "minecraft:smooth_stone_slab"
+# id, display name, panel textures, stone top, top slab, panel material
 FINISHES = [
-    ("white", "White", "minecraft:smooth_stone_slab", "minecraft:white_concrete"),
-    ("oak", "Oak", "minecraft:oak_slab", "minecraft:oak_planks"),
-    ("spruce", "Spruce", "minecraft:spruce_slab", "minecraft:spruce_planks"),
-    ("dark_oak", "Dark Oak", "minecraft:dark_oak_slab", "minecraft:dark_oak_planks"),
+    ("white", "White", "white", True, STONE, "minecraft:white_concrete"),
+    ("oak", "Oak", "oak", False, "minecraft:oak_slab", "minecraft:oak_planks"),
+    ("spruce", "Spruce", "spruce", False, "minecraft:spruce_slab", "minecraft:spruce_planks"),
+    ("dark_oak", "Dark Oak", "dark_oak", False, "minecraft:dark_oak_slab", "minecraft:dark_oak_planks"),
+    ("stone_top_oak", "Stone Top Oak", "oak", True, STONE, "minecraft:oak_planks"),
+    ("stone_top_spruce", "Stone Top Spruce", "spruce", True, STONE, "minecraft:spruce_planks"),
+    ("stone_top_dark_oak", "Stone Top Dark Oak", "dark_oak", True, STONE, "minecraft:dark_oak_planks"),
 ]
 
 def w(path, obj):
@@ -53,11 +57,12 @@ w(f"{A}/models/block/cupboard.json", {"parent": "minecraft:block/block",
 w(f"{A}/models/block/cupboard_closed.json", {"parent": f"{MOD}:block/cupboard", "elements": CARCASS + DOOR})
 
 lang = {f"itemGroup.{MOD}": "More Storage", f"container.{MOD}.cupboard": "Cupboard"}
-blocks = []
-for name, label, slab, panel in FINISHES:
+axe, pickaxe = [], []
+for name, label, panels, stone, slab, panel in FINISHES:
     bid = f"{name}_cupboard"
-    blocks.append(f"{MOD}:{bid}")
-    tex = {k: f"{MOD}:block/{bid}_{k}" for k in ["top", "side", "inside", "door"]}
+    (pickaxe if stone else axe).append(f"{MOD}:{bid}")
+    tex = {k: f"{MOD}:block/{panels}_cupboard_{k}" for k in ["side", "inside", "door"]}
+    tex["top"] = f"{MOD}:block/{'stone' if stone else panels}_cupboard_top"
     rot = {"north": 0, "east": 90, "south": 180, "west": 270}
     w(f"{A}/blockstates/{bid}.json", {"variants": {f"facing={f}": ({"model": f"{MOD}:block/{bid}", "y": y} if y else {"model": f"{MOD}:block/{bid}"}) for f, y in rot.items()}})
     w(f"{A}/models/block/{bid}.json", {"parent": f"{MOD}:block/cupboard", "textures": tex})
@@ -76,5 +81,18 @@ for name, label, slab, panel in FINISHES:
         "requirements": [list(crit)], "rewards": {"recipes": [f"{MOD}:{bid}"]}})
     lang[f"block.{MOD}.{bid}"] = f"{label} Cupboard"
 
-w(f"{ROOT}/data/minecraft/tags/block/mineable/axe.json", {"values": blocks})
+
+w(f"{ROOT}/data/minecraft/tags/block/mineable/axe.json", {"values": axe})
+w(f"{ROOT}/data/minecraft/tags/block/mineable/pickaxe.json", {"values": pickaxe})
+
+w(f"{A}/models/item/screwdriver.json", {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{MOD}:item/screwdriver"}})
+w(f"{A}/items/screwdriver.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/screwdriver"}})
+w(f"{D}/recipe/screwdriver.json", {"type": "minecraft:crafting_shaped", "category": "tools", "pattern": ["I", "S"],
+    "key": {"I": "#c:ingots/iron", "S": "minecraft:stick"}, "result": {"id": f"{MOD}:screwdriver", "count": 1}})
+crit = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": f"{MOD}:screwdriver"}},
+        "has_cupboard": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": "#" + MOD + ":cupboards"}]}}}
+w(f"{D}/advancement/recipes/tools/screwdriver.json", {"parent": "minecraft:recipes/root", "criteria": crit,
+    "requirements": [list(crit)], "rewards": {"recipes": [f"{MOD}:screwdriver"]}})
+w(f"{D}/tags/item/cupboards.json", {"values": axe + pickaxe})
+lang[f"item.{MOD}.screwdriver"] = "Screwdriver"
 w(f"{A}/lang/en_us.json", lang)
