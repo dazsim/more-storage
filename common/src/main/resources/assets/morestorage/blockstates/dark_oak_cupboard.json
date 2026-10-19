@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "morestorage:block/dark_oak_cupboard"
+    },
+    "facing=east": {
+      "model": "morestorage:block/dark_oak_cupboard",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "morestorage:block/dark_oak_cupboard",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "morestorage:block/dark_oak_cupboard",
+      "y": 270
+    }
+  }
+}

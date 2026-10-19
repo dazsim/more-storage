@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "morestorage:block/spruce_cupboard"
+    },
+    "facing=east": {
+      "model": "morestorage:block/spruce_cupboard",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "morestorage:block/spruce_cupboard",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "morestorage:block/spruce_cupboard",
+      "y": 270
+    }
+  }
+}
