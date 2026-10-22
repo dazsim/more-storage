@@ -1,0 +1,8 @@
+{
+  "section": "parts",
+  "sort": 1,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/parts_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/parts_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/parts_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/parts_r_stand.png"
+}

@@ -99,5 +99,6 @@
   "finish.muchmorestorage.polished_granite": "Polished Granite",
   "finish.muchmorestorage.polished_diorite": "Polished Diorite",
   "finish.muchmorestorage.polished_andesite": "Polished Andesite",
-  "item.muchmorestorage.screwdriver": "Screwdriver"
+  "item.muchmorestorage.screwdriver": "Screwdriver",
+  "book.muchmorestorage.manual.title": "Much More Storage Manual"
 }

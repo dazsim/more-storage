@@ -1,0 +1,20 @@
+{
+  "title": "book.muchmorestorage.manual.title",
+  "default_template": "muchmorestorage:leaflet",
+  "style": {
+    "page": "#ffffff",
+    "ink": "#111111",
+    "soft": "#8a8a8a",
+    "cover": "#3a3a3a",
+    "cover_edge": "#1e1e1e",
+    "edge": "#c8c8c8"
+  },
+  "stand_cover": "muchmorestorage:textures/simplebooks/manual/stand_cover.png",
+  "sections": [
+    "cover",
+    "parts",
+    "assembly",
+    "use",
+    "apart"
+  ]
+}

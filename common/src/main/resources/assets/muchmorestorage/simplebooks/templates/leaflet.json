@@ -1,0 +1,45 @@
+{
+  "vars": {},
+  "slots": {
+    "left.art": {
+      "type": "image_box",
+      "box": [
+        0,
+        0,
+        644,
+        876
+      ],
+      "bind": "left_image",
+      "frame": false
+    },
+    "right.art": {
+      "type": "image_box",
+      "box": [
+        0,
+        0,
+        644,
+        876
+      ],
+      "bind": "right_image",
+      "frame": false
+    },
+    "left.page": {
+      "type": "page_number",
+      "box": [
+        0,
+        892,
+        644,
+        20
+      ]
+    },
+    "right.page": {
+      "type": "page_number",
+      "box": [
+        0,
+        892,
+        644,
+        20
+      ]
+    }
+  }
+}

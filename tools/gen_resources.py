@@ -81,4 +81,8 @@ w(f"{A}/models/item/screwdriver.json", {"parent": "minecraft:item/handheld", "te
 w(f"{A}/items/screwdriver.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/screwdriver"}})
 recipe("screwdriver", ["I", "S"], {"I": "#c:ingots/iron", "S": "minecraft:stick"}, category="tools", unlock=f"#{MOD}:carcasses")
 lang[f"item.{MOD}.screwdriver"] = "Screwdriver"
+lang[f"book.{MOD}.manual.title"] = "Much More Storage Manual"
 w(f"{A}/lang/en_us.json", lang)
+
+import gen_manual
+gen_manual.main()

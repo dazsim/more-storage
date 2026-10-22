@@ -1,0 +1,8 @@
+{
+  "section": "cover",
+  "sort": 0,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/cover_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/cover_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/cover_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/cover_r_stand.png"
+}
