@@ -2,8 +2,6 @@ package com.workshopcraft.muchmorestorage.block;
 
 import com.mojang.serialization.MapCodec;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
-import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
-import com.workshopcraft.muchmorestorage.item.WorktopItem;
 import com.workshopcraft.muchmorestorage.registry.Finishes;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -118,13 +116,14 @@ public class CupboardBlock extends BaseEntityBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player,
                                           InteractionHand hand, BlockHitResult hit) {
-        if (held.getItem() instanceof ScrewdriverItem) return InteractionResult.PASS;
-        if (held.getItem() instanceof WorktopItem worktop && !state.getValue(ASSEMBLED)
+        if (held.is(ModContent.SCREWDRIVERS)) return InteractionResult.PASS;
+        String top = ModContent.topOf(held);
+        if (!top.isEmpty() && !state.getValue(ASSEMBLED)
                 && level.getBlockEntity(pos) instanceof CupboardBlockEntity be && !be.hasTop()) {
             if (!level.isClientSide()) {
-                be.setFinishes(be.body(), worktop.top);
+                be.setFinishes(be.body(), top);
                 held.consume(1, player);
-                SoundType sound = Finishes.isWood(worktop.top) ? SoundType.WOOD : SoundType.STONE;
+                SoundType sound = Finishes.isWoodTop(top) ? SoundType.WOOD : SoundType.STONE;
                 level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.0F);
             }
             return InteractionResult.SUCCESS;
@@ -163,7 +162,7 @@ public class CupboardBlock extends BaseEntityBlock {
     public static void unscrew(Level level, BlockPos pos, BlockState state, CupboardBlockEntity be) {
         Containers.dropContents(level, pos, be);
         be.clearContent();
-        if (be.hasTop()) popResource(level, pos.above(), new ItemStack(ModContent.WORKTOPS.get(be.top())));
+        if (be.hasTop()) popResource(level, pos.above(), ModContent.worktop(be.top()));
         be.setFinishes(be.body(), "");
         level.setBlock(pos, state.setValue(ASSEMBLED, false), 3);
     }
@@ -176,7 +175,7 @@ public class CupboardBlock extends BaseEntityBlock {
                 out.add(ModContent.cupboard(be.body(), be.hasTop() ? be.top() : "oak"));
             } else {
                 out.add(new ItemStack(ModContent.CARCASSES.get(be.body())));
-                if (be.hasTop()) out.add(new ItemStack(ModContent.WORKTOPS.get(be.top())));
+                if (be.hasTop()) out.add(ModContent.worktop(be.top()));
             }
         }
         return out;

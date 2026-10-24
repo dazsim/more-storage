@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -84,6 +85,25 @@ public final class ModContent {
         // registered last so the block maps back to it
         CUPBOARD_ITEM = new CupboardItem(CUPBOARD, item("cupboard").component(BODY, "oak").component(TOP, "oak"));
         r.accept(MuchMoreStorage.id("cupboard"), CUPBOARD_ITEM);
+    }
+
+    public static final TagKey<Item> WORKTOP_TAG = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "worktops"));
+    public static final TagKey<Item> SCREWDRIVERS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "tools/screwdriver"));
+
+    // own tops are short names, worktops from other mods keep their full item id
+    public static String topOf(ItemStack stack) {
+        if (stack.getItem() instanceof WorktopItem w) return w.top;
+        if (stack.is(WORKTOP_TAG)) return BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+        return "";
+    }
+
+    public static ItemStack worktop(String top) {
+        if (top.contains(":")) {
+            Identifier id = Identifier.tryParse(top);
+            return id == null ? ItemStack.EMPTY : BuiltInRegistries.ITEM.getOptional(id).map(ItemStack::new).orElse(ItemStack.EMPTY);
+        }
+        WorktopItem item = WORKTOPS.get(top);
+        return item == null ? ItemStack.EMPTY : new ItemStack(item);
     }
 
     public static ItemStack cupboard(String body, String top) {

@@ -34,7 +34,17 @@ public final class Finishes {
         return MuchMoreStorage.id("block/" + body + "_body_" + part);
     }
 
+    public static boolean isWoodTop(String top) {
+        if (!top.contains(":")) return isWood(top);
+        String path = top.substring(top.indexOf(':') + 1).replace("_worktop", "");
+        return WOODS.contains(path);
+    }
+
     public static Identifier topSprite(String top) {
+        if (top.contains(":")) {
+            Identifier id = Identifier.tryParse(top);
+            return id == null ? topSprite("oak") : id.withPrefix("block/");
+        }
         if (WOODS.contains(top) || top.equals("granite")) return MuchMoreStorage.id("block/" + top + "_worktop");
         return Identifier.withDefaultNamespace("block/" + top);
     }

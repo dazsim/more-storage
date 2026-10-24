@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
-import com.workshopcraft.muchmorestorage.registry.Finishes;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -36,13 +35,13 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
                 PoseStack ps = new PoseStack();
                 ps.last().set(p);
                 ps.translate(0, -7 / 16F, 0);
-                CupboardModel.worktop(new Quads(ps.last(), vc, light, overlay), CupboardModel.sprite(Finishes.topSprite(look.top())));
+                CupboardModel.worktop(new Quads(ps.last(), vc, light, overlay), CupboardModel.top(look.top()));
                 return;
             }
             CupboardModel.Body body = CupboardModel.Body.of(look.body());
             CupboardModel.carcass(q, body);
             CupboardModel.door(q, body, false);
-            if (!look.top().isEmpty()) CupboardModel.worktop(q, CupboardModel.sprite(Finishes.topSprite(look.top())));
+            if (!look.top().isEmpty()) CupboardModel.worktop(q, CupboardModel.top(look.top()));
         });
     }
 

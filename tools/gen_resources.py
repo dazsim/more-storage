@@ -77,6 +77,9 @@ for f in dict.fromkeys(BODIES + TOPS):
     lang[f"finish.{MOD}.{f}"] = label(f)
 
 w(f"{D}/tags/item/carcasses.json", {"values": [f"{MOD}:{b}_carcass" for b in BODIES]})
+w(f"{ROOT}/data/c/tags/item/worktops.json", {"values": [f"{MOD}:{t}_worktop" for t in TOPS]})
+w(f"{ROOT}/data/c/tags/item/tools/screwdriver.json", {"values": [{"id": f"{m}:screwdriver", "required": False}
+                                                           for m in [MOD, "simplemachines", "morelighting"]]})
 w(f"{A}/models/item/screwdriver.json", {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{MOD}:item/screwdriver"}})
 w(f"{A}/items/screwdriver.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/screwdriver"}})
 recipe("screwdriver", ["I", "S"], {"I": "#c:ingots/iron", "S": "minecraft:stick"}, category="tools", unlock=f"#{MOD}:carcasses")

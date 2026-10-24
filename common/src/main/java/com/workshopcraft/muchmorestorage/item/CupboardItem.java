@@ -18,6 +18,7 @@ public class CupboardItem extends BlockItem {
     }
 
     public static Component finishName(String finish) {
+        if (finish.contains(":")) return ModContent.worktop(finish).getHoverName();
         return Component.translatable("finish." + MuchMoreStorage.MOD_ID + "." + finish);
     }
 

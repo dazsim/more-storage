@@ -1,7 +1,11 @@
 package com.workshopcraft.muchmorestorage.neoforge;
 
 import com.workshopcraft.muchmorestorage.MuchMoreStorage;
+import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
+import net.minecraft.world.InteractionResult;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -15,6 +19,14 @@ public class MuchMoreStorageNeoForge {
     public MuchMoreStorageNeoForge(IEventBus modBus) {
         modBus.addListener(MuchMoreStorageNeoForge::onRegister);
         modBus.addListener(MuchMoreStorageNeoForge::onCapabilities);
+        NeoForge.EVENT_BUS.addListener(MuchMoreStorageNeoForge::onUseBlock);
+    }
+
+    private static void onUseBlock(PlayerInteractEvent.RightClickBlock e) {
+        if (ScrewdriverItem.use(e.getLevel(), e.getPos(), e.getEntity(), e.getItemStack())) {
+            e.setCanceled(true);
+            e.setCancellationResult(InteractionResult.SUCCESS);
+        }
     }
 
     private static void onRegister(RegisterEvent e) {

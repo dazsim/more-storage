@@ -3,6 +3,7 @@ package com.workshopcraft.muchmorestorage.client;
 import com.workshopcraft.muchmorestorage.MuchMoreStorage;
 import com.workshopcraft.muchmorestorage.registry.Finishes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteId;
@@ -19,6 +20,16 @@ public final class CupboardModel {
 
     public static TextureAtlasSprite sprite(Identifier id) {
         return Minecraft.getInstance().getAtlasManager().get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, id));
+    }
+
+    // a worktop from another mod with no texture of its own falls back to the vanilla block it is cut from
+    public static TextureAtlasSprite top(String top) {
+        TextureAtlasSprite sp = sprite(Finishes.topSprite(top));
+        if (top.contains(":") && sp.contents().name().equals(MissingTextureAtlasSprite.getLocation())) {
+            String path = top.substring(top.indexOf(':') + 1).replace("_worktop", "");
+            sp = sprite(Identifier.withDefaultNamespace("block/" + path));
+        }
+        return sp;
     }
 
     public record Body(TextureAtlasSprite door, TextureAtlasSprite side, TextureAtlasSprite inside, TextureAtlasSprite handle) {

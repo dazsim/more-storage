@@ -6,11 +6,9 @@ import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,21 +18,20 @@ public class ScrewdriverItem extends Item {
         super(props);
     }
 
-    @Override
-    public InteractionResult useOn(UseOnContext ctx) {
-        Level level = ctx.getLevel();
-        BlockPos pos = ctx.getClickedPos();
+    // called from the loaders' use-block events so any c:tools/screwdriver works, sneaking included
+    public static boolean use(Level level, BlockPos pos, Player player, ItemStack held) {
+        if (!held.is(ModContent.SCREWDRIVERS) || player.isSpectator()) return false;
         BlockState state = level.getBlockState(pos);
-        if (!(state.getBlock() instanceof CupboardBlock) || !(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return InteractionResult.PASS;
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
-        Player player = ctx.getPlayer();
-        boolean sneaking = player != null && player.isSecondaryUseActive();
+        if (!(state.getBlock() instanceof CupboardBlock) || !(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return false;
+        if (!player.mayBuild()) return false;
+        if (level.isClientSide()) return true;
+        boolean sneaking = player.isSecondaryUseActive();
         boolean assembled = state.getValue(CupboardBlock.ASSEMBLED);
         if (sneaking && assembled) {
             CupboardBlock.unscrew(level, pos, state, be);
             ratchet(level, pos, 1.3F);
         } else if (sneaking && be.hasTop() && be.settleEnd == 0) {
-            Block.popResource(level, pos.above(), new ItemStack(ModContent.WORKTOPS.get(be.top())));
+            Block.popResource(level, pos.above(), ModContent.worktop(be.top()));
             be.setFinishes(be.body(), "");
             click(level, pos, 1.2F);
         } else if (!assembled && be.hasTop()) {
@@ -46,7 +43,7 @@ public class ScrewdriverItem extends Item {
             level.setBlock(pos, state.cycle(CupboardBlock.HINGE), 3);
             click(level, pos, 1.6F);
         }
-        return InteractionResult.SUCCESS;
+        return true;
     }
 
     private static void click(Level level, BlockPos pos, float pitch) {

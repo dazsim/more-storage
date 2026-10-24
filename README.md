@@ -20,10 +20,14 @@ Bodies: the twelve woods and the sixteen concrete colours. Wood bodies are quick
 - On a cupboard: swaps the door hinge between left and right.
 - Sneaking on a cupboard: unscrews it. The worktop pops off, the contents drop and it goes back to a carcass.
 
+Any worktop in the `c:worktops` tag fits a carcass, so Simple Machines worktops work too, and any screwdriver in `c:tools/screwdriver` works on cupboards. Neither mod needs the other.
+
 Breaking a cupboard drops one cupboard item that keeps its body and top, and it places back already assembled. A carcass drops itself, plus the worktop if one was sitting on it.
 
 With Simple Books installed there is a picture manual: craft a book with a screwdriver, or get one the first time you pick a screwdriver up. Its pages are drawn by `python3 tools/gen_manual.py`, which `gen_resources.py` runs for you.
 
 Minecraft 26.1 to 26.1.2, NeoForge and Fabric.
+
+1.0.2: worktops and screwdrivers from other mods work through the `c:worktops` and `c:tools/screwdriver` tags.
 
 Build with `./gradlew build`. Textures are drawn by `python3 tools/gen_textures.py` and the json files are made by `python3 tools/gen_resources.py`.

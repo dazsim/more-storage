@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.math.Axis;
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
-import com.workshopcraft.muchmorestorage.registry.Finishes;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -92,7 +91,7 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
 
     // a loose worktop sits a little high and askew, then drops flat while it is screwed down
     private void submitWorktop(State s, PoseStack pose, SubmitNodeCollector out) {
-        TextureAtlasSprite top = CupboardModel.sprite(Finishes.topSprite(s.top));
+        TextureAtlasSprite top = CupboardModel.top(s.top);
         float k = s.assembled ? 0F : 1F - s.settle * s.settle;
         pose.pushPose();
         pose.translate(0.5F + 0.6F / 16 * k, 15 / 16F + 1.5F / 16 * k, 0.5F + 0.4F / 16 * k);
