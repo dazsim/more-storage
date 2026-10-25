@@ -26,10 +26,6 @@
               "function": "minecraft:set_components",
               "components": {
                 "simplebooks:book": "muchmorestorage:manual",
-                "minecraft:custom_name": {
-                  "text": "Much More Storage Manual",
-                  "italic": false
-                },
                 "minecraft:item_model": "muchmorestorage:manual"
               }
             }

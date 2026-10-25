@@ -593,15 +593,22 @@ def manual_icon():
 
 GUARD = {"fabric:load_conditions": [{"condition": "fabric:all_mods_loaded", "values": ["simplebooks"]}],
          "neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "simplebooks"}]}
-BOOK = {"simplebooks:book": f"{MOD}:manual", "minecraft:custom_name": {"text": "Much More Storage Manual", "italic": False},
-        "minecraft:item_model": f"{MOD}:manual"}
+# no custom_name, Simple Books names it from book.<mod>.manual.title
+BOOK = {"simplebooks:book": f"{MOD}:manual", "minecraft:item_model": f"{MOD}:manual"}
+SCREWDRIVERS = "#c:tools/screwdriver"
 
 def data():
     D = f"{ROOT}/data/{MOD}"
-    w(f"{D}/recipe/manual.json", {**GUARD, "type": "minecraft:crafting_shapeless", "category": "misc",
-        "ingredients": ["minecraft:book", f"{MOD}:screwdriver"], "result": {"id": "simplebooks:guide", "components": BOOK}})
+    # any mod's screwdriver works and comes back, see KeepToolShapelessRecipe
+    w(f"{D}/recipe/manual.json", {**GUARD, "type": f"{MOD}:crafting_shapeless_keep_tool", "category": "misc",
+        "ingredients": ["minecraft:book", SCREWDRIVERS, "#c:chests/wooden"], "keep": SCREWDRIVERS,
+        "result": {"id": "simplebooks:guide", "components": BOOK}})
+    unlock = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": f"{MOD}:manual"}},
+              "has_screwdriver": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": SCREWDRIVERS}]}}}
+    w(f"{D}/advancement/recipes/misc/manual.json", {**GUARD, "parent": "minecraft:recipes/root", "criteria": unlock,
+        "requirements": [list(unlock)], "rewards": {"recipes": [f"{MOD}:manual"]}})
     w(f"{D}/advancement/got_manual.json", {**GUARD, "criteria": {"screwdriver": {"trigger": "minecraft:inventory_changed",
-        "conditions": {"items": [{"items": f"{MOD}:screwdriver"}]}}}, "requirements": [["screwdriver"]],
+        "conditions": {"items": [{"items": SCREWDRIVERS}]}}}, "requirements": [["screwdriver"]],
         "rewards": {"loot": [f"{MOD}:manual"]}})
     w(f"{D}/loot_table/manual.json", {**GUARD, "type": "minecraft:advancement_reward", "pools": [{"rolls": 1, "entries": [
         {"type": "minecraft:item", "name": "simplebooks:guide", "functions": [{"function": "minecraft:set_components", "components": BOOK}]}]}]})

@@ -24,10 +24,12 @@ Any worktop in the `c:worktops` tag fits a carcass, so Simple Machines worktops 
 
 Breaking a cupboard drops one cupboard item that keeps its body and top, and it places back already assembled. A carcass drops itself, plus the worktop if one was sitting on it.
 
-With Simple Books installed there is a picture manual: craft a book with a screwdriver, or get one the first time you pick a screwdriver up. Its pages are drawn by `python3 tools/gen_manual.py`, which `gen_resources.py` runs for you.
+With Simple Books installed there is a picture manual: craft a book, a screwdriver and a chest (you keep the screwdriver), or get one the first time you pick up any screwdriver. Its pages are drawn by `python3 tools/gen_manual.py`, which `gen_resources.py` runs for you.
 
 Minecraft 26.1 to 26.1.2, NeoForge and Fabric.
 
 1.0.2: worktops and screwdrivers from other mods work through the `c:worktops` and `c:tools/screwdriver` tags.
+
+1.0.3: the manual is book + any screwdriver + chest and the screwdriver comes back, so it no longer clashes with the More Foods knife. It is named by Simple Books, and the screwdriver recipe shows once you have iron or a stick.
 
 Build with `./gradlew build`. Textures are drawn by `python3 tools/gen_textures.py` and the json files are made by `python3 tools/gen_resources.py`.

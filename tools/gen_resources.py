@@ -28,8 +28,12 @@ for sub in ["assets/" + MOD + "/blockstates", "assets/" + MOD + "/items", "asset
     shutil.rmtree(f"{ROOT}/{sub}", ignore_errors=True)
 
 def advancement(path, recipe, unlock):
-    crit = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": recipe}},
-            "has_item": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": unlock}]}}}
+    # unlock is one item or tag, or a list of them where any one will do
+    crit = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": recipe}}}
+    items = unlock if isinstance(unlock, list) else [unlock]
+    for n, item in enumerate(items):
+        crit["has_item" if n == 0 else f"has_item_{n + 1}"] = {"trigger": "minecraft:inventory_changed",
+                                                               "conditions": {"items": [{"items": item}]}}
     w(path, {"parent": "minecraft:recipes/root", "criteria": crit, "requirements": [list(crit)], "rewards": {"recipes": [recipe]}})
 
 def recipe(name, pattern, key, count=1, category="misc", unlock=None):
@@ -82,7 +86,8 @@ w(f"{ROOT}/data/c/tags/item/tools/screwdriver.json", {"values": [{"id": f"{m}:sc
                                                            for m in [MOD, "simplemachines", "morelighting"]]})
 w(f"{A}/models/item/screwdriver.json", {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{MOD}:item/screwdriver"}})
 w(f"{A}/items/screwdriver.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/screwdriver"}})
-recipe("screwdriver", ["I", "S"], {"I": "#c:ingots/iron", "S": "minecraft:stick"}, category="tools", unlock=f"#{MOD}:carcasses")
+recipe("screwdriver", ["I", "S"], {"I": "#c:ingots/iron", "S": "minecraft:stick"}, category="tools",
+       unlock=["#c:ingots/iron", "minecraft:stick"])
 lang[f"item.{MOD}.screwdriver"] = "Screwdriver"
 lang[f"book.{MOD}.manual.title"] = "Much More Storage Manual"
 w(f"{A}/lang/en_us.json", lang)

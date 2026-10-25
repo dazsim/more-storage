@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.workshopcraft.muchmorestorage.MuchMoreStorage;
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
+import com.workshopcraft.muchmorestorage.crafting.KeepToolShapelessRecipe;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.CupboardItem;
 import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
@@ -20,6 +21,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -113,6 +115,11 @@ public final class ModContent {
         return stack;
     }
 
+    // book + screwdriver + chest gives the manual and the screwdriver comes back
+    public static void registerRecipeSerializers(BiConsumer<Identifier, RecipeSerializer<?>> r) {
+        r.accept(MuchMoreStorage.id("crafting_shapeless_keep_tool"), KeepToolShapelessRecipe.SERIALIZER);
+    }
+
     public static void registerBlockEntities(BiConsumer<Identifier, BlockEntityType<?>> r) {
         CUPBOARD_BE = new BlockEntityType<>(CupboardBlockEntity::new, Set.of(CUPBOARD));
         r.accept(MuchMoreStorage.id("cupboard"), CUPBOARD_BE);
@@ -141,6 +148,7 @@ public final class ModContent {
         registerBlocks(direct(BuiltInRegistries.BLOCK));
         registerItems(direct(BuiltInRegistries.ITEM));
         registerBlockEntities(direct(BuiltInRegistries.BLOCK_ENTITY_TYPE));
+        registerRecipeSerializers(direct(BuiltInRegistries.RECIPE_SERIALIZER));
         registerCreativeTabs(direct(BuiltInRegistries.CREATIVE_MODE_TAB));
     }
 }

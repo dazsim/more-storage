@@ -12,7 +12,17 @@
       "conditions": {
         "items": [
           {
-            "items": "#muchmorestorage:carcasses"
+            "items": "#c:ingots/iron"
+          }
+        ]
+      }
+    },
+    "has_item_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:stick"
           }
         ]
       }
@@ -21,7 +31,8 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_item"
+      "has_item",
+      "has_item_2"
     ]
   ],
   "rewards": {
