@@ -8,6 +8,7 @@
         "${mod_author}"
     ],
     "license": "${license}",
+    "icon": "muchmorestorage_logo.png",
     "environment": "*",
     "accessWidener": "muchmorestorage.accesswidener",
     "entrypoints": {
