@@ -4,5 +4,43 @@
   "left_image": "muchmorestorage:textures/simplebooks/manual/cover_l.png",
   "right_image": "muchmorestorage:textures/simplebooks/manual/cover_r.png",
   "stand_left": "muchmorestorage:textures/simplebooks/manual/cover_l_stand.png",
-  "stand_right": "muchmorestorage:textures/simplebooks/manual/cover_r_stand.png"
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/cover_r_stand.png",
+  "drawn_recipes": [
+    {
+      "side": "right",
+      "text": [
+        90,
+        750,
+        520
+      ],
+      "result": {
+        "item": "muchmorestorage:screwdriver",
+        "count": 1,
+        "box": [
+          470,
+          560,
+          120,
+          120
+        ]
+      },
+      "grid": {
+        "at": [
+          170,
+          520
+        ],
+        "cell": 80,
+        "pattern": [
+          "I",
+          "S"
+        ]
+      },
+      "key": {
+        "I": {
+          "item": "#c:ingots/iron",
+          "name": "book.muchmorestorage.manual.iron_ingot"
+        },
+        "S": "minecraft:stick"
+      }
+    }
+  ]
 }

@@ -103,5 +103,16 @@
   "book.muchmorestorage.manual.title": "Much More Storage Manual",
   "tag.item.muchmorestorage.carcasses": "Carcasses",
   "tag.item.c.worktops": "Worktops",
-  "tag.item.c.tools.screwdriver": "Screwdrivers"
+  "tag.item.c.tools.screwdriver": "Screwdrivers",
+  "book.muchmorestorage.manual.iron_ingot": "Iron Ingot",
+  "book.muchmorestorage.manual.chest": "Wooden Chest",
+  "book.muchmorestorage.manual.planks": "Planks (all one kind)",
+  "book.muchmorestorage.manual.concrete": "Concrete (all one colour)",
+  "book.muchmorestorage.manual.wood_slab": "Wooden Slab (all one kind)",
+  "book.muchmorestorage.manual.stone_slab": "Smooth Stone or Polished Stone Slab (all one kind)",
+  "book.muchmorestorage.manual.wood_carcass": "Wooden Carcass",
+  "book.muchmorestorage.manual.concrete_carcass": "Concrete Carcass",
+  "book.muchmorestorage.manual.wood_worktop": "Wooden Worktop",
+  "book.muchmorestorage.manual.stone_worktop": "Stone Worktop",
+  "book.muchmorestorage.manual.concrete_worktop": "Concrete Worktop"
 }

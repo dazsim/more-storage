@@ -9,6 +9,7 @@ A = f"{ROOT}/assets/{MOD}"
 TEX = f"textures/simplebooks/manual"
 PW, PH, SS = 644, 876, 3
 STAND = (160, 218)
+WOODS = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak", "bamboo", "crimson", "warped"]
 FONTS = ["/usr/share/fonts/truetype/sand-box/google/Noto Sans/NotoSans-VariableFont_wdth,wght.ttf",
          "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "DejaVuSans-Bold.ttf", "Arial Bold.ttf"]
 _fonts = {}
@@ -257,7 +258,8 @@ def cupboard(sc, at=(0, 0, 0), top=True, loose=0.0, door=0.0, hinge="left", body
 def worktop(sc, at=(0, 0, 0), finish="wood", xf=()):
     top_face = lambda x, z, y: (x, y, z)
     tm = (grain(top_face, 1, 15, 1, 15, 2, 3, 9, vertical=False) if finish == "wood"
-          else specks(top_face, 0, 16, 0, 16, 2, 9, 10) if finish == "stone" else specks(top_face, 0, 16, 0, 16, 2, 3, 11))
+          else specks(top_face, 0, 16, 0, 16, 2, 9, 10) if finish == "stone"
+          else specks(top_face, 0, 16, 0, 16, 2, 18, 12) if finish == "granite" else specks(top_face, 0, 16, 0, 16, 2, 3, 11))
     sc.box((0, 0, 0), (16, 2, 16), list(xf) + [move(*at)], marks=tm)
 
 def steve(sc, at=(0, 0, 0), yaw=0, arm=0, arm2=0, crouch=False, eyes=True):
@@ -322,9 +324,16 @@ def cell_icon(pg, kind, x, y, s):
         pg.line((x0, ly), (x1, ly), 1.5)
         cx = (x0 + x1) / 2
         pg.path([(cx - 3, ly - 4), (cx + 3, ly - 4), (cx + 3, ly + 5), (cx - 3, ly + 5)], 1.4, closed=True)
-    elif kind in ("slab", "slab_d", "slab_a"):
+    elif kind in ("slab", "slab_d", "slab_a", "slab_s"):
         ym = (y0 + y1) / 2
         pg.path([(x0, ym), (x1, ym), (x1, y1), (x0, y1)], 1.8, closed=True)
+        if kind == "slab":
+            yy = ym + (y1 - ym) / 2
+            pg.line((x0, yy), (x1, yy), 1.2)
+            pg.line((x0 + (x1 - x0) * 0.35, ym), (x0 + (x1 - x0) * 0.35, yy), 1.1)
+            pg.line((x0 + (x1 - x0) * 0.7, yy), (x0 + (x1 - x0) * 0.7, y1), 1.1)
+        if kind == "slab_s":
+            pg.path([(x0 + 3, ym + 3), (x1 - 3, ym + 3), (x1 - 3, y1 - 3), (x0 + 3, y1 - 3)], 1.0, closed=True)
         if kind == "slab_d":
             r = random.Random(int(x))
             for _ in range(6): pg.dot((r.uniform(x0 + 3, x1 - 3), r.uniform(ym + 3, y1 - 3)), 1.0)
@@ -376,44 +385,118 @@ def page_cover(pg):
     sc.draw(pg)
     screwdriver(pg, (hand[0] + 4, hand[1] + 46), 105, 0.8)
 
+# ---------- recipe legends, read from the recipe files gen_resources.py just wrote ----------
+
+def recipe_files():
+    d = f"{ROOT}/data/{MOD}/recipe"
+    out = {}
+    for f in sorted(os.listdir(d)):
+        with open(f"{d}/{f}") as fh: out[f[:-5]] = json.load(fh)
+    return out
+
+def drawn(pg, family, text, result_box, title=None, names=None, at=None, cell=None):
+    """A drawn_recipes entry for every recipe in family, which must share one pattern."""
+    pats = {tuple(r["pattern"]) for r in family}
+    counts = {r["result"].get("count", 1) for r in family}
+    assert len(pats) == 1 and len(counts) == 1, family
+    pattern = list(pats.pop())
+    keys = {}
+    for r in family:
+        for k, v in r["key"].items():
+            for i in (v if isinstance(v, list) else [v]):
+                keys.setdefault(k, [])
+                if i not in keys[k]: keys[k].append(i)
+    def ref(k):
+        ids, n = keys[k], (names or {}).get(k)
+        if len(ids) == 1 and not n: return ids[0]
+        o = {"items": ids} if len(ids) > 1 else {"item": ids[0]}
+        if n: o["name"] = n
+        return o
+    res = sorted(r["result"]["id"] for r in family)
+    result = {"items": res} if len(res) > 1 else {"item": res[0]}
+    result.update({"count": counts.pop(), "box": result_box})
+    e = {"side": pg.side, "text": text, "result": result}
+    if title: e["title"] = title
+    if at is not None:
+        e["grid"] = {"at": at, "cell": cell, "pattern": pattern}
+        e["key"] = {k: ref(k) for k in keys}
+    else:
+        order = [c for c in "".join(pattern) if c != " "]
+        e["ingredients"] = [dict(r if isinstance(r := ref(k), dict) else {"item": r}, count=order.count(k))
+                            for k in dict.fromkeys(order)]
+    pg.recipes.append(e)
+
+def legend(name):
+    return f"book.{MOD}.manual.{name}"
+
+LEGENDS = {"iron_ingot": "Iron Ingot", "chest": "Wooden Chest", "planks": "Planks (all one kind)",
+           "concrete": "Concrete (all one colour)", "wood_slab": "Wooden Slab (all one kind)",
+           "stone_slab": "Smooth Stone or Polished Stone Slab (all one kind)",
+           "wood_carcass": "Wooden Carcass", "concrete_carcass": "Concrete Carcass",
+           "wood_worktop": "Wooden Worktop", "stone_worktop": "Stone Worktop", "concrete_worktop": "Concrete Worktop"}
+
+def fam(pred):
+    return [r for n, r in RECIPES.items() if pred(n, r)]
+
+def is_wood(item):
+    return any(item == f"minecraft:{w}_{s}" for w in WOODS for s in ("planks", "slab"))
+
 def page_tools(pg):
     count(pg, (70, 150), 1, 44)
     screwdriver(pg, (330, 250), -25, 2.2, 3.0)
-    grid(pg, 90, 540, 80, [[None, "ingot", None], [None, "stick", None]])
-    pg.arrow([(355, 620), (435, 620)], 3.0)
-    screwdriver(pg, (530, 640), -50, 0.9)
-    count(pg, (500, 730), 1)
+    grid(pg, 90, 520, 80, [[None, "ingot", None], [None, "stick", None]])
+    pg.arrow([(355, 600), (435, 600)], 3.0)
+    screwdriver(pg, (530, 620), -50, 0.9)
+    count(pg, (500, 710), 1)
+    drawn(pg, fam(lambda n, r: n == "screwdriver"), [90, 750, 520], [470, 560, 120, 120],
+          names={"I": legend("iron_ingot")}, at=[170, 520], cell=80)
 
 def page_parts_carcass(pg):
-    count(pg, (60, 150), 1, 44)
-    sc = Scene(0, 0, 14).at(330, 330)
+    count(pg, (60, 120), 1, 44)
+    sc = Scene(0, 0, 11).at(330, 240)
     cupboard(sc, (0, 0, 0), top=False)
     sc.draw(pg)
-    grid(pg, 50, 570, 70, [["plank"] * 3, ["plank", "chest", "plank"], ["plank"] * 3])
-    pg.arrow([(285, 675), (350, 675)], 3.0)
-    s2 = Scene(0, 0, 7).at(480, 670)
+    grid(pg, 50, 410, 70, [["plank"] * 3, ["plank", "chest", "plank"], ["plank"] * 3])
+    pg.arrow([(285, 515), (350, 515)], 3.0)
+    s2 = Scene(0, 0, 7).at(480, 510)
     cupboard(s2, (0, 0, 0), top=False)
     s2.draw(pg)
-    count(pg, (560, 770), 1, 30)
-    cell_icon(pg, "plank", 60, 800, 60)
-    pg.text((140, 848), "/", 40, "ms")
-    cell_icon(pg, "concrete", 160, 800, 60)
+    count(pg, (560, 610), 1, 30)
+    cell_icon(pg, "plank", 60, 630, 60)
+    pg.text((140, 678), "/", 40, "ms")
+    cell_icon(pg, "concrete", 160, 630, 60)
+    carcass = lambda wood: fam(lambda n, r: n.endswith("_carcass") and is_wood(r["key"]["P"]) == wood)
+    names = {"C": legend("chest")}
+    drawn(pg, carcass(True), [50, 712, 560], [410, 440, 140, 140], legend("wood_carcass"),
+          dict(names, P=legend("planks")), at=[50, 410], cell=70)
+    drawn(pg, carcass(False), [50, 772, 560], [410, 440, 140, 140], legend("concrete_carcass"),
+          dict(names, P=legend("concrete")))
+    pg.recipes[-2]["hover"] = [{"box": [66, 636, 48, 48], "item": pg.recipes[-2]["key"]["P"]},
+                               {"box": [166, 636, 48, 48], "item": {k: v for k, v in pg.recipes[-1]["ingredients"][0].items() if k != "count"}}]
 
 def page_parts_worktop(pg):
-    count(pg, (60, 150), 1, 44)
-    sc = Scene(0, 0, 14).at(330, 240, (0, 0, 0), (16, 2, 16))
+    count(pg, (60, 110), 1, 44)
+    sc = Scene(0, 0, 11).at(330, 170, (0, 0, 0), (16, 2, 16))
     worktop(sc, (0, 0, 0))
     sc.draw(pg)
-    rows = [(["slab", "slab", "slab"], 1, "wood"), (["concrete"] * 3, 2, "plain"), (["slab_a", "slab_d", "slab_a"], 1, "stone")]
-    for i, (cells, n, fin) in enumerate(rows):
-        y = 420 + i * 150
-        grid(pg, 40, y, 70, [cells])
-        pg.arrow([(272, y + 35), (330, y + 35)], 3.0)
-        s2 = Scene(0, 0, 6).at(440, y + 35, (0, -5, 0), (16, 2, 22) if n == 2 else (16, 2, 16))
+    slabs = lambda r: r["key"].get("S", "")
+    rows = [(["slab"] * 3, "wood", fam(lambda n, r: n.endswith("_worktop") and is_wood(slabs(r))), "wood_worktop", {"S": "wood_slab"}),
+            (["slab_s"] * 3, "stone", fam(lambda n, r: n.endswith("_worktop") and "S" in r["key"] and not is_wood(slabs(r))),
+             "stone_worktop", {"S": "stone_slab"}),
+            (["slab_a", "slab_d", "slab_a"], "granite", fam(lambda n, r: n == "granite_worktop"), None, {}),
+            (["concrete"] * 3, "plain", fam(lambda n, r: n.endswith("_worktop") and "C" in r["key"]), "concrete_worktop", {"C": "concrete"})]
+    for i, (cells, fin, family, title, names) in enumerate(rows):
+        y = 245 + i * 152
+        n = family[0]["result"].get("count", 1)
+        grid(pg, 40, y, 60, [cells])
+        pg.arrow([(240, y + 30), (300, y + 30)], 3.0)
+        s2 = Scene(0, 0, 5).at(400, y + 30, (0, -5, 0), (16, 2, 22) if n == 2 else (16, 2, 16))
         worktop(s2, (0, 0, 0), fin)
         if n == 2: worktop(s2, (0, -5, 6), fin)
         s2.draw(pg)
-        count(pg, (560, y + 48), n, 30)
+        count(pg, (500, y + 44), n, 30)
+        drawn(pg, family, [40, y + 70, 580], [330, y - 6, 140, 72], title and legend(title),
+              {k: legend(v) for k, v in names.items()}, at=[40, y], cell=60)
 
 def page_step1(pg):
     step(pg, 1)
@@ -616,14 +699,19 @@ def data():
     w(f"{A}/models/item/manual.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MOD}:item/manual"}})
 
 def main(only=None):
+    global RECIPES
     data()
+    RECIPES = recipe_files()
+    with open(f"{A}/lang/en_us.json") as f: lang = json.load(f)
+    lang.update({legend(k): v for k, v in LEGENDS.items()})
+    w(f"{A}/lang/en_us.json", lang)
     books = f"{A}/simplebooks/books"
     import shutil
     shutil.rmtree(f"{books}/manual", ignore_errors=True)
     shutil.rmtree(f"{A}/{TEX}", ignore_errors=True)
     os.makedirs(f"{A}/{TEX}", exist_ok=True)
     w(f"{books}/manual.json", {"title": f"book.{MOD}.manual.title", "default_template": f"{MOD}:leaflet",
-        "style": {"page": "#ffffff", "ink": "#111111", "soft": "#8a8a8a", "cover": "#3a3a3a", "cover_edge": "#1e1e1e", "edge": "#c8c8c8"},
+        "style": {"page": "#ffffff", "ink": "#111111", "soft": "#555555", "cover": "#3a3a3a", "cover_edge": "#1e1e1e", "edge": "#c8c8c8"},
         "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart"]})
     w(f"{A}/simplebooks/templates/leaflet.json", {"vars": {}, "slots": {
         "left.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "left_image", "frame": False},
@@ -631,14 +719,19 @@ def main(only=None):
         "left.page": {"type": "page_number", "box": [0, 892, PW, 20]},
         "right.page": {"type": "page_number", "box": [0, 892, PW, 20]}}})
     for i, (name, left, right) in enumerate(SPREADS):
+        recipes = []
         for side, fn in (("l", left), ("r", right)):
             for stand in (False, True):
                 pg = Page(2.0 if stand else 1.0)
+                pg.side, pg.recipes = "left" if side == "l" else "right", []
                 fn(pg)
                 pg.save(f"{name}_{side}" + ("_stand" if stand else ""), stand)
-        w(f"{books}/manual/pages/{name}.json", {"section": SECTIONS[name], "sort": i,
+            recipes += pg.recipes
+        page = {"section": SECTIONS[name], "sort": i,
             "left_image": f"{MOD}:{TEX}/{name}_l.png", "right_image": f"{MOD}:{TEX}/{name}_r.png",
-            "stand_left": f"{MOD}:{TEX}/{name}_l_stand.png", "stand_right": f"{MOD}:{TEX}/{name}_r_stand.png"})
+            "stand_left": f"{MOD}:{TEX}/{name}_l_stand.png", "stand_right": f"{MOD}:{TEX}/{name}_r_stand.png"}
+        if recipes: page["drawn_recipes"] = recipes
+        w(f"{books}/manual/pages/{name}.json", page)
     manual_icon()
 
 if __name__ == "__main__":

@@ -4,5 +4,402 @@
   "left_image": "muchmorestorage:textures/simplebooks/manual/parts_l.png",
   "right_image": "muchmorestorage:textures/simplebooks/manual/parts_r.png",
   "stand_left": "muchmorestorage:textures/simplebooks/manual/parts_l_stand.png",
-  "stand_right": "muchmorestorage:textures/simplebooks/manual/parts_r_stand.png"
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/parts_r_stand.png",
+  "drawn_recipes": [
+    {
+      "side": "left",
+      "text": [
+        50,
+        712,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:acacia_carcass",
+          "muchmorestorage:bamboo_carcass",
+          "muchmorestorage:birch_carcass",
+          "muchmorestorage:cherry_carcass",
+          "muchmorestorage:crimson_carcass",
+          "muchmorestorage:dark_oak_carcass",
+          "muchmorestorage:jungle_carcass",
+          "muchmorestorage:mangrove_carcass",
+          "muchmorestorage:oak_carcass",
+          "muchmorestorage:pale_oak_carcass",
+          "muchmorestorage:spruce_carcass",
+          "muchmorestorage:warped_carcass"
+        ],
+        "count": 1,
+        "box": [
+          410,
+          440,
+          140,
+          140
+        ]
+      },
+      "title": "book.muchmorestorage.manual.wood_carcass",
+      "grid": {
+        "at": [
+          50,
+          410
+        ],
+        "cell": 70,
+        "pattern": [
+          "PPP",
+          "PCP",
+          "PPP"
+        ]
+      },
+      "key": {
+        "P": {
+          "items": [
+            "minecraft:acacia_planks",
+            "minecraft:bamboo_planks",
+            "minecraft:birch_planks",
+            "minecraft:cherry_planks",
+            "minecraft:crimson_planks",
+            "minecraft:dark_oak_planks",
+            "minecraft:jungle_planks",
+            "minecraft:mangrove_planks",
+            "minecraft:oak_planks",
+            "minecraft:pale_oak_planks",
+            "minecraft:spruce_planks",
+            "minecraft:warped_planks"
+          ],
+          "name": "book.muchmorestorage.manual.planks"
+        },
+        "C": {
+          "item": "#c:chests/wooden",
+          "name": "book.muchmorestorage.manual.chest"
+        }
+      },
+      "hover": [
+        {
+          "box": [
+            66,
+            636,
+            48,
+            48
+          ],
+          "item": {
+            "items": [
+              "minecraft:acacia_planks",
+              "minecraft:bamboo_planks",
+              "minecraft:birch_planks",
+              "minecraft:cherry_planks",
+              "minecraft:crimson_planks",
+              "minecraft:dark_oak_planks",
+              "minecraft:jungle_planks",
+              "minecraft:mangrove_planks",
+              "minecraft:oak_planks",
+              "minecraft:pale_oak_planks",
+              "minecraft:spruce_planks",
+              "minecraft:warped_planks"
+            ],
+            "name": "book.muchmorestorage.manual.planks"
+          }
+        },
+        {
+          "box": [
+            166,
+            636,
+            48,
+            48
+          ],
+          "item": {
+            "items": [
+              "minecraft:black_concrete",
+              "minecraft:blue_concrete",
+              "minecraft:brown_concrete",
+              "minecraft:cyan_concrete",
+              "minecraft:gray_concrete",
+              "minecraft:green_concrete",
+              "minecraft:light_blue_concrete",
+              "minecraft:light_gray_concrete",
+              "minecraft:lime_concrete",
+              "minecraft:magenta_concrete",
+              "minecraft:orange_concrete",
+              "minecraft:pink_concrete",
+              "minecraft:purple_concrete",
+              "minecraft:red_concrete",
+              "minecraft:white_concrete",
+              "minecraft:yellow_concrete"
+            ],
+            "name": "book.muchmorestorage.manual.concrete"
+          }
+        }
+      ]
+    },
+    {
+      "side": "left",
+      "text": [
+        50,
+        772,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:black_concrete_carcass",
+          "muchmorestorage:blue_concrete_carcass",
+          "muchmorestorage:brown_concrete_carcass",
+          "muchmorestorage:cyan_concrete_carcass",
+          "muchmorestorage:gray_concrete_carcass",
+          "muchmorestorage:green_concrete_carcass",
+          "muchmorestorage:light_blue_concrete_carcass",
+          "muchmorestorage:light_gray_concrete_carcass",
+          "muchmorestorage:lime_concrete_carcass",
+          "muchmorestorage:magenta_concrete_carcass",
+          "muchmorestorage:orange_concrete_carcass",
+          "muchmorestorage:pink_concrete_carcass",
+          "muchmorestorage:purple_concrete_carcass",
+          "muchmorestorage:red_concrete_carcass",
+          "muchmorestorage:white_concrete_carcass",
+          "muchmorestorage:yellow_concrete_carcass"
+        ],
+        "count": 1,
+        "box": [
+          410,
+          440,
+          140,
+          140
+        ]
+      },
+      "title": "book.muchmorestorage.manual.concrete_carcass",
+      "ingredients": [
+        {
+          "items": [
+            "minecraft:black_concrete",
+            "minecraft:blue_concrete",
+            "minecraft:brown_concrete",
+            "minecraft:cyan_concrete",
+            "minecraft:gray_concrete",
+            "minecraft:green_concrete",
+            "minecraft:light_blue_concrete",
+            "minecraft:light_gray_concrete",
+            "minecraft:lime_concrete",
+            "minecraft:magenta_concrete",
+            "minecraft:orange_concrete",
+            "minecraft:pink_concrete",
+            "minecraft:purple_concrete",
+            "minecraft:red_concrete",
+            "minecraft:white_concrete",
+            "minecraft:yellow_concrete"
+          ],
+          "name": "book.muchmorestorage.manual.concrete",
+          "count": 8
+        },
+        {
+          "item": "#c:chests/wooden",
+          "name": "book.muchmorestorage.manual.chest",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "side": "right",
+      "text": [
+        40,
+        315,
+        580
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:acacia_worktop",
+          "muchmorestorage:bamboo_worktop",
+          "muchmorestorage:birch_worktop",
+          "muchmorestorage:cherry_worktop",
+          "muchmorestorage:crimson_worktop",
+          "muchmorestorage:dark_oak_worktop",
+          "muchmorestorage:jungle_worktop",
+          "muchmorestorage:mangrove_worktop",
+          "muchmorestorage:oak_worktop",
+          "muchmorestorage:pale_oak_worktop",
+          "muchmorestorage:spruce_worktop",
+          "muchmorestorage:warped_worktop"
+        ],
+        "count": 1,
+        "box": [
+          330,
+          239,
+          140,
+          72
+        ]
+      },
+      "title": "book.muchmorestorage.manual.wood_worktop",
+      "grid": {
+        "at": [
+          40,
+          245
+        ],
+        "cell": 60,
+        "pattern": [
+          "SSS"
+        ]
+      },
+      "key": {
+        "S": {
+          "items": [
+            "minecraft:acacia_slab",
+            "minecraft:bamboo_slab",
+            "minecraft:birch_slab",
+            "minecraft:cherry_slab",
+            "minecraft:crimson_slab",
+            "minecraft:dark_oak_slab",
+            "minecraft:jungle_slab",
+            "minecraft:mangrove_slab",
+            "minecraft:oak_slab",
+            "minecraft:pale_oak_slab",
+            "minecraft:spruce_slab",
+            "minecraft:warped_slab"
+          ],
+          "name": "book.muchmorestorage.manual.wood_slab"
+        }
+      }
+    },
+    {
+      "side": "right",
+      "text": [
+        40,
+        467,
+        580
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:polished_andesite_worktop",
+          "muchmorestorage:polished_diorite_worktop",
+          "muchmorestorage:polished_granite_worktop",
+          "muchmorestorage:smooth_stone_worktop"
+        ],
+        "count": 1,
+        "box": [
+          330,
+          391,
+          140,
+          72
+        ]
+      },
+      "title": "book.muchmorestorage.manual.stone_worktop",
+      "grid": {
+        "at": [
+          40,
+          397
+        ],
+        "cell": 60,
+        "pattern": [
+          "SSS"
+        ]
+      },
+      "key": {
+        "S": {
+          "items": [
+            "minecraft:polished_andesite_slab",
+            "minecraft:polished_diorite_slab",
+            "minecraft:polished_granite_slab",
+            "minecraft:smooth_stone_slab"
+          ],
+          "name": "book.muchmorestorage.manual.stone_slab"
+        }
+      }
+    },
+    {
+      "side": "right",
+      "text": [
+        40,
+        619,
+        580
+      ],
+      "result": {
+        "item": "muchmorestorage:granite_worktop",
+        "count": 1,
+        "box": [
+          330,
+          543,
+          140,
+          72
+        ]
+      },
+      "grid": {
+        "at": [
+          40,
+          549
+        ],
+        "cell": 60,
+        "pattern": [
+          "ADA"
+        ]
+      },
+      "key": {
+        "A": "minecraft:polished_andesite_slab",
+        "D": "minecraft:polished_diorite_slab"
+      }
+    },
+    {
+      "side": "right",
+      "text": [
+        40,
+        771,
+        580
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:black_concrete_worktop",
+          "muchmorestorage:blue_concrete_worktop",
+          "muchmorestorage:brown_concrete_worktop",
+          "muchmorestorage:cyan_concrete_worktop",
+          "muchmorestorage:gray_concrete_worktop",
+          "muchmorestorage:green_concrete_worktop",
+          "muchmorestorage:light_blue_concrete_worktop",
+          "muchmorestorage:light_gray_concrete_worktop",
+          "muchmorestorage:lime_concrete_worktop",
+          "muchmorestorage:magenta_concrete_worktop",
+          "muchmorestorage:orange_concrete_worktop",
+          "muchmorestorage:pink_concrete_worktop",
+          "muchmorestorage:purple_concrete_worktop",
+          "muchmorestorage:red_concrete_worktop",
+          "muchmorestorage:white_concrete_worktop",
+          "muchmorestorage:yellow_concrete_worktop"
+        ],
+        "count": 2,
+        "box": [
+          330,
+          695,
+          140,
+          72
+        ]
+      },
+      "title": "book.muchmorestorage.manual.concrete_worktop",
+      "grid": {
+        "at": [
+          40,
+          701
+        ],
+        "cell": 60,
+        "pattern": [
+          "CCC"
+        ]
+      },
+      "key": {
+        "C": {
+          "items": [
+            "minecraft:black_concrete",
+            "minecraft:blue_concrete",
+            "minecraft:brown_concrete",
+            "minecraft:cyan_concrete",
+            "minecraft:gray_concrete",
+            "minecraft:green_concrete",
+            "minecraft:light_blue_concrete",
+            "minecraft:light_gray_concrete",
+            "minecraft:lime_concrete",
+            "minecraft:magenta_concrete",
+            "minecraft:orange_concrete",
+            "minecraft:pink_concrete",
+            "minecraft:purple_concrete",
+            "minecraft:red_concrete",
+            "minecraft:white_concrete",
+            "minecraft:yellow_concrete"
+          ],
+          "name": "book.muchmorestorage.manual.concrete"
+        }
+      }
+    }
+  ]
 }
