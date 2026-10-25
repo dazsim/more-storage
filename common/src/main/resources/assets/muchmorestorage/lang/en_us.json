@@ -100,5 +100,8 @@
   "finish.muchmorestorage.polished_diorite": "Polished Diorite",
   "finish.muchmorestorage.polished_andesite": "Polished Andesite",
   "item.muchmorestorage.screwdriver": "Screwdriver",
-  "book.muchmorestorage.manual.title": "Much More Storage Manual"
+  "book.muchmorestorage.manual.title": "Much More Storage Manual",
+  "tag.item.muchmorestorage.carcasses": "Carcasses",
+  "tag.item.c.worktops": "Worktops",
+  "tag.item.c.tools.screwdriver": "Screwdrivers"
 }

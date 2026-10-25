@@ -90,6 +90,9 @@ recipe("screwdriver", ["I", "S"], {"I": "#c:ingots/iron", "S": "minecraft:stick"
        unlock=["#c:ingots/iron", "minecraft:stick"])
 lang[f"item.{MOD}.screwdriver"] = "Screwdriver"
 lang[f"book.{MOD}.manual.title"] = "Much More Storage Manual"
+lang[f"tag.item.{MOD}.carcasses"] = "Carcasses"
+lang["tag.item.c.worktops"] = "Worktops"
+lang["tag.item.c.tools.screwdriver"] = "Screwdrivers"
 w(f"{A}/lang/en_us.json", lang)
 
 import gen_manual
