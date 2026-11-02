@@ -232,6 +232,25 @@ for k in ("block", "item", "container"):
     lang[f"{k}.{MOD}.kladkaos"] = "KLADKAOS"
 lang.update({f"tooltip.{MOD}.kladkaos": "Wardrobe, 54 slots and an armour rail",
              f"tooltip.{MOD}.kladkaos.use": "Click with armour to hang it, sneak with an empty hand to swap outfits"})
+# TRULLBORG, a chest on wheels from two panels, four nuggets and the screwdriver that comes back
+special("trullborg")
+for body in BODIES:
+    name = f"{body}_kladkaos_panel"
+    for era, e in ERAS.items():
+        if not has(era, name): continue
+        D = f"{era_root(era)}/data/{MOD}"
+        out = result(era, f"{MOD}:trullborg", nbt={"Body": body}) if e.get("nbt") else result(era, f"{MOD}:trullborg", components={f"{MOD}:body": body})
+        w(f"{D}/{folder(era, 'recipe')}/{body}_trullborg.json", {"type": f"{MOD}:crafting_shapeless_keep_tool", "category": "misc",
+            "ingredients": [ing(era, i) for i in [f"{MOD}:{name}"] * 2 + ["minecraft:iron_nugget"] * 4 + ["#c:tools/screwdriver"]],
+            "keep": ing(era, "#c:tools/screwdriver"), "result": out})
+        advancement(era, f"{D}/{folder(era, 'advancement')}/recipes/misc/{body}_trullborg.json", f"{MOD}:{body}_trullborg", f"{MOD}:{name}")
+for k in ("item", "entity", "container"):
+    lang[f"{k}.{MOD}.trullborg"] = "TRULLBORG"
+lang.update({f"tooltip.{MOD}.trullborg": "Chest on wheels, 18 slots",
+             f"tooltip.{MOD}.trullborg.use": "Walk into it to push, sneak-click to pull, hit it empty to pick it up",
+             f"message.{MOD}.trullborg.pull": "Pulling the TRULLBORG",
+             f"message.{MOD}.trullborg.let_go": "Let go of the TRULLBORG",
+             f"message.{MOD}.trullborg.full": "Empty it first"})
 for d in ["top", "middle", "bottom"]:
     lang[f"container.{MOD}.ladstapel.{d}"] = f"LADSTAPEL, {d} drawer"
 lang.update({f"tooltip.{MOD}.bokwurm": "Bookcase, holds 12 books",

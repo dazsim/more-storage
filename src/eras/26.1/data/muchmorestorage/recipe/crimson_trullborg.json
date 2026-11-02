@@ -1,0 +1,20 @@
+{
+  "type": "muchmorestorage:crafting_shapeless_keep_tool",
+  "category": "misc",
+  "ingredients": [
+    "muchmorestorage:crimson_kladkaos_panel",
+    "muchmorestorage:crimson_kladkaos_panel",
+    "minecraft:iron_nugget",
+    "minecraft:iron_nugget",
+    "minecraft:iron_nugget",
+    "minecraft:iron_nugget",
+    "#c:tools/screwdriver"
+  ],
+  "keep": "#c:tools/screwdriver",
+  "result": {
+    "id": "muchmorestorage:trullborg",
+    "components": {
+      "muchmorestorage:body": "crimson"
+    }
+  }
+}

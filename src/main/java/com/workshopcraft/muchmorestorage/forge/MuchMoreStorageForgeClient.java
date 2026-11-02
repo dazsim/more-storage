@@ -7,6 +7,7 @@ import com.workshopcraft.muchmorestorage.client.v1_21.KubhalaRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.BokwurmRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.LadstapelRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KladkaosRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.TrullborgRenderer;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -24,6 +25,7 @@ public final class MuchMoreStorageForgeClient {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.BOKWURM_BE, BokwurmRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.LADSTAPEL_BE, LadstapelRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.KLADKAOS_BE, KladkaosRenderer::new));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerEntityRenderer(ModContent.TRULLBORG, TrullborgRenderer::new));
     }
 
     // called from the items' initializeClient
