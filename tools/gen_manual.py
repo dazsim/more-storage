@@ -493,9 +493,9 @@ LEGENDS = {"iron_ingot": "Iron Ingot", "iron_nugget": "Iron Nugget", "chest": "W
            "stone_slab": "Smooth Stone or Polished Stone Slab (all one kind)",
            "wood_carcass": "Wooden Carcass", "concrete_carcass": "Concrete Carcass",
            "wood_worktop": "Wooden Worktop", "stone_worktop": "Stone Worktop", "concrete_worktop": "Concrete Worktop",
-           "wool_sakksakk": "SAKKSÄKK (any wool colour)", "string": "String", "wool": "Wool (all one colour)",
+           "wool_sakksakk": "SAKKSAKK (any wool colour)", "string": "String", "wool": "Wool (all one colour)",
            "sugar_cane": "Sugar Cane",
-           "wood_flatpack": "Wooden KUBHÅLA Flat Pack", "concrete_flatpack": "Concrete KUBHÅLA Flat Pack"}
+           "wood_flatpack": "Wooden KUBHALA Flat Pack", "concrete_flatpack": "Concrete KUBHALA Flat Pack"}
 
 def fam(pred):
     return [r for n, r in RECIPES.items() if pred(n, r)]

@@ -181,13 +181,13 @@ for body in BODIES:
     special(name)
     panel = f"minecraft:{body}_planks" if body in WOODS else f"minecraft:{body}"
     recipe(name, ["PPP", "PNP", "PPP"], {"P": panel, "N": "minecraft:iron_nugget"}, 2, unlock=panel)
-    lang[f"item.{MOD}.{name}"] = f"{label(body)} KUBHÅLA Flat Pack"
+    lang[f"item.{MOD}.{name}"] = f"{label(body)} KUBHALA Flat Pack"
 for name, pattern in [("kubhala_drawer", ["S S", "SNS", "SSS"]), ("kubhala_door", ["SS", "SN", "SS"])]:
     w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MOD}:item/{name}"}})
     item_model(name, {"type": "minecraft:model", "model": f"{MOD}:item/{name}"})
     recipe(name, pattern, {"S": "#minecraft:wooden_slabs", "N": "minecraft:iron_nugget"}, unlock="#minecraft:wooden_slabs")
-lang.update({f"block.{MOD}.kubhala": "KUBHÅLA", f"item.{MOD}.kubhala": "KUBHÅLA", f"container.{MOD}.kubhala": "KUBHÅLA",
-             f"item.{MOD}.kubhala_drawer": "KUBHÅLA Drawer Insert", f"item.{MOD}.kubhala_door": "KUBHÅLA Door Insert",
+lang.update({f"block.{MOD}.kubhala": "KUBHALA", f"item.{MOD}.kubhala": "KUBHALA", f"container.{MOD}.kubhala": "KUBHALA",
+             f"item.{MOD}.kubhala_drawer": "KUBHALA Drawer Insert", f"item.{MOD}.kubhala_door": "KUBHALA Door Insert",
              f"tooltip.{MOD}.kubhala": "Cube shelf, holds 9 stacks",
              f"tooltip.{MOD}.kubhala.join": "Joins up with cubes beside, above and below",
              f"tooltip.{MOD}.flatpack": "Place it, then use a screwdriver",
@@ -201,12 +201,12 @@ for c in SAKKSAKKS:
     item_model(name, {"type": "minecraft:model", "model": f"{MOD}:item/{name}"})
     side = "minecraft:sugar_cane" if c == "wicker" else f"minecraft:{c}_wool"
     recipe(name, ["S S", "W W", "WWW"], {"S": "minecraft:string", "W": side}, unlock=side)
-    lang[f"item.{MOD}.{name}"] = f"{label(c)} SAKKSÄKK"
+    lang[f"item.{MOD}.{name}"] = f"{label(c)} SAKKSAKK"
 tag(f"{MOD}/tags/item/sakksakks", [f"{MOD}:{c}_sakksakk" for c in SAKKSAKKS])
 lang.update({f"tooltip.{MOD}.sakksakk": "Right-click to open, 9 slots",
              f"tooltip.{MOD}.sakksakk.used": "%s/%s slots used",
-             f"tooltip.{MOD}.sakksakk.cube": "Use on an empty KUBHÅLA cube, a screwdriver pulls it out",
-             f"tag.item.{MOD}.sakksakks": "SAKKSÄKKs"})
+             f"tooltip.{MOD}.sakksakk.cube": "Use on an empty KUBHALA cube, a screwdriver pulls it out",
+             f"tag.item.{MOD}.sakksakks": "SAKKSAKKs"})
 lang[f"book.{MOD}.manual.title"] = "Much More Storage Manual"
 lang[f"tag.item.{MOD}.carcasses"] = "Carcasses"
 lang["tag.item.c.worktops"] = "Worktops"
