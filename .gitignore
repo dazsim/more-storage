@@ -28,3 +28,4 @@ runs
 .vscode
 .DS_Store
 logs
+__pycache__/

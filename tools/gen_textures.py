@@ -186,6 +186,42 @@ def screwdriver():
     px[14, 1] = OUTLINE
     return im
 
+def insert(rng, drawer):
+    # an insert seen from the front, white with a steel handle
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = im.load()
+    OUTLINE = hexc("3a352e")
+    y0 = 4 if drawer else 1
+    for x in range(2, 14):
+        for y in range(y0, 15):
+            r = rng.random()
+            px[x, y] = hexc(WHITE[1] if r < 0.8 else WHITE[0] if r < 0.9 else WHITE[2])
+    for x in range(2, 14):
+        px[x, y0] = OUTLINE
+        px[x, 14] = OUTLINE
+        px[x, 13] = hexc(WHITE[4])
+    for y in range(y0, 15):
+        px[2, y] = OUTLINE
+        px[13, y] = OUTLINE
+        px[12, y] = hexc(WHITE[3]) if y0 < y < 14 else px[12, y]
+    if drawer:
+        # the sides of the box show above the front
+        for x in range(3, 13):
+            px[x, 2] = OUTLINE
+            px[x, 3] = hexc(WHITE[3])
+        px[3, 3] = OUTLINE
+        px[12, 3] = OUTLINE
+        for x in range(6, 10):
+            px[x, 7] = hexc(STEEL[1])
+            px[x, 8] = hexc(STEEL[3])
+    else:
+        for y in range(6, 10):
+            px[4, y] = hexc(STEEL[1])
+            px[5, y] = hexc(STEEL[3])
+        px[12, 3] = hexc(STEEL[4])
+        px[12, 11] = hexc(STEEL[4])
+    return im
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     for name in os.listdir(OUT):
@@ -204,5 +240,7 @@ def main():
     handle().save(f"{OUT}/cupboard_handle.png")
     os.makedirs(ITEMS, exist_ok=True)
     screwdriver().save(f"{ITEMS}/screwdriver.png")
+    insert(random.Random("drawer"), True).save(f"{ITEMS}/kubhala_drawer.png")
+    insert(random.Random("door"), False).save(f"{ITEMS}/kubhala_door.png")
 
 main()

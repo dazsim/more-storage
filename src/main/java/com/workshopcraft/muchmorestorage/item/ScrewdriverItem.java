@@ -2,6 +2,9 @@ package com.workshopcraft.muchmorestorage.item;
 
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
+import com.workshopcraft.muchmorestorage.block.Insert;
+import com.workshopcraft.muchmorestorage.block.KubhalaBlock;
+import com.workshopcraft.muchmorestorage.block.KubhalaBlockEntity;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -22,6 +25,7 @@ public class ScrewdriverItem extends Item {
     public static boolean use(Level level, BlockPos pos, Player player, ItemStack held) {
         if (!held.is(ModContent.SCREWDRIVERS) || player.isSpectator()) return false;
         BlockState state = level.getBlockState(pos);
+        if (state.getBlock() instanceof KubhalaBlock) return kubhala(level, pos, player, state);
         if (!(state.getBlock() instanceof CupboardBlock) || !(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return false;
         if (!player.mayBuild()) return false;
         if (level.isClientSide()) return true;
@@ -42,6 +46,24 @@ public class ScrewdriverItem extends Item {
         } else {
             level.setBlock(pos, state.cycle(CupboardBlock.HINGE), 3);
             click(level, pos, 1.6F);
+        }
+        return true;
+    }
+
+    private static boolean kubhala(Level level, BlockPos pos, Player player, BlockState state) {
+        boolean sneaking = player.isSecondaryUseActive();
+        if (!KubhalaBlock.screwdriverActs(state, sneaking) || !player.mayBuild()
+                || !(level.getBlockEntity(pos) instanceof KubhalaBlockEntity be)) return false;
+        if (level.isClientSide()) return true;
+        boolean assembled = state.getValue(KubhalaBlock.ASSEMBLED);
+        boolean popping = assembled && state.getValue(KubhalaBlock.INSERT) != Insert.NONE && (sneaking || state.getValue(KubhalaBlock.FITTED));
+        if (!assembled && be.settleEnd > 0) return true;
+        KubhalaBlock.screwdriver(level, pos, state, be, sneaking);
+        if (popping) {
+            click(level, pos, 1.2F);
+        } else {
+            click(level, pos, 1.4F);
+            ratchet(level, pos, assembled ? 1.3F : 1.6F);
         }
         return true;
     }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PNP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:gray_concrete",
+    "N": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "muchmorestorage:gray_concrete_kubhala_flatpack",
+    "count": 2
+  }
+}

@@ -1,0 +1,275 @@
+{
+  "section": "kubhala",
+  "sort": 7,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/kubhala_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/kubhala_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/kubhala_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/kubhala_r_stand.png",
+  "drawn_recipes": [
+    {
+      "side": "left",
+      "text": [
+        50,
+        712,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:acacia_kubhala_flatpack",
+          "muchmorestorage:bamboo_kubhala_flatpack",
+          "muchmorestorage:birch_kubhala_flatpack",
+          "muchmorestorage:cherry_kubhala_flatpack",
+          "muchmorestorage:crimson_kubhala_flatpack",
+          "muchmorestorage:dark_oak_kubhala_flatpack",
+          "muchmorestorage:jungle_kubhala_flatpack",
+          "muchmorestorage:mangrove_kubhala_flatpack",
+          "muchmorestorage:oak_kubhala_flatpack",
+          "muchmorestorage:spruce_kubhala_flatpack",
+          "muchmorestorage:warped_kubhala_flatpack"
+        ],
+        "count": 2,
+        "box": [
+          410,
+          440,
+          140,
+          140
+        ]
+      },
+      "title": "book.muchmorestorage.manual.wood_flatpack",
+      "grid": {
+        "at": [
+          50,
+          410
+        ],
+        "cell": 70,
+        "pattern": [
+          "PPP",
+          "PNP",
+          "PPP"
+        ]
+      },
+      "key": {
+        "P": {
+          "items": [
+            "minecraft:acacia_planks",
+            "minecraft:bamboo_planks",
+            "minecraft:birch_planks",
+            "minecraft:cherry_planks",
+            "minecraft:crimson_planks",
+            "minecraft:dark_oak_planks",
+            "minecraft:jungle_planks",
+            "minecraft:mangrove_planks",
+            "minecraft:oak_planks",
+            "minecraft:spruce_planks",
+            "minecraft:warped_planks"
+          ],
+          "name": "book.muchmorestorage.manual.planks"
+        },
+        "N": {
+          "item": "minecraft:iron_nugget",
+          "name": "book.muchmorestorage.manual.iron_nugget"
+        }
+      },
+      "hover": [
+        {
+          "box": [
+            66,
+            636,
+            48,
+            48
+          ],
+          "item": {
+            "items": [
+              "minecraft:acacia_planks",
+              "minecraft:bamboo_planks",
+              "minecraft:birch_planks",
+              "minecraft:cherry_planks",
+              "minecraft:crimson_planks",
+              "minecraft:dark_oak_planks",
+              "minecraft:jungle_planks",
+              "minecraft:mangrove_planks",
+              "minecraft:oak_planks",
+              "minecraft:spruce_planks",
+              "minecraft:warped_planks"
+            ],
+            "name": "book.muchmorestorage.manual.planks"
+          }
+        },
+        {
+          "box": [
+            166,
+            636,
+            48,
+            48
+          ],
+          "item": {
+            "items": [
+              "minecraft:black_concrete",
+              "minecraft:blue_concrete",
+              "minecraft:brown_concrete",
+              "minecraft:cyan_concrete",
+              "minecraft:gray_concrete",
+              "minecraft:green_concrete",
+              "minecraft:light_blue_concrete",
+              "minecraft:light_gray_concrete",
+              "minecraft:lime_concrete",
+              "minecraft:magenta_concrete",
+              "minecraft:orange_concrete",
+              "minecraft:pink_concrete",
+              "minecraft:purple_concrete",
+              "minecraft:red_concrete",
+              "minecraft:white_concrete",
+              "minecraft:yellow_concrete"
+            ],
+            "name": "book.muchmorestorage.manual.concrete"
+          }
+        }
+      ]
+    },
+    {
+      "side": "left",
+      "text": [
+        50,
+        772,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:black_concrete_kubhala_flatpack",
+          "muchmorestorage:blue_concrete_kubhala_flatpack",
+          "muchmorestorage:brown_concrete_kubhala_flatpack",
+          "muchmorestorage:cyan_concrete_kubhala_flatpack",
+          "muchmorestorage:gray_concrete_kubhala_flatpack",
+          "muchmorestorage:green_concrete_kubhala_flatpack",
+          "muchmorestorage:light_blue_concrete_kubhala_flatpack",
+          "muchmorestorage:light_gray_concrete_kubhala_flatpack",
+          "muchmorestorage:lime_concrete_kubhala_flatpack",
+          "muchmorestorage:magenta_concrete_kubhala_flatpack",
+          "muchmorestorage:orange_concrete_kubhala_flatpack",
+          "muchmorestorage:pink_concrete_kubhala_flatpack",
+          "muchmorestorage:purple_concrete_kubhala_flatpack",
+          "muchmorestorage:red_concrete_kubhala_flatpack",
+          "muchmorestorage:white_concrete_kubhala_flatpack",
+          "muchmorestorage:yellow_concrete_kubhala_flatpack"
+        ],
+        "count": 2,
+        "box": [
+          410,
+          440,
+          140,
+          140
+        ]
+      },
+      "title": "book.muchmorestorage.manual.concrete_flatpack",
+      "ingredients": [
+        {
+          "items": [
+            "minecraft:black_concrete",
+            "minecraft:blue_concrete",
+            "minecraft:brown_concrete",
+            "minecraft:cyan_concrete",
+            "minecraft:gray_concrete",
+            "minecraft:green_concrete",
+            "minecraft:light_blue_concrete",
+            "minecraft:light_gray_concrete",
+            "minecraft:lime_concrete",
+            "minecraft:magenta_concrete",
+            "minecraft:orange_concrete",
+            "minecraft:pink_concrete",
+            "minecraft:purple_concrete",
+            "minecraft:red_concrete",
+            "minecraft:white_concrete",
+            "minecraft:yellow_concrete"
+          ],
+          "name": "book.muchmorestorage.manual.concrete",
+          "count": 8
+        },
+        {
+          "item": "minecraft:iron_nugget",
+          "name": "book.muchmorestorage.manual.iron_nugget",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "side": "right",
+      "text": [
+        50,
+        240,
+        560
+      ],
+      "result": {
+        "item": "muchmorestorage:kubhala_drawer",
+        "count": 1,
+        "box": [
+          330,
+          50,
+          200,
+          168
+        ]
+      },
+      "grid": {
+        "at": [
+          50,
+          50
+        ],
+        "cell": 56,
+        "pattern": [
+          "S S",
+          "SNS",
+          "SSS"
+        ]
+      },
+      "key": {
+        "S": {
+          "item": "#minecraft:wooden_slabs",
+          "name": "book.muchmorestorage.manual.wood_slab"
+        },
+        "N": {
+          "item": "minecraft:iron_nugget",
+          "name": "book.muchmorestorage.manual.iron_nugget"
+        }
+      }
+    },
+    {
+      "side": "right",
+      "text": [
+        50,
+        490,
+        560
+      ],
+      "result": {
+        "item": "muchmorestorage:kubhala_door",
+        "count": 1,
+        "box": [
+          330,
+          300,
+          200,
+          168
+        ]
+      },
+      "grid": {
+        "at": [
+          50,
+          300
+        ],
+        "cell": 56,
+        "pattern": [
+          "SS",
+          "SN",
+          "SS"
+        ]
+      },
+      "key": {
+        "S": {
+          "item": "#minecraft:wooden_slabs",
+          "name": "book.muchmorestorage.manual.wood_slab"
+        },
+        "N": {
+          "item": "minecraft:iron_nugget",
+          "name": "book.muchmorestorage.manual.iron_nugget"
+        }
+      }
+    }
+  ]
+}

@@ -6,10 +6,12 @@ import com.workshopcraft.muchmorestorage.registry.ModContent;
 //? if >=26.1 {
 import com.workshopcraft.muchmorestorage.client.CupboardItemRenderer;
 import com.workshopcraft.muchmorestorage.client.CupboardRenderer;
+import com.workshopcraft.muchmorestorage.client.KubhalaRenderer;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 //?} else {
 /^import com.workshopcraft.muchmorestorage.client.v1_21.CupboardItemRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.CupboardRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.KubhalaRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
@@ -24,6 +26,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 public class MuchMoreStorageNeoForgeClient {
     public MuchMoreStorageNeoForgeClient(IEventBus modBus) {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.CUPBOARD_BE, CupboardRenderer::new));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.KUBHALA_BE, KubhalaRenderer::new));
         //? if >=26.1 {
         modBus.addListener((RegisterSpecialModelRendererEvent e) -> e.register(MuchMoreStorage.id("cupboard"), CupboardItemRenderer.Unbaked.MAP_CODEC));
         //?} else {

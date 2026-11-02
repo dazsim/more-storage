@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PNP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:birch_planks",
+    "N": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "muchmorestorage:birch_kubhala_flatpack",
+    "count": 2
+  }
+}

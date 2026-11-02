@@ -170,6 +170,29 @@ item_model("screwdriver", {"type": "minecraft:model", "model": f"{MOD}:item/scre
 recipe("screwdriver", ["I", "S"], {"I": "#c:ingots/iron", "S": "minecraft:stick"}, category="tools",
        unlock=["#c:ingots/iron", "minecraft:stick"])
 lang[f"item.{MOD}.screwdriver"] = "Screwdriver"
+
+# KUBHÅLA cube shelf, the renderer draws it like the cupboard
+w(f"{A}/blockstates/kubhala.json", {"variants": {
+    "concrete=false": {"model": f"{MOD}:block/cupboard_wood"},
+    "concrete=true": {"model": f"{MOD}:block/cupboard_concrete"}}})
+special("kubhala")
+for body in BODIES:
+    name = f"{body}_kubhala_flatpack"
+    special(name)
+    panel = f"minecraft:{body}_planks" if body in WOODS else f"minecraft:{body}"
+    recipe(name, ["PPP", "PNP", "PPP"], {"P": panel, "N": "minecraft:iron_nugget"}, 2, unlock=panel)
+    lang[f"item.{MOD}.{name}"] = f"{label(body)} KUBHÅLA Flat Pack"
+for name, pattern in [("kubhala_drawer", ["S S", "SNS", "SSS"]), ("kubhala_door", ["SS", "SN", "SS"])]:
+    w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MOD}:item/{name}"}})
+    item_model(name, {"type": "minecraft:model", "model": f"{MOD}:item/{name}"})
+    recipe(name, pattern, {"S": "#minecraft:wooden_slabs", "N": "minecraft:iron_nugget"}, unlock="#minecraft:wooden_slabs")
+lang.update({f"block.{MOD}.kubhala": "KUBHÅLA", f"item.{MOD}.kubhala": "KUBHÅLA", f"container.{MOD}.kubhala": "KUBHÅLA",
+             f"item.{MOD}.kubhala_drawer": "KUBHÅLA Drawer Insert", f"item.{MOD}.kubhala_door": "KUBHÅLA Door Insert",
+             f"tooltip.{MOD}.kubhala": "Cube shelf, holds 9 stacks",
+             f"tooltip.{MOD}.kubhala.join": "Joins up with cubes beside, above and below",
+             f"tooltip.{MOD}.flatpack": "Place it, then use a screwdriver",
+             f"tooltip.{MOD}.insert": "Use on an empty cube, then fix with a screwdriver",
+             f"tooltip.{MOD}.insert.out": "A screwdriver pops it back out"})
 lang[f"book.{MOD}.manual.title"] = "Much More Storage Manual"
 lang[f"tag.item.{MOD}.carcasses"] = "Carcasses"
 lang["tag.item.c.worktops"] = "Worktops"

@@ -5,6 +5,9 @@ import com.mojang.serialization.Codec;
 import com.workshopcraft.muchmorestorage.MuchMoreStorage;
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
+import com.workshopcraft.muchmorestorage.block.Insert;
+import com.workshopcraft.muchmorestorage.block.KubhalaBlock;
+import com.workshopcraft.muchmorestorage.block.KubhalaBlockEntity;
 //? if >=26.1 {
 import com.workshopcraft.muchmorestorage.crafting.KeepToolShapelessRecipe;
 //?} else if >=1.21 {
@@ -13,6 +16,9 @@ import com.workshopcraft.muchmorestorage.crafting.KeepToolShapelessRecipe;
 /*import com.workshopcraft.muchmorestorage.crafting.v1_20.KeepToolShapelessRecipe;*/
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.CupboardItem;
+import com.workshopcraft.muchmorestorage.item.FlatpackItem;
+import com.workshopcraft.muchmorestorage.item.InsertItem;
+import com.workshopcraft.muchmorestorage.item.KubhalaItem;
 import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
 import net.minecraft.core.Registry;
@@ -51,6 +57,12 @@ public final class ModContent {
     public static CupboardItem CUPBOARD_ITEM;
     public static ScrewdriverItem SCREWDRIVER;
     public static BlockEntityType<CupboardBlockEntity> CUPBOARD_BE;
+    public static final Map<String, FlatpackItem> FLATPACKS = new LinkedHashMap<>();
+    public static KubhalaBlock KUBHALA;
+    public static KubhalaItem KUBHALA_ITEM;
+    public static InsertItem DRAWER_INSERT;
+    public static InsertItem DOOR_INSERT;
+    public static BlockEntityType<KubhalaBlockEntity> KUBHALA_BE;
     //? if >=1.20.5 {
     public static DataComponentType<String> BODY;
     public static DataComponentType<String> TOP;
@@ -61,6 +73,8 @@ public final class ModContent {
             {"oak", "oak"}, {"white_concrete", "granite"}, {"spruce", "smooth_stone"}, {"dark_oak", "polished_andesite"},
             {"light_blue_concrete", "polished_diorite"}, {"black_concrete", "white_concrete"}, {"cherry", "cherry"},
             {"green_concrete", "oak"}, {"birch", "polished_granite"}};
+
+    private static final String[] KUBHALA_EXAMPLES = {"white_concrete", "black_concrete", "oak", "birch", "dark_oak"};
 
     private ModContent() {}
 
@@ -82,6 +96,14 @@ public final class ModContent {
                 .strength(2.5F)
                 .noOcclusion());
         r.accept(id, CUPBOARD);
+        Identifier kid = MuchMoreStorage.id("kubhala");
+        KUBHALA = new KubhalaBlock(BlockBehaviour.Properties.of()
+                //? if >=1.21.2
+                .setId(ResourceKey.create(Registries.BLOCK, kid))
+                .mapColor(s -> s.getValue(KubhalaBlock.CONCRETE) ? MapColor.STONE : MapColor.WOOD)
+                .strength(2.0F)
+                .noOcclusion());
+        r.accept(kid, KUBHALA);
     }
 
     private static Item.Properties item(String name) {
@@ -110,6 +132,20 @@ public final class ModContent {
         //?} else
         /*CUPBOARD_ITEM = new CupboardItem(CUPBOARD, item("cupboard"));*/
         r.accept(MuchMoreStorage.id("cupboard"), CUPBOARD_ITEM);
+        for (String body : Finishes.BODIES) {
+            FlatpackItem item = new FlatpackItem(KUBHALA, body, item(body + "_kubhala_flatpack"));
+            FLATPACKS.put(body, item);
+            r.accept(MuchMoreStorage.id(body + "_kubhala_flatpack"), item);
+        }
+        DRAWER_INSERT = new InsertItem(Insert.DRAWER, item("kubhala_drawer"));
+        r.accept(MuchMoreStorage.id("kubhala_drawer"), DRAWER_INSERT);
+        DOOR_INSERT = new InsertItem(Insert.DOOR, item("kubhala_door"));
+        r.accept(MuchMoreStorage.id("kubhala_door"), DOOR_INSERT);
+        //? if >=1.20.5 {
+        KUBHALA_ITEM = new KubhalaItem(KUBHALA, item("kubhala").component(BODY, "white_concrete"));
+        //?} else
+        /*KUBHALA_ITEM = new KubhalaItem(KUBHALA, item("kubhala"));*/
+        r.accept(MuchMoreStorage.id("kubhala"), KUBHALA_ITEM);
     }
 
     public static final TagKey<Item> WORKTOP_TAG = TagKey.create(Registries.ITEM, MuchMoreStorage.id("c", "worktops"));
@@ -141,6 +177,23 @@ public final class ModContent {
         stack.getOrCreateTag().putString("Top", top);
         *///?}
         return stack;
+    }
+
+    public static ItemStack kubhala(String body) {
+        ItemStack stack = new ItemStack(KUBHALA_ITEM);
+        //? if >=1.20.5 {
+        stack.set(BODY, body);
+        //?} else
+        /*stack.getOrCreateTag().putString("Body", body);*/
+        return stack;
+    }
+
+    public static ItemStack insert(Insert kind) {
+        return switch (kind) {
+            case DRAWER -> new ItemStack(DRAWER_INSERT);
+            case DOOR -> new ItemStack(DOOR_INSERT);
+            default -> ItemStack.EMPTY;
+        };
     }
 
     public static String bodyOf(ItemStack stack) {
@@ -186,6 +239,11 @@ public final class ModContent {
         //?} else
         /*CUPBOARD_BE = BlockEntityType.Builder.of(CupboardBlockEntity::new, CUPBOARD).build(null);*/
         r.accept(MuchMoreStorage.id("cupboard"), CUPBOARD_BE);
+        //? if >=1.21.2 {
+        KUBHALA_BE = new BlockEntityType<>(KubhalaBlockEntity::new, Set.of(KUBHALA));
+        //?} else
+        /*KUBHALA_BE = BlockEntityType.Builder.of(KubhalaBlockEntity::new, KUBHALA).build(null);*/
+        r.accept(MuchMoreStorage.id("kubhala"), KUBHALA_BE);
     }
 
     public static void registerCreativeTabs(BiConsumer<Identifier, CreativeModeTab> r) {
@@ -197,6 +255,10 @@ public final class ModContent {
                     for (String[] e : EXAMPLES) out.accept(cupboard(e[0], e[1]));
                     CARCASSES.values().forEach(out::accept);
                     WORKTOPS.values().forEach(out::accept);
+                    for (String body : KUBHALA_EXAMPLES) out.accept(kubhala(body));
+                    out.accept(DRAWER_INSERT);
+                    out.accept(DOOR_INSERT);
+                    FLATPACKS.values().forEach(out::accept);
                 })
                 .build();
         r.accept(MuchMoreStorage.id("main"), TAB);

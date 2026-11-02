@@ -4,6 +4,8 @@ package com.workshopcraft.muchmorestorage.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
+import com.workshopcraft.muchmorestorage.item.FlatpackItem;
+import com.workshopcraft.muchmorestorage.item.KubhalaItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.client.renderer.Sheets;
@@ -18,12 +20,16 @@ import java.util.function.Consumer;
 
 // carcasses, worktops and cupboards all draw their finish from the stack
 public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRenderer.Look> {
-    public record Look(String body, String top) {}
+    public record Look(String body, String top, int kind) {
+        Look(String body, String top) { this(body, top, 0); }
+    }
 
     @Override
     public @Nullable Look extractArgument(ItemStack stack) {
         if (stack.getItem() instanceof CarcassItem carcass) return new Look(carcass.body, "");
         if (stack.getItem() instanceof WorktopItem worktop) return new Look("", worktop.top);
+        if (stack.getItem() instanceof FlatpackItem pack) return new Look(pack.body, "", 1);
+        if (stack.getItem() instanceof KubhalaItem) return new Look(ModContent.bodyOf(stack), "", 2);
         return new Look(ModContent.bodyOf(stack), ModContent.cupboardTopOf(stack));
     }
 
@@ -40,6 +46,8 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
                 return;
             }
             CupboardModel.Body body = CupboardModel.Body.of(look.body());
+            if (look.kind() == 1) { KubhalaModel.flatpack(q, body); return; }
+            if (look.kind() == 2) { KubhalaModel.frame(q, body, KubhalaModel.Join.NONE); return; }
             CupboardModel.carcass(q, body);
             CupboardModel.door(q, body, false);
             if (!look.top().isEmpty()) CupboardModel.worktop(q, CupboardModel.top(look.top()));

@@ -32,6 +32,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChestLidController;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
@@ -78,11 +79,16 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         super(ModContent.CUPBOARD_BE, pos, state);
     }
 
+    protected CupboardBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int size) {
+        super(type, pos, state);
+        items = NonNullList.withSize(size, ItemStack.EMPTY);
+    }
+
     public static void clientTick(Level level, BlockPos pos, BlockState state, CupboardBlockEntity be) {
         be.door.tickLid();
     }
 
-    private void sound(SoundEvent event) {
+    protected void sound(SoundEvent event) {
         if (level == null) return;
         BlockPos p = getBlockPos();
         level.playSound(null, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, event, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 1.0F);
@@ -102,7 +108,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         if (level != null) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
     }
 
-    private boolean assembled() {
+    protected boolean assembled() {
         return getBlockState().getBlock() instanceof CupboardBlock && getBlockState().getValue(CupboardBlock.ASSEMBLED);
     }
 

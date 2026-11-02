@@ -32,6 +32,18 @@ Minecraft 1.20.1 (Forge and Fabric), 1.21.1, 26.1 to 26.1.2 and 26.3 (NeoForge a
 
 1.0.3: the manual is book + any screwdriver + chest and the screwdriver comes back, so it no longer clashes with the More Foods knife. It is named by Simple Books, and the screwdriver recipe shows once you have iron or a stick.
 
+1.1.0: the KUBHÅLA cube shelf with drawer and door inserts.
+
+## KUBHÅLA cube shelf
+
+A square open shelf that holds 9 stacks. Cubes next to each other, above or below, facing the same way join into one grid with thin dividers. An open cube shows what is inside.
+
+1. Craft a flat pack: eight planks or concrete around an iron nugget (makes two). Every wood and concrete colour works.
+2. Place it and use a screwdriver on it. The boards stand up and it becomes a cube.
+3. Craft a drawer (slabs around an iron nugget, open at the top) or a door (two columns of slabs with a nugget). Use it on a cube, then screw it in with a screwdriver. A drawer slides out and a door swings open when you use the cube; the contents are hidden while it is closed.
+
+Screwdriver on a cube with an insert pops the insert out and the contents stay. Sneaking with a screwdriver on a bare cube takes it back to a flat pack and drops the contents. Breaking a cube drops a cube item that keeps its finish, plus the insert and contents.
+
 ## Building
 
 The build uses [Stonecutter](https://stonecutter.kikugie.dev/) so every Minecraft version and loader comes from the one source tree in `src`. Version specific values are in `stonecutter.properties.toml` and the versions built are listed in `settings.gradle.kts`.

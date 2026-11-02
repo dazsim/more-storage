@@ -255,6 +255,36 @@ def cupboard(sc, at=(0, 0, 0), top=True, loose=0.0, door=0.0, hinge="left", body
               else specks(top_face, 0, 16, 0, 16, 16, 9, 10) if finish == "stone" else specks(top_face, 0, 16, 0, 16, 16, 3, 11))
         sc.box((0, 14, 0), (16, 16, 16), txf, marks=tm, bias=2)
 
+def kubhala(sc, at=(0, 0, 0), insert=None, open=0.0, loose=0.0, items=0, body="wood"):
+    """One cube shelf, open to +z. insert is None, "drawer" or "door"."""
+    base = [move(*at)]
+    xside = lambda z, y, x: (x, y, z)
+    mk = grain(xside, 1, 15, 2, 14, 16, 2, 5) if body == "wood" else specks(xside, 0, 16, 2, 14, 16, 4, 6)
+    sc.box((0, 0, 0), (16, 16, 1), base, width=2.0, bias=-4)
+    sc.box((0, 0, 0), (2, 16, 16), base)
+    sc.box((14, 0, 0), (16, 16, 16), base, marks=mk)
+    sc.box((2, 0, 1), (14, 2, 16), base, width=2.0, bias=-2)
+    sc.box((2, 14, 1), (14, 16, 16), base, width=2.0)
+    for i, x in enumerate([4, 9, 6][:items]):
+        item_cube(None, sc, (x + at[0], 2 + at[1], 6 + 2 * i + at[2]), 3.5)
+    if not insert: return
+    lxf = [rot("y", 6 * loose, (8, 8, 16)), move(0, 0, 2 * loose)]
+    if insert == "drawer":
+        dxf = lxf + [move(0, 0, 9 * open)] + base
+        sc.box((2.3, 2.3, 15), (13.7, 13.7, 16), dxf, bias=3)
+        sc.box((5.5, 10, 16), (10.5, 11, 17), dxf, width=1.8, bias=3.5)
+        if open > 0:
+            sc.box((3, 2.3, 3), (13, 10, 15), dxf, width=1.8, bias=-1)
+    else:
+        dxf = lxf + [rot("y", 100 * open, (13.7, 0, 16))] + base
+        sc.box((2.3, 2.3, 15), (13.7, 13.7, 16), dxf, bias=3)
+        sc.box((3.5, 5.5, 16), (4.5, 10.5, 17), dxf, width=1.8, bias=3.5)
+
+def flatpack(sc, at=(0, 0, 0)):
+    base = [move(*at)]
+    for i, (dx, dz, a) in enumerate([(0, 0, 0), (0.6, -0.4, 4), (-0.5, 0.5, -3), (0.3, 0.2, 2)]):
+        sc.box((1, i * 1.5, 1), (15, i * 1.5 + 1.5, 15), [rot("y", a, (8, 0, 8)), move(dx, 0, dz)] + base, width=2.0, bias=i)
+
 def worktop(sc, at=(0, 0, 0), finish="wood", xf=()):
     top_face = lambda x, z, y: (x, y, z)
     tm = (grain(top_face, 1, 15, 1, 15, 2, 3, 9, vertical=False) if finish == "wood"
@@ -348,6 +378,10 @@ def cell_icon(pg, kind, x, y, s):
         pg.line((x0 + 4, cy + 10), (x1 - 8, cy + 10), 1.6)
         pg.line((x1 - 2, cy - 6), (x1 - 2, cy - 2), 1.6)
         pg.line((x1 - 2, cy - 2), (x1 - 8, cy + 10), 1.6)
+    elif kind == "nugget":
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2 + 2
+        pg.path([(cx - 8, cy + 2), (cx - 4, cy - 5), (cx + 5, cy - 6), (cx + 9, cy + 1), (cx + 3, cy + 6), (cx - 5, cy + 6)], 1.8, closed=True)
+        pg.line((cx - 2, cy - 2), (cx + 3, cy - 3), 1.1)
     elif kind == "stick":
         pg.line((x0 + 2, y1 - 2), (x1 - 2, y0 + 2), 3.2)
         pg.line((x0 + (x1 - x0) * 0.45, y0 + (y1 - y0) * 0.55), (x0 + (x1 - x0) * 0.4, y0 + (y1 - y0) * 0.4), 1.6)
@@ -429,11 +463,12 @@ def drawn(pg, family, text, result_box, title=None, names=None, at=None, cell=No
 def legend(name):
     return f"book.{MOD}.manual.{name}"
 
-LEGENDS = {"iron_ingot": "Iron Ingot", "chest": "Wooden Chest", "planks": "Planks (all one kind)",
+LEGENDS = {"iron_ingot": "Iron Ingot", "iron_nugget": "Iron Nugget", "chest": "Wooden Chest", "planks": "Planks (all one kind)",
            "concrete": "Concrete (all one colour)", "wood_slab": "Wooden Slab (all one kind)",
            "stone_slab": "Smooth Stone or Polished Stone Slab (all one kind)",
            "wood_carcass": "Wooden Carcass", "concrete_carcass": "Concrete Carcass",
-           "wood_worktop": "Wooden Worktop", "stone_worktop": "Stone Worktop", "concrete_worktop": "Concrete Worktop"}
+           "wood_worktop": "Wooden Worktop", "stone_worktop": "Stone Worktop", "concrete_worktop": "Concrete Worktop",
+           "wood_flatpack": "Wooden KUBHÅLA Flat Pack", "concrete_flatpack": "Concrete KUBHÅLA Flat Pack"}
 
 def fam(pred):
     return [r for n, r in RECIPES.items() if pred(n, r)]
@@ -647,6 +682,62 @@ def page_loose(pg):
     count(pg, (260, 860), 1, 30)
     count(pg, (560, 860), 1, 30)
 
+def page_kubhala(pg):
+    sc = Scene(0, 0, 8).at(130, 200, (0, 0, 0), (16, 6, 16))
+    flatpack(sc)
+    sc.draw(pg)
+    pg.arrow([(230, 200), (300, 200)], 3.0)
+    screwdriver(pg, (360, 110), -60, 0.7)
+    twist(pg, (356, 70), 26, 8)
+    s1 = Scene(0, 0, 8).at(480, 210)
+    kubhala(s1, items=2)
+    s1.draw(pg)
+    count(pg, (560, 330), 9, 30)
+    grid(pg, 50, 410, 70, [["plank"] * 3, ["plank", "nugget", "plank"], ["plank"] * 3])
+    pg.arrow([(285, 515), (350, 515)], 3.0)
+    s2 = Scene(0, 0, 7).at(480, 515, (0, 0, 0), (16, 6, 16))
+    flatpack(s2)
+    s2.draw(pg)
+    count(pg, (560, 610), 2, 30)
+    cell_icon(pg, "plank", 60, 630, 60)
+    pg.text((140, 678), "/", 40, "ms")
+    cell_icon(pg, "concrete", 160, 630, 60)
+    packs = lambda wood: fam(lambda n, r: n.endswith("_kubhala_flatpack") and is_wood(r["key"]["P"]) == wood)
+    names = {"N": legend("iron_nugget")}
+    drawn(pg, packs(True), [50, 712, 560], [410, 440, 140, 140], legend("wood_flatpack"),
+          dict(names, P=legend("planks")), at=[50, 410], cell=70)
+    drawn(pg, packs(False), [50, 772, 560], [410, 440, 140, 140], legend("concrete_flatpack"),
+          dict(names, P=legend("concrete")))
+    pg.recipes[-2]["hover"] = [{"box": [66, 636, 48, 48], "item": pg.recipes[-2]["key"]["P"]},
+                               {"box": [166, 636, 48, 48], "item": {k: v for k, v in pg.recipes[-1]["ingredients"][0].items() if k != "count"}}]
+
+def page_inserts(pg):
+    rows = [("kubhala_drawer", [["slab", None, "slab"], ["slab", "nugget", "slab"], ["slab"] * 3], "drawer"),
+            ("kubhala_door", [["slab", "slab"], ["slab", "nugget"], ["slab", "slab"]], "door")]
+    for i, (name, cells, kind) in enumerate(rows):
+        y = 50 + i * 250
+        grid(pg, 50, y, 56, cells)
+        pg.arrow([(250, y + 84), (310, y + 84)], 3.0)
+        sc = Scene(0, 0, 6).at(430, y + 84)
+        kubhala(sc, insert=kind, open=0.6)
+        sc.draw(pg)
+        drawn(pg, fam(lambda n, r: n == name), [50, y + 190, 560], [330, y, 200, 168], None,
+              {"S": legend("wood_slab"), "N": legend("iron_nugget")}, at=[50, y], cell=56)
+    pg.line((60, 545), (584, 545), 1.6)
+    sc = Scene(0, 0, 7).at(250, 720, (0, 0, 0), (32, 16, 20))
+    kubhala(sc, insert="drawer", loose=1.0)
+    kubhala(sc, (16, 0, 0))
+    sc.draw(pg)
+    tip = sc.proj((8, 16, 16))
+    screwdriver(pg, (tip[0] + 4, tip[1] - 50), -95, 1.0, 2.4)
+    twist(pg, (tip[0] + 2, tip[1] - 110), 26, 8)
+    screwdriver(pg, (520, 640), -60, 0.7)
+    pg.arrow([(470, 700), (540, 780)], 2.6, 12)
+    s3 = Scene(0, 0, 4).at(560, 820, (2, 2, 15), (14, 14, 17))
+    s3.box((2.3, 2.3, 15), (13.7, 13.7, 16), [], bias=3)
+    s3.box((5.5, 10, 16), (10.5, 11, 17), [], width=1.8, bias=3.5)
+    s3.draw(pg)
+
 SPREADS = [
     ("cover", page_cover, page_tools),
     ("parts", page_parts_carcass, page_parts_worktop),
@@ -655,9 +746,10 @@ SPREADS = [
     ("finishes", page_bodies, page_mix),
     ("hinge", page_hinge, page_break),
     ("apart", page_apart, page_loose),
+    ("kubhala", page_kubhala, page_inserts),
 ]
 SECTIONS = {"cover": "cover", "parts": "parts", "steps_a": "assembly", "steps_b": "assembly", "finishes": "assembly",
-            "hinge": "use", "apart": "apart"}
+            "hinge": "use", "apart": "apart", "kubhala": "kubhala"}
 
 def manual_icon():
     rows = ["................", "...##########...", "...#WWWWWWWWW#..", "...#WWWWWWWWW#..", "...#WKKKKKKWW#..",
@@ -747,7 +839,7 @@ def main(gen):
     os.makedirs(f"{A}/{TEX}", exist_ok=True)
     w(f"{books}/manual.json", {"title": f"book.{MOD}.manual.title", "default_template": f"{MOD}:leaflet",
         "style": {"page": "#ffffff", "ink": "#111111", "soft": "#555555", "cover": "#3a3a3a", "cover_edge": "#1e1e1e", "edge": "#c8c8c8"},
-        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart"]})
+        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala"]})
     w(f"{A}/simplebooks/templates/leaflet.json", {"vars": {}, "slots": {
         "left.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "left_image", "frame": False},
         "right.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "right_image", "frame": False},

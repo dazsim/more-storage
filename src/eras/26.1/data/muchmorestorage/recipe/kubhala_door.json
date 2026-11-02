@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SS",
+    "SN",
+    "SS"
+  ],
+  "key": {
+    "S": "#minecraft:wooden_slabs",
+    "N": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "muchmorestorage:kubhala_door",
+    "count": 1
+  }
+}

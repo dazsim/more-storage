@@ -5,7 +5,10 @@ package com.workshopcraft.muchmorestorage.client.v1_21;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.workshopcraft.muchmorestorage.client.CupboardModel;
 import com.workshopcraft.muchmorestorage.client.Quads;
+import com.workshopcraft.muchmorestorage.client.KubhalaModel;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
+import com.workshopcraft.muchmorestorage.item.FlatpackItem;
+import com.workshopcraft.muchmorestorage.item.KubhalaItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.client.Minecraft;
@@ -29,6 +32,8 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         List<Item> out = new ArrayList<>(ModContent.CARCASSES.values());
         out.addAll(ModContent.WORKTOPS.values());
         out.add(ModContent.CUPBOARD_ITEM);
+        out.addAll(ModContent.FLATPACKS.values());
+        out.add(ModContent.KUBHALA_ITEM);
         return out;
     }
 
@@ -48,6 +53,8 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
             return;
         }
         Quads q = new Quads(pose.last(), vc, light, overlay);
+        if (stack.getItem() instanceof FlatpackItem pack) { KubhalaModel.flatpack(q, CupboardModel.Body.of(pack.body)); return; }
+        if (stack.getItem() instanceof KubhalaItem) { KubhalaModel.frame(q, CupboardModel.Body.of(ModContent.bodyOf(stack)), KubhalaModel.Join.NONE); return; }
         boolean carcass = stack.getItem() instanceof CarcassItem;
         String body = carcass ? ((CarcassItem) stack.getItem()).body : ModContent.bodyOf(stack);
         CupboardModel.Body b = CupboardModel.Body.of(body);

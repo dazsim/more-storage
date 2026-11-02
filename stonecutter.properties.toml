@@ -1,7 +1,7 @@
 mod.id = "muchmorestorage"
 mod.name = "Much More Storage"
 mod.group = "com.workshopcraft.muchmorestorage"
-mod.version = "1.0.4"
+mod.version = "1.1.0"
 mod.author = "Workshopcraft"
 mod.license = "All Rights Reserved"
 mod.description = "Kitchen cupboards that store items like a chest."

@@ -8,10 +8,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import com.workshopcraft.muchmorestorage.MuchMoreStorage;
 import com.workshopcraft.muchmorestorage.client.CupboardItemRenderer;
 import com.workshopcraft.muchmorestorage.client.CupboardRenderer;
+import com.workshopcraft.muchmorestorage.client.KubhalaRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 //?} else {
 /*import com.workshopcraft.muchmorestorage.client.v1_21.CupboardItemRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.CupboardRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.KubhalaRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.world.item.Item;
 *///?}
@@ -20,6 +22,7 @@ public class MuchMoreStorageFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BlockEntityRenderers.register(ModContent.CUPBOARD_BE, CupboardRenderer::new);
+        BlockEntityRenderers.register(ModContent.KUBHALA_BE, KubhalaRenderer::new);
         //? if >=26.1 {
         SpecialModelRenderers.ID_MAPPER.put(MuchMoreStorage.id("cupboard"), CupboardItemRenderer.Unbaked.MAP_CODEC);
         //?} else {
