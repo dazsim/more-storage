@@ -10,6 +10,7 @@ import com.workshopcraft.muchmorestorage.client.KubhalaRenderer;
 import com.workshopcraft.muchmorestorage.client.BokwurmRenderer;
 import com.workshopcraft.muchmorestorage.client.LadstapelRenderer;
 import com.workshopcraft.muchmorestorage.client.GenomskadaRenderer;
+import com.workshopcraft.muchmorestorage.client.CrateRenderer;
 import com.workshopcraft.muchmorestorage.client.KladkaosRenderer;
 import com.workshopcraft.muchmorestorage.client.TrullborgRenderer;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
@@ -20,6 +21,7 @@ import com.workshopcraft.muchmorestorage.client.v1_21.KubhalaRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.BokwurmRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.LadstapelRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.GenomskadaRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.CrateRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KladkaosRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.TrullborgRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -40,6 +42,7 @@ public class MuchMoreStorageNeoForgeClient {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.BOKWURM_BE, BokwurmRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.LADSTAPEL_BE, LadstapelRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.GENOMSKADA_BE, GenomskadaRenderer::new));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.CRATE_BE, CrateRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.KLADKAOS_BE, KladkaosRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerEntityRenderer(ModContent.TRULLBORG, TrullborgRenderer::new));
         //? if >=26.1 {

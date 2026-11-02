@@ -1044,6 +1044,93 @@ def page_genomskada_use(pg):
     genomskada(s3, items=2)
     s3.draw(pg)
 
+def hexkey(pg, c, size=1.0, ang=-30):
+    """The L shaped hex key, long arm along ang, short arm bent down at the end."""
+    a = math.radians(ang)
+    ux, uy = math.cos(a), math.sin(a)
+    nx, ny = -uy, ux
+    P = lambda t, k: (c[0] + (ux * t + nx * k) * size, c[1] + (uy * t + ny * k) * size)
+    outline = [P(0, -5), P(110, -5), P(116, 0), P(116, 40), P(106, 40), P(106, 5), P(0, 5)]
+    pg.fill(outline)
+    pg.path(outline + [P(-3, 0)], 2.4, closed=True)
+    pg.line(P(8, 0), P(104, 0), 1.0)
+    pg.line(P(111, 8), P(111, 36), 1.0)
+
+def crate(sc, at=(0, 0, 0), step=4):
+    """The flat-pack crate, boards at step 0, a wall a turn, the lid on the last."""
+    base = [move(*at)]
+    if step == 0:
+        for i in range(4):
+            d = 0.4 if i % 2 == 0 else -0.4
+            sc.box((1 + d, i * 1.5, 1 - d), (15 + d, i * 1.5 + 1.5, 15 - d), base, width=1.8, bias=i)
+        return
+    sc.box((1, 0, 1), (15, 1.5, 15), base, width=1.8)
+    sc.box((1, 1.5, 13.5), (15, 14, 15), base, width=2.0)
+    if step >= 2:
+        sc.box((1, 1.5, 1), (2.5, 14, 13.5), base, width=2.0)
+        sc.box((13.5, 1.5, 1), (15, 14, 13.5), base, width=2.0)
+    if step >= 3: sc.box((2.5, 1.5, 1), (13.5, 14, 2.5), base, width=2.0, bias=1)
+    if step >= 4:
+        sc.box((1, 14, 1), (15, 15.5, 15), base, width=2.2, bias=2)
+        sc.box((2.5, 7, 0.5), (13.5, 8.5, 1), base, width=1.4, bias=3)
+
+def wobble_marks(pg, c, r=60):
+    for k in (-1, 1):
+        pg.curve(lambda t, k=k: (c[0] + k * (r + 6 * math.sin(t * 9)), c[1] - 30 + t * 60), 20, 1.6)
+
+def phone_guy(pg, c, s=1.0):
+    """A stick figure on the phone, a question mark over its head."""
+    x, y = c
+    pg.circle((x, y - 90 * s), 18 * s, 2.4)
+    pg.line((x, y - 72 * s), (x, y), 2.6)
+    pg.line((x, y), (x - 22 * s, y + 55 * s), 2.6)
+    pg.line((x, y), (x + 22 * s, y + 55 * s), 2.6)
+    pg.line((x, y - 55 * s), (x - 34 * s, y - 25 * s), 2.6)
+    pg.path([(x, y - 55 * s), (x + 26 * s, y - 70 * s), (x + 22 * s, y - 92 * s)], 2.6)
+    phone = [(x + 14 * s, y - 112 * s), (x + 26 * s, y - 112 * s), (x + 28 * s, y - 84 * s), (x + 16 * s, y - 84 * s)]
+    pg.fill(phone)
+    pg.path(phone, 2.2, closed=True)
+    pg.text((x - 6 * s, y - 120 * s), "?", int(54 * s), "ms")
+
+def page_hexhojk(pg):
+    hexkey(pg, (70, 160), 1.3, -20)
+    s0 = Scene(0, 0, 9).at(430, 190, (0, 0, 0), (16, 6, 16))
+    crate(s0, step=0)
+    s0.draw(pg)
+    pg.line((60, 330), (584, 330), 1.6)
+    for i in range(4):
+        cx = 100 + i * 140
+        s = Scene(0, 0, 4.2).at(cx, 470, (0, 0, 0), (16, 16, 16))
+        crate(s, step=i + 1)
+        s.draw(pg)
+        if i < 3: wobble_marks(pg, (cx, 470), 44)
+        twist(pg, (cx, 390), 24, 8)
+        for k in range(i + 1): pg.dot((cx - 15 + k * 10, 560), 3.0)
+    pg.line((60, 600), (584, 600), 1.6)
+    s4 = Scene(0, 0, 6.5).at(300, 720, (0, 0, 0), (16, 16, 16))
+    crate(s4, step=4)
+    s4.draw(pg)
+    check(pg, (470, 720), 22, True)
+    slots(pg, 214, 820, 24, 9)
+    slots(pg, 214, 844, 24, 9)
+
+def page_hexhojk_help(pg):
+    s0 = Scene(0, 0, 7).at(160, 280, (0, 0, 0), (16, 16, 16))
+    crate(s0, step=2)
+    s0.draw(pg)
+    wobble_marks(pg, (160, 280), 70)
+    hexkey(pg, (60, 420), 0.8, -10)
+    phone_guy(pg, (430, 300), 1.3)
+    pg.line((60, 520), (584, 520), 1.6)
+    s1 = Scene(0, 0, 7).at(220, 720, (0, 0, 0), (16, 16, 16))
+    crate(s1, step=4)
+    s1.draw(pg)
+    pg.arrow([(330, 700), (400, 650)], 2.6, 12)
+    screw = [(440, 600), (456, 600), (452, 612), (452, 660), (448, 668), (444, 660), (444, 612)]
+    pg.path(screw, 2.2, closed=True)
+    for k in range(5): pg.line((444, 620 + k * 9), (452, 616 + k * 9), 1.2)
+    check(pg, (500, 720), 20, True)
+
 def comparator(sc, at=(0, 0, 0)):
     base = [move(*at)]
     sc.box((0, 0, 0), (16, 2, 16), base)
@@ -1197,10 +1284,11 @@ SPREADS = [
     ("kladkaos", page_kladkaos, page_kladkaos_use),
     ("trullborg", page_trullborg, page_trullborg_use),
     ("genomskada", page_genomskada, page_genomskada_use),
+    ("hexhojk", page_hexhojk, page_hexhojk_help),
 ]
 SECTIONS = {"cover": "cover", "parts": "parts", "steps_a": "assembly", "steps_b": "assembly", "finishes": "assembly",
             "hinge": "use", "apart": "apart", "kubhala": "kubhala", "sakksakk": "kubhala",
-            "bokwurm": "bokwurm", "ladstapel": "ladstapel", "kladkaos": "kladkaos", "trullborg": "trullborg", "genomskada": "genomskada"}
+            "bokwurm": "bokwurm", "ladstapel": "ladstapel", "kladkaos": "kladkaos", "trullborg": "trullborg", "genomskada": "genomskada", "hexhojk": "hexhojk"}
 
 def manual_icon():
     rows = ["................", "...##########...", "...#WWWWWWWWW#..", "...#WWWWWWWWW#..", "...#WKKKKKKWW#..",
@@ -1290,7 +1378,7 @@ def main(gen):
     os.makedirs(f"{A}/{TEX}", exist_ok=True)
     w(f"{books}/manual.json", {"title": f"book.{MOD}.manual.title", "default_template": f"{MOD}:leaflet",
         "style": {"page": "#ffffff", "ink": "#111111", "soft": "#555555", "cover": "#3a3a3a", "cover_edge": "#1e1e1e", "edge": "#c8c8c8"},
-        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel", "kladkaos", "trullborg", "genomskada"]})
+        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel", "kladkaos", "trullborg", "genomskada", "hexhojk"]})
     w(f"{A}/simplebooks/templates/leaflet.json", {"vars": {}, "slots": {
         "left.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "left_image", "frame": False},
         "right.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "right_image", "frame": False},

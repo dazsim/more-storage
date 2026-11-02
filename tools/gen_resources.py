@@ -261,6 +261,50 @@ for k in ("block", "item", "container"):
     lang[f"{k}.{MOD}.genomskada"] = "GENOMSKADA"
 lang.update({f"tooltip.{MOD}.genomskada": "Clear storage box, 9 stacks", f"tooltip.{MOD}.lid": "Lid: %s",
              f"tooltip.{MOD}.genomskada.use": "Stacks 3 high, use a dye on it to colour the lid"})
+# HEXHOJK, a hex key that puts flat-pack crates together a turn at a time
+def pixels(name, rows, col):
+    from PIL import Image
+    im = Image.new("RGBA", (16, 16))
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row): im.putpixel((x, y), col[ch])
+    os.makedirs(f"{A}/textures/item", exist_ok=True)
+    im.save(f"{A}/textures/item/{name}.png")
+METAL = {".": (0, 0, 0, 0), "#": (46, 46, 52, 255), "M": (150, 152, 160, 255), "L": (205, 208, 214, 255)}
+pixels("hexhojk", ["................", "................", "..........##....", ".........#LM#...", "........#LM#....", ".......#LM#.....",
+                   "......#LM#......", ".....#LM#.......", "....#LM#........", "...#LM#.........", "..#LM#..........", "..#LM###........",
+                   "..#LLLLM#.......", "...#MMMM#.......", "....####........", "................"], METAL)
+pixels("leftover_screw", ["................", "................", "................", "......####......", ".....#LLMM#.....", ".....#####M#....",
+                          "......#LM#......", "......#M##......", "......##M#......", "......#LM#......", "......#M##......", "......##M#......",
+                          "......#LM#......", ".......#M#......", "........#.......", "................"], METAL)
+for name in ("hexhojk", "leftover_screw"):
+    w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/handheld" if name == "hexhojk" else "minecraft:item/generated",
+                                        "textures": {"layer0": f"{MOD}:item/{name}"}})
+    item_model(name, {"type": "minecraft:model", "model": f"{MOD}:item/{name}"})
+recipe("hexhojk", ["N ", "NN"], {"N": "minecraft:iron_nugget"}, category="tools", unlock="minecraft:iron_nugget")
+lang.update({f"item.{MOD}.hexhojk": "HEXHOJK", f"item.{MOD}.leftover_screw": "Leftover Screw",
+             f"tooltip.{MOD}.hexhojk": "Hex key, turn it on a flat-pack crate",
+             f"tooltip.{MOD}.hexhojk.use": "Four turns and the crate is done",
+             f"tooltip.{MOD}.leftover_screw": "This is fine."})
+w(f"{A}/blockstates/flatpack_crate.json", {"variants": {
+    "concrete=false": {"model": f"{MOD}:block/cupboard_wood"},
+    "concrete=true": {"model": f"{MOD}:block/cupboard_concrete"}}})
+special("flatpack_crate")
+for body in BODIES:
+    name = f"{body}_kladkaos_panel"
+    for era, e in ERAS.items():
+        if not has(era, name): continue
+        D = f"{era_root(era)}/data/{MOD}"
+        out = result(era, f"{MOD}:flatpack_crate", nbt={"Body": body}) if e.get("nbt") else result(era, f"{MOD}:flatpack_crate", components={f"{MOD}:body": body})
+        w(f"{D}/{folder(era, 'recipe')}/{body}_flatpack_crate.json", {"type": "minecraft:crafting_shaped", "category": "misc",
+            "pattern": ["PP", "PP"], "key": {"P": ing(era, f"{MOD}:{name}")}, "result": out})
+        advancement(era, f"{D}/{folder(era, 'advancement')}/recipes/misc/{body}_flatpack_crate.json", f"{MOD}:{body}_flatpack_crate", f"{MOD}:{name}")
+for k in ("block", "item", "container"):
+    lang[f"{k}.{MOD}.flatpack_crate"] = "Flat-Pack Crate"
+lang.update({f"tooltip.{MOD}.flatpack_crate": "Storage crate, 18 slots, comes unassembled",
+             f"tooltip.{MOD}.flatpack_crate.use": "Place it, then turn a HEXHOJK on it four times",
+             f"tooltip.{MOD}.flatpack_crate.unassembled": "Unassembled, a pile of boards",
+             f"message.{MOD}.flatpack_crate.turn": "Turn %s of %s, it wobbles",
+             f"message.{MOD}.flatpack_crate.assembled": "Assembled, ready to open"})
 for d in ["top", "middle", "bottom"]:
     lang[f"container.{MOD}.ladstapel.{d}"] = f"LADSTAPEL, {d} drawer"
 lang.update({f"tooltip.{MOD}.bokwurm": "Bookcase, holds 12 books",

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "P": "muchmorestorage:pale_oak_kladkaos_panel"
+  },
+  "result": {
+    "id": "muchmorestorage:flatpack_crate",
+    "components": {
+      "muchmorestorage:body": "pale_oak"
+    }
+  }
+}

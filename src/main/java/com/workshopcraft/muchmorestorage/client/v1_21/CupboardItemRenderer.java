@@ -44,6 +44,7 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         out.add(ModContent.KLADKAOS_ITEM);
         out.add(ModContent.TRULLBORG_ITEM);
         out.add(ModContent.GENOMSKADA_ITEM);
+        out.add(ModContent.CRATE_ITEM);
         return out;
     }
 
@@ -73,6 +74,7 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         if (stack.getItem() instanceof KubhalaItem) { KubhalaModel.frame(q, CupboardModel.Body.of(ModContent.bodyOf(stack)), KubhalaModel.Join.NONE); return; }
         if (stack.getItem() == ModContent.BOKWURM_ITEM) { FurnitureModel.bokwurmItem(q, CupboardModel.Body.of(ModContent.bodyOf(stack))); return; }
         if (stack.getItem() == ModContent.TRULLBORG_ITEM) { FurnitureModel.trullborg(q, CupboardModel.Body.of(ModContent.bodyOf(stack)), 0); return; }
+        if (stack.getItem() == ModContent.CRATE_ITEM) { FurnitureModel.crate(q, CupboardModel.Body.of(ModContent.bodyOf(stack)), 0); return; }
         if (stack.getItem() instanceof PanelItem panel) { FurnitureModel.panel(q, CupboardModel.Body.of(panel.body)); return; }
         if (stack.getItem() == ModContent.KLADKAOS_ITEM) {
             pose.pushPose();

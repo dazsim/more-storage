@@ -47,6 +47,7 @@ public class FurnitureItem extends BlockItem {
         lines.accept(Component.translatable(kind.equals("genomskada") ? "tooltip.muchmorestorage.lid" : "tooltip.muchmorestorage.body", CupboardItem.finishName(ModContent.bodyOf(stack))).withStyle(ChatFormatting.GRAY));
         lines.accept(Component.translatable("tooltip.muchmorestorage." + kind).withStyle(ChatFormatting.GRAY));
         lines.accept(Component.translatable("tooltip.muchmorestorage." + kind + ".use").withStyle(ChatFormatting.GRAY));
+        if (kind.equals("flatpack_crate")) lines.accept(Component.translatable("tooltip.muchmorestorage.flatpack_crate.unassembled").withStyle(ChatFormatting.GRAY));
         if (kind.equals("bokwurm")) lines.accept(Component.translatable("tooltip.muchmorestorage.bokwurm.enchanting").withStyle(ChatFormatting.GRAY));
     }
     //? if forge {

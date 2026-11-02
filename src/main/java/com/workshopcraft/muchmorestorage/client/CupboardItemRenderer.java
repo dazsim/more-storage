@@ -37,6 +37,7 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
         if (stack.getItem() == ModContent.KLADKAOS_ITEM) return new Look(ModContent.bodyOf(stack), "", 6);
         if (stack.getItem() == ModContent.TRULLBORG_ITEM) return new Look(ModContent.bodyOf(stack), "", 7);
         if (stack.getItem() == ModContent.GENOMSKADA_ITEM) return new Look(com.workshopcraft.muchmorestorage.block.GenomskadaBlockEntity.lid(ModContent.bodyOf(stack)), "", 8);
+        if (stack.getItem() == ModContent.CRATE_ITEM) return new Look(ModContent.bodyOf(stack), "", 9);
         if (stack.getItem() instanceof FurnitureItem) return new Look(ModContent.bodyOf(stack), "", 4);
         return new Look(ModContent.bodyOf(stack), ModContent.cupboardTopOf(stack));
     }
@@ -66,6 +67,7 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
             if (look.kind() == 4) { FurnitureModel.ladstapelItem(q, body); return; }
             if (look.kind() == 5) { FurnitureModel.panel(q, body); return; }
             if (look.kind() == 7) { FurnitureModel.trullborg(q, body, 0); return; }
+            if (look.kind() == 9) { FurnitureModel.crate(q, body, 0); return; }
             if (look.kind() == 6) {
                 PoseStack ps = new PoseStack();
                 ps.last().set(p);

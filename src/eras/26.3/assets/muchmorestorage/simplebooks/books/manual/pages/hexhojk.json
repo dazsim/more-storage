@@ -1,0 +1,8 @@
+{
+  "section": "hexhojk",
+  "sort": 14,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/hexhojk_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/hexhojk_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/hexhojk_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/hexhojk_r_stand.png"
+}

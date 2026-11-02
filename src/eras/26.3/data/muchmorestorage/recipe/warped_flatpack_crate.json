@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "P": "muchmorestorage:warped_kladkaos_panel"
+  },
+  "result": {
+    "id": "muchmorestorage:flatpack_crate",
+    "components": {
+      "muchmorestorage:body": "warped"
+    }
+  }
+}

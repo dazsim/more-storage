@@ -236,6 +236,29 @@ public final class FurnitureModel {
         box(q, 6, 12.5F, 0.5F, 10, 13, 2, lid, DARK, NORTH, WEST, EAST, UP);
     }
 
+    // the flat-pack crate, a pile of boards at step 0, a wall more each turn, the lid on the last
+    public static void crate(Quads q, CupboardModel.Body b, int step) {
+        TextureAtlasSprite s = b.side();
+        if (step == 0) {
+            for (int i = 0; i < 4; i++) {
+                float d = (i % 2 == 0 ? 0.4F : -0.4F);
+                box(q, 1 + d, i * 1.5F, 1 - d, 15 + d, i * 1.5F + 1.5F, 15 - d, s, i % 2 == 0 ? W : SHADE, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+            }
+            return;
+        }
+        box(q, 1, 0, 1, 15, 1.5F, 15, s, W, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+        box(q, 1, 1.5F, 13.5F, 15, 14, 15, s, W, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+        if (step >= 2) {
+            box(q, 1, 1.5F, 1, 2.5F, 14, 13.5F, s, W, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+            box(q, 13.5F, 1.5F, 1, 15, 14, 13.5F, s, W, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+        }
+        if (step >= 3) box(q, 2.5F, 1.5F, 1, 13.5F, 14, 2.5F, s, W, NORTH, SOUTH, UP, DOWN);
+        if (step >= 4) {
+            box(q, 1, 14, 1, 15, 15.5F, 15, s, W, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+            box(q, 2.5F, 7, 0.5F, 13.5F, 8.5F, 1, s, DARK, NORTH, UP, DOWN);
+        }
+    }
+
     private static void box(Quads q, float x0, float y0, float z0, float x1, float y1, float z1, TextureAtlasSprite sp, int colour, Direction... faces) {
         KubhalaModel.box(q, x0, y0, z0, x1, y1, z1, sp, colour, faces);
     }

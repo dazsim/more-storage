@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "P": {
+      "item": "muchmorestorage:brown_concrete_kladkaos_panel"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:flatpack_crate",
+    "nbt": {
+      "Body": "brown_concrete"
+    }
+  }
+}
