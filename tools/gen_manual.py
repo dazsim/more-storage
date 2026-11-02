@@ -676,35 +676,64 @@ def manual_icon():
 
 GUARD = {"fabric:load_conditions": [{"condition": "fabric:all_mods_loaded", "values": ["simplebooks"]}],
          "neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "simplebooks"}]}
+# forge 1.20.1 reads plain "conditions" on recipes and advancements, its loot tables have none
+OLD_GUARD = {"fabric:load_conditions": GUARD["fabric:load_conditions"],
+             "conditions": [{"type": "forge:mod_loaded", "modid": "simplebooks"}]}
 # no custom_name, Simple Books names it from book.<mod>.manual.title
 BOOK = {"simplebooks:book": f"{MOD}:manual", "minecraft:item_model": f"{MOD}:manual"}
 SCREWDRIVERS = "#c:tools/screwdriver"
 
-def data(era, e):
+def data(era):
+    g = G
+    e = g.ERAS[era]
     D = f"src/eras/{era}/data/{MOD}"
+    f = lambda kind: g.folder(era, kind)
+    guard = OLD_GUARD if e.get("nbt") else GUARD
+    book = BOOK if e.get("items") else {"simplebooks:book": BOOK["simplebooks:book"]}
     # any mod's screwdriver works and comes back, see KeepToolShapelessRecipe
-    w(f"{D}/recipe/manual.json", {**GUARD, "type": f"{MOD}:crafting_shapeless_keep_tool", "category": "misc",
-        "ingredients": ["minecraft:book", SCREWDRIVERS, "#c:chests/wooden"], "keep": SCREWDRIVERS,
-        "result": {"id": "simplebooks:guide", "components": BOOK}})
-    unlock = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {e.get("unlock", "recipe"): f"{MOD}:manual"}},
-              "has_screwdriver": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": SCREWDRIVERS}]}}}
-    w(f"{D}/advancement/recipes/misc/manual.json", {**GUARD, "parent": "minecraft:recipes/root", "criteria": unlock,
+    out = g.result(era, "simplebooks:guide", nbt=book) if e.get("nbt") else g.result(era, "simplebooks:guide", components=book)
+    w(f"{D}/{f('recipe')}/manual.json", {**guard, "type": f"{MOD}:crafting_shapeless_keep_tool", "category": "misc",
+        "ingredients": [g.ing(era, i) for i in ["minecraft:book", SCREWDRIVERS, "#c:chests/wooden"]], "keep": g.ing(era, SCREWDRIVERS),
+        "result": out})
+    unlock = {"has_the_recipe": g.unlocked(era, f"{MOD}:manual"),
+              "has_screwdriver": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [g.item_pred(era, SCREWDRIVERS)]}}}
+    w(f"{D}/{f('advancement')}/recipes/misc/manual.json", {**guard, "parent": "minecraft:recipes/root", "criteria": unlock,
         "requirements": [list(unlock)], "rewards": {"recipes": [f"{MOD}:manual"]}})
-    w(f"{D}/advancement/got_manual.json", {**GUARD, "criteria": {"screwdriver": {"trigger": "minecraft:inventory_changed",
-        "conditions": {"items": [{"items": SCREWDRIVERS}]}}}, "requirements": [["screwdriver"]],
+    w(f"{D}/{f('advancement')}/got_manual.json", {**guard, "criteria": {"screwdriver": {"trigger": "minecraft:inventory_changed",
+        "conditions": {"items": [g.item_pred(era, SCREWDRIVERS)]}}}, "requirements": [["screwdriver"]],
         "rewards": {"loot": [f"{MOD}:manual"]}})
     if e.get("modifier"):
-        entry = {"type": "minecraft:item", "name": "simplebooks:guide", "modifier": {"type": "minecraft:set_components", "components": BOOK}}
+        entry = {"type": "minecraft:item", "name": "simplebooks:guide", "modifier": {"type": "minecraft:set_components", "components": book}}
+    elif e.get("nbt"):
+        # an optional tag instead of the item, so the table still parses on forge without Simple Books
+        entry = {"type": "minecraft:tag", "name": f"{MOD}:manual_book", "expand": True,
+                 "functions": [{"function": "minecraft:set_nbt", "tag": json.dumps(book, separators=(",", ":"))}]}
+        w(f"{D}/{f('tags/item')}/manual_book.json", {"values": [{"id": "simplebooks:guide", "required": False}]})
     else:
-        entry = {"type": "minecraft:item", "name": "simplebooks:guide", "functions": [{"function": "minecraft:set_components", "components": BOOK}]}
-    w(f"{D}/loot_table/manual.json", {**GUARD, "type": "minecraft:advancement_reward", "pools": [{"rolls": 1, "entries": [entry]}]})
-    w(f"src/eras/{era}/assets/{MOD}/items/manual.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/manual"}})
+        entry = {"type": "minecraft:item", "name": "simplebooks:guide", "functions": [{"function": "minecraft:set_components", "components": book}]}
+    w(f"{D}/{f('loot_table')}/manual.json", {**guard, "type": "minecraft:advancement_reward", "pools": [{"rolls": 1, "entries": [entry]}]})
     w(f"{A}/models/item/manual.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MOD}:item/manual"}})
+    if e.get("items"):
+        w(f"src/eras/{era}/assets/{MOD}/items/manual.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/manual"}})
 
-def main(eras):
-    global RECIPES
-    for era, e in eras.items():
-        data(era, e)
+def era_page(era, obj):
+    """The page json for an era, without items the era lacks and with its tag names."""
+    g = G
+    if isinstance(obj, dict):
+        return {k: era_page(era, v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [era_page(era, v) for v in obj if not isinstance(v, str) or g.has(era, v)]
+    if isinstance(obj, str) and obj.startswith("#"):
+        return "#" + g.tagname(era, obj[1:])
+    return obj
+
+def main(gen):
+    """gen is the running gen_resources module, for its era helpers."""
+    global RECIPES, G
+    G = gen
+    eras = gen.ERAS
+    for era in eras:
+        data(era)
     RECIPES = recipe_files()
     with open(f"{A}/lang/en_us.json") as f: lang = json.load(f)
     lang.update({legend(k): v for k, v in LEGENDS.items()})
@@ -712,6 +741,7 @@ def main(eras):
     books = f"{A}/simplebooks/books"
     import shutil
     shutil.rmtree(f"{books}/manual", ignore_errors=True)
+    pages = lambda era: f"src/eras/{era}/assets/{MOD}/simplebooks/books/manual/pages"
     shutil.rmtree(f"{A}/{TEX}", ignore_errors=True)
     os.makedirs(f"{A}/{TEX}", exist_ok=True)
     w(f"{books}/manual.json", {"title": f"book.{MOD}.manual.title", "default_template": f"{MOD}:leaflet",
@@ -735,7 +765,8 @@ def main(eras):
             "left_image": f"{MOD}:{TEX}/{name}_l.png", "right_image": f"{MOD}:{TEX}/{name}_r.png",
             "stand_left": f"{MOD}:{TEX}/{name}_l_stand.png", "stand_right": f"{MOD}:{TEX}/{name}_r_stand.png"}
         if recipes: page["drawn_recipes"] = recipes
-        w(f"{books}/manual/pages/{name}.json", page)
+        for era in eras:
+            w(f"{pages(era)}/{name}.json", era_page(era, page))
     manual_icon()
 
 if __name__ == "__main__":

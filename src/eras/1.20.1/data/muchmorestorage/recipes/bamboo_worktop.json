@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:bamboo_slab"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:bamboo_worktop",
+    "count": 1
+  }
+}

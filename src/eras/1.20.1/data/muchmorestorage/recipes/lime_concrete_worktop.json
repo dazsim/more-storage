@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:lime_concrete"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:lime_concrete_worktop",
+    "count": 2
+  }
+}

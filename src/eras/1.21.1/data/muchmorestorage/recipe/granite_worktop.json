@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:polished_andesite_slab"
+    },
+    "D": {
+      "item": "minecraft:polished_diorite_slab"
+    }
+  },
+  "result": {
+    "id": "muchmorestorage:granite_worktop",
+    "count": 1
+  }
+}

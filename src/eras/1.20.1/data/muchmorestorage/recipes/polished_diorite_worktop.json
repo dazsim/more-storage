@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:polished_diorite_slab"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:polished_diorite_worktop",
+    "count": 1
+  }
+}

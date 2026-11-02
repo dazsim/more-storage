@@ -1,0 +1,8 @@
+{
+  "section": "assembly",
+  "sort": 2,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/steps_a_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/steps_a_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/steps_a_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/steps_a_r_stand.png"
+}

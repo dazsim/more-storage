@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:orange_concrete"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:orange_concrete_worktop",
+    "count": 2
+  }
+}

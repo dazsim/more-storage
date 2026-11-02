@@ -25,6 +25,7 @@ val era = when {
     else -> "1.20.1"
 }
 sourceSets.main { resources.srcDir(rootProject.file("src/eras/$era")) }
+fun packProp(key: String) = runCatching { sc.properties.get<String>(key) }.getOrDefault("")
 
 neoForge {
     version = sc.properties.get<String>("deps.neo_loader")
@@ -65,8 +66,10 @@ tasks {
             "minecraft" to sc.properties.get<String>("mod.mc_compat"),
             "neoforge" to sc.properties.get<String>("deps.neo_compat"),
             "fml" to sc.properties.get<String>("deps.neo_fml_compat"),
-            "pack_min" to sc.properties.get<String>("mod.pack_min"),
-            "pack_max" to sc.properties.get<String>("mod.pack_max"),
+            // pack_min and pack_max from 1.21.9, pack_format before
+            "pack_min" to packProp("mod.pack_min"),
+            "pack_max" to packProp("mod.pack_max"),
+            "pack_format" to packProp("mod.pack_format"),
         )
         inputs.properties(props)
         filesMatching(listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")) { expand(props) }

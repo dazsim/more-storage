@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:birch_slab"
+    }
+  },
+  "result": {
+    "id": "muchmorestorage:birch_worktop",
+    "count": 1
+  }
+}

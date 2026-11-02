@@ -1,0 +1,8 @@
+{
+  "section": "use",
+  "sort": 5,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/hinge_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/hinge_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/hinge_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/hinge_r_stand.png"
+}

@@ -1,0 +1,8 @@
+{
+  "section": "apart",
+  "sort": 6,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/apart_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/apart_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/apart_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/apart_r_stand.png"
+}

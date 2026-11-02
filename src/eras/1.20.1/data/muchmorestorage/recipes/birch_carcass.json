@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:birch_planks"
+    },
+    "C": {
+      "tag": "muchmorestorage:wooden_chests"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:birch_carcass",
+    "count": 1
+  }
+}
