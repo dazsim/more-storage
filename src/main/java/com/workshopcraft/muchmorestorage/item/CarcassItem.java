@@ -18,4 +18,11 @@ public class CarcassItem extends BlockItem {
         return getOrCreateDescriptionId();
     }
     *///?}
+    //? if forge {
+
+    /*@Override
+    public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+        com.workshopcraft.muchmorestorage.forge.MuchMoreStorageForgeClient.itemRenderer(consumer);
+    }
+    *///?}
 }

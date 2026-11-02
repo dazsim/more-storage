@@ -51,6 +51,9 @@ public class ScrewdriverItem extends Item {
     }
 
     private static void ratchet(Level level, BlockPos pos, float pitch) {
+        //? if >=1.20.5 {
         level.playSound(null, pos, SoundEvents.CROSSBOW_LOADING_MIDDLE.value(), SoundSource.BLOCKS, 0.5F, pitch);
+        //?} else
+        /*level.playSound(null, pos, SoundEvents.CROSSBOW_LOADING_MIDDLE, SoundSource.BLOCKS, 0.5F, pitch);*/
     }
 }

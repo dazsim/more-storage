@@ -8,6 +8,13 @@ public final class MuchMoreStorage {
     private MuchMoreStorage() {}
 
     public static Identifier id(String path) {
-        return Identifier.fromNamespaceAndPath(MOD_ID, path);
+        return id(MOD_ID, path);
+    }
+
+    public static Identifier id(String namespace, String path) {
+        //? if >=1.21 {
+        return Identifier.fromNamespaceAndPath(namespace, path);
+        //?} else
+        /*return new Identifier(namespace, path);*/
     }
 }

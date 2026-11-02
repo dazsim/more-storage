@@ -49,6 +49,6 @@ public final class Finishes {
             return id == null ? topSprite("oak") : id.withPrefix("block/");
         }
         if (WOODS.contains(top) || top.equals("granite")) return MuchMoreStorage.id("block/" + top + "_worktop");
-        return Identifier.withDefaultNamespace("block/" + top);
+        return MuchMoreStorage.id("minecraft", "block/" + top);
     }
 }

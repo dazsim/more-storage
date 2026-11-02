@@ -26,7 +26,7 @@ Breaking a cupboard drops one cupboard item that keeps its body and top, and it 
 
 With Simple Books installed there is a picture manual: craft a book, a screwdriver and a chest (you keep the screwdriver), or get one the first time you pick up any screwdriver. Its pages are drawn by `python3 tools/gen_manual.py`, which `gen_resources.py` runs for you.
 
-Minecraft 26.1 to 26.1.2, NeoForge and Fabric.
+Minecraft 1.20.1 (Forge and Fabric), 1.21.1, 26.1 to 26.1.2 and 26.3 (NeoForge and Fabric). Cupboards from a 1.20.1 world keep their body and top after an upgrade to 1.21.1 or later.
 
 1.0.2: worktops and screwdrivers from other mods work through the `c:worktops` and `c:tools/screwdriver` tags.
 
@@ -36,6 +36,6 @@ Minecraft 26.1 to 26.1.2, NeoForge and Fabric.
 
 The build uses [Stonecutter](https://stonecutter.kikugie.dev/) so every Minecraft version and loader comes from the one source tree in `src`. Version specific values are in `stonecutter.properties.toml` and the versions built are listed in `settings.gradle.kts`.
 
-Build with JDK 25, one version at a time: `./gradlew :26.1.2-fabric:build` and `./gradlew :26.1.2-neoforge:build`. Jars end up in `versions/<version>-<loader>/build/libs/`. Add `-Pversion=1.0.4-alpha.1` for a test jar.
+Build with JDK 25, one node at a time, for example `./gradlew :26.1.2-fabric:build` or `./gradlew :1.20.1-forge:build`. Jars end up in `versions/<version>-<loader>/build/libs/`. Add `-Pversion=1.0.4-alpha.1` for a test jar.
 
 Textures are drawn by `python3 tools/gen_textures.py` and the json files are made by `python3 tools/gen_resources.py`, both run from the repo root.

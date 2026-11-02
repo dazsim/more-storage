@@ -1,23 +1,32 @@
 package com.workshopcraft.muchmorestorage.registry;
 
+//? if >=1.20.5
 import com.mojang.serialization.Codec;
 import com.workshopcraft.muchmorestorage.MuchMoreStorage;
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
 //? if >=26.1 {
 import com.workshopcraft.muchmorestorage.crafting.KeepToolShapelessRecipe;
-//?} else
-/*import com.workshopcraft.muchmorestorage.crafting.v1_21.KeepToolShapelessRecipe;*/
+//?} else if >=1.21 {
+/*import com.workshopcraft.muchmorestorage.crafting.v1_21.KeepToolShapelessRecipe;
+*///?} else
+/*import com.workshopcraft.muchmorestorage.crafting.v1_20.KeepToolShapelessRecipe;*/
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.CupboardItem;
 import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
 import net.minecraft.core.Registry;
+//? if >=1.20.5 {
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.item.component.CustomData;
+import org.jspecify.annotations.Nullable;
+//?}
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -42,8 +51,10 @@ public final class ModContent {
     public static CupboardItem CUPBOARD_ITEM;
     public static ScrewdriverItem SCREWDRIVER;
     public static BlockEntityType<CupboardBlockEntity> CUPBOARD_BE;
+    //? if >=1.20.5 {
     public static DataComponentType<String> BODY;
     public static DataComponentType<String> TOP;
+    //?}
     public static CreativeModeTab TAB;
 
     private static final String[][] EXAMPLES = {
@@ -53,12 +64,14 @@ public final class ModContent {
 
     private ModContent() {}
 
+    //? if >=1.20.5 {
     public static void registerDataComponents(BiConsumer<Identifier, DataComponentType<?>> r) {
         BODY = DataComponentType.<String>builder().persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8).build();
         TOP = DataComponentType.<String>builder().persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8).build();
         r.accept(MuchMoreStorage.id("body"), BODY);
         r.accept(MuchMoreStorage.id("top"), TOP);
     }
+    //?}
 
     public static void registerBlocks(BiConsumer<Identifier, Block> r) {
         Identifier id = MuchMoreStorage.id("cupboard");
@@ -92,12 +105,15 @@ public final class ModContent {
         SCREWDRIVER = new ScrewdriverItem(item("screwdriver").stacksTo(1));
         r.accept(MuchMoreStorage.id("screwdriver"), SCREWDRIVER);
         // registered last so the block maps back to it
+        //? if >=1.20.5 {
         CUPBOARD_ITEM = new CupboardItem(CUPBOARD, item("cupboard").component(BODY, "oak").component(TOP, "oak"));
+        //?} else
+        /*CUPBOARD_ITEM = new CupboardItem(CUPBOARD, item("cupboard"));*/
         r.accept(MuchMoreStorage.id("cupboard"), CUPBOARD_ITEM);
     }
 
-    public static final TagKey<Item> WORKTOP_TAG = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "worktops"));
-    public static final TagKey<Item> SCREWDRIVERS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "tools/screwdriver"));
+    public static final TagKey<Item> WORKTOP_TAG = TagKey.create(Registries.ITEM, MuchMoreStorage.id("c", "worktops"));
+    public static final TagKey<Item> SCREWDRIVERS = TagKey.create(Registries.ITEM, MuchMoreStorage.id("c", "tools/screwdriver"));
 
     // own tops are short names, worktops from other mods keep their full item id
     public static String topOf(ItemStack stack) {
@@ -117,10 +133,47 @@ public final class ModContent {
 
     public static ItemStack cupboard(String body, String top) {
         ItemStack stack = new ItemStack(CUPBOARD_ITEM);
+        //? if >=1.20.5 {
         stack.set(BODY, body);
         stack.set(TOP, top);
+        //?} else {
+        /*stack.getOrCreateTag().putString("Body", body);
+        stack.getOrCreateTag().putString("Top", top);
+        *///?}
         return stack;
     }
+
+    public static String bodyOf(ItemStack stack) {
+        //? if >=1.20.5 {
+        String old = legacy(stack.get(DataComponents.CUSTOM_DATA), "Body");
+        return old != null ? old : stack.getOrDefault(BODY, "oak");
+        //?} else
+        /*return legacy(stack.getTag(), "Body", "oak");*/
+    }
+
+    public static String cupboardTopOf(ItemStack stack) {
+        //? if >=1.20.5 {
+        String old = legacy(stack.get(DataComponents.CUSTOM_DATA), "Top");
+        return old != null ? old : stack.getOrDefault(TOP, "oak");
+        //?} else
+        /*return legacy(stack.getTag(), "Top", "oak");*/
+    }
+
+    // 1.20.1 kept the finishes as item nbt, which becomes custom data when a world is upgraded
+    //? if >=1.20.5 {
+    public static @Nullable String legacy(@Nullable CustomData data, String key) {
+        if (data == null) return null;
+        CompoundTag tag = data.copyTag();
+        //? if >=1.21.5 {
+        return tag.getString(key).orElse(null);
+        //?} else
+        /*return tag.contains(key) ? tag.getString(key) : null;*/
+    }
+    //?} else {
+    /*private static String legacy(CompoundTag tag, String key, String fallback) {
+        return tag != null && tag.contains(key) ? tag.getString(key) : fallback;
+    }
+    *///?}
 
     // book + screwdriver + chest gives the manual and the screwdriver comes back
     public static void registerRecipeSerializers(BiConsumer<Identifier, RecipeSerializer<?>> r) {
@@ -154,6 +207,7 @@ public final class ModContent {
     }
 
     public static void registerAllDirect() {
+        //? if >=1.20.5
         registerDataComponents(direct(BuiltInRegistries.DATA_COMPONENT_TYPE));
         registerBlocks(direct(BuiltInRegistries.BLOCK));
         registerItems(direct(BuiltInRegistries.ITEM));

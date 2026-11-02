@@ -706,7 +706,8 @@ def data(era):
         entry = {"type": "minecraft:item", "name": "simplebooks:guide", "modifier": {"type": "minecraft:set_components", "components": book}}
     elif e.get("nbt"):
         # an optional tag instead of the item, so the table still parses on forge without Simple Books
-        entry = {"type": "minecraft:tag", "name": f"{MOD}:manual_book", "expand": True,
+        # not expanded, 1.20.1 skips the functions on expanded tag entries
+        entry = {"type": "minecraft:tag", "name": f"{MOD}:manual_book", "expand": False,
                  "functions": [{"function": "minecraft:set_nbt", "tag": json.dumps(book, separators=(",", ":"))}]}
         w(f"{D}/{f('tags/item')}/manual_book.json", {"values": [{"id": "simplebooks:guide", "required": False}]})
     else:

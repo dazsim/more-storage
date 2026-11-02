@@ -24,7 +24,7 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
     public @Nullable Look extractArgument(ItemStack stack) {
         if (stack.getItem() instanceof CarcassItem carcass) return new Look(carcass.body, "");
         if (stack.getItem() instanceof WorktopItem worktop) return new Look("", worktop.top);
-        return new Look(stack.getOrDefault(ModContent.BODY, "oak"), stack.getOrDefault(ModContent.TOP, "oak"));
+        return new Look(ModContent.bodyOf(stack), ModContent.cupboardTopOf(stack));
     }
 
     @Override

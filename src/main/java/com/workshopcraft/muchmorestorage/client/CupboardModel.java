@@ -31,7 +31,7 @@ public final class CupboardModel {
         TextureAtlasSprite sp = sprite(Finishes.topSprite(top));
         if (top.contains(":") && sp.contents().name().equals(MissingTextureAtlasSprite.getLocation())) {
             String path = top.substring(top.indexOf(':') + 1).replace("_worktop", "");
-            sp = sprite(Identifier.withDefaultNamespace("block/" + path));
+            sp = sprite(MuchMoreStorage.id("minecraft", "block/" + path));
         }
         return sp;
     }

@@ -28,14 +28,21 @@ public record Quads(PoseStack.Pose pose, VertexConsumer vc, int light, int overl
         float[][] uv = {{u0, v0}, {u0, v1}, {u1, v1}, {u1, v0}};
         //? if >=1.21.5 {
         Vector3f n = pose.transformNormal(dir.getUnitVec3f(), new Vector3f());
-        //?} else
-        /*Vector3f n = pose.transformNormal(dir.step(), new Vector3f());*/
+        //?} else if >=1.21 {
+        /*Vector3f n = pose.transformNormal(dir.step(), new Vector3f());
+        *///?} else
+        /*Vector3f n = pose.normal().transform(dir.step());*/
         Matrix4f m = pose.pose();
         Vector3f pos = new Vector3f();
         for (int i = 0; i < 4; i++) {
             m.transformPosition(c[i][0], c[i][1], c[i][2], pos);
+            //? if >=1.21 {
             vc.addVertex(pos.x(), pos.y(), pos.z(), colour, sp.getU(uv[i][0] / 16F), sp.getV(uv[i][1] / 16F),
                     overlay, light, n.x(), n.y(), n.z());
+            //?} else {
+            /*vc.vertex(pos.x(), pos.y(), pos.z(), (colour >> 16 & 255) / 255F, (colour >> 8 & 255) / 255F, (colour & 255) / 255F,
+                    (colour >>> 24) / 255F, sp.getU(uv[i][0]), sp.getV(uv[i][1]), overlay, light, n.x(), n.y(), n.z());
+            *///?}
         }
     }
 }

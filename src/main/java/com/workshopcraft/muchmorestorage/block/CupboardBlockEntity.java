@@ -6,7 +6,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 //? if >=1.21.6
 import net.minecraft.core.component.DataComponentGetter;
+//? if >=1.20.5 {
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+//?}
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -132,7 +135,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         output.putString("Top", top);
         if (!trySaveLootTable(output)) ContainerHelper.saveAllItems(output, items);
     }
-    //?} else {
+    //?} else if >=1.20.5 {
     /*@Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
@@ -150,8 +153,27 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         tag.putString("Top", top);
         if (!trySaveLootTable(tag)) ContainerHelper.saveAllItems(tag, items, registries);
     }
+    *///?} else {
+    /*@Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        body = tag.contains("Body") ? tag.getString("Body") : "oak";
+        top = tag.getString("Top");
+        if (top.isEmpty()) settleStart = -1;
+        items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+        if (!tryLoadLootTable(tag)) ContainerHelper.loadAllItems(tag, items);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putString("Body", body);
+        tag.putString("Top", top);
+        if (!trySaveLootTable(tag)) ContainerHelper.saveAllItems(tag, items);
+    }
     *///?}
 
+    //? if >=1.20.5 {
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder b) {
         super.collectImplicitComponents(b);
@@ -165,8 +187,10 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     //?} else
     /*protected void applyImplicitComponents(DataComponentInput in) {*/
         super.applyImplicitComponents(in);
-        String b = in.get(ModContent.BODY);
-        String t = in.get(ModContent.TOP);
+        String b = ModContent.legacy(in.get(DataComponents.CUSTOM_DATA), "Body");
+        String t = ModContent.legacy(in.get(DataComponents.CUSTOM_DATA), "Top");
+        if (b == null) b = in.get(ModContent.BODY);
+        if (t == null) t = in.get(ModContent.TOP);
         if (b != null) body = b;
         if (t != null) top = t;
     }
@@ -186,9 +210,13 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         tag.remove("Top");
     }
     *///?}
+    //?}
 
     @Override
+    //? if >=1.20.5 {
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+    //?} else
+    /*public CompoundTag getUpdateTag() {*/
         CompoundTag tag = new CompoundTag();
         tag.putString("Body", body);
         tag.putString("Top", top);

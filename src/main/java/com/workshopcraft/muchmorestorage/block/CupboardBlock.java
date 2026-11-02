@@ -1,6 +1,6 @@
 package com.workshopcraft.muchmorestorage.block;
 
-//? if <26.3
+//? if >=1.20.5 && <26.3
 import com.mojang.serialization.MapCodec;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.registry.Finishes;
@@ -14,7 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-//? if <1.21.2
+//? if >=1.20.5 && <1.21.2
 /*import net.minecraft.world.ItemInteractionResult;*/
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
@@ -52,7 +52,7 @@ import java.util.List;
 
 // one block for every finish, the body and top live in the block entity
 public class CupboardBlock extends BaseEntityBlock {
-    //? if <26.3
+    //? if >=1.20.5 && <26.3
     public static final MapCodec<CupboardBlock> CODEC = simpleCodec(CupboardBlock::new);
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
@@ -65,7 +65,7 @@ public class CupboardBlock extends BaseEntityBlock {
                 .setValue(ASSEMBLED, true).setValue(CONCRETE, false));
     }
 
-    //? if <26.3 {
+    //? if >=1.20.5 && <26.3 {
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
     //?}
@@ -77,7 +77,7 @@ public class CupboardBlock extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         ItemStack stack = ctx.getItemInHand();
         boolean carcass = stack.getItem() instanceof CarcassItem;
-        String body = carcass ? ((CarcassItem) stack.getItem()).body : stack.getOrDefault(ModContent.BODY, "oak");
+        String body = carcass ? ((CarcassItem) stack.getItem()).body : ModContent.bodyOf(stack);
         return defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite())
                 .setValue(ASSEMBLED, !carcass).setValue(CONCRETE, !Finishes.isWood(body));
     }
@@ -87,26 +87,31 @@ public class CupboardBlock extends BaseEntityBlock {
         if (stack.getItem() instanceof CarcassItem carcass && level.getBlockEntity(pos) instanceof CupboardBlockEntity be) {
             be.setFinishes(carcass.body, "");
         }
+        //? if <1.20.5 {
+        /*else if (level.getBlockEntity(pos) instanceof CupboardBlockEntity be) {
+            be.setFinishes(ModContent.bodyOf(stack), ModContent.cupboardTopOf(stack));
+        }
+        *///?}
     }
 
     @Override
-    protected BlockState rotate(BlockState s, Rotation r) { return s.setValue(FACING, r.rotate(s.getValue(FACING))); }
+    public BlockState rotate(BlockState s, Rotation r) { return s.setValue(FACING, r.rotate(s.getValue(FACING))); }
 
     @Override
-    protected BlockState mirror(BlockState s, Mirror m) {
+    public BlockState mirror(BlockState s, Mirror m) {
         BlockState r = s.rotate(m.getRotation(s.getValue(FACING)));
         return m == Mirror.NONE ? r : r.cycle(HINGE);
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
+    public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
 
     @Override
-    protected SoundType getSoundType(BlockState state) { return state.getValue(CONCRETE) ? SoundType.STONE : SoundType.WOOD; }
+    public SoundType getSoundType(BlockState state) { return state.getValue(CONCRETE) ? SoundType.STONE : SoundType.WOOD; }
 
     // axe for wood bodies, pickaxe for concrete, both still work by hand
     @Override
-    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
         BlockState like = state.getValue(CONCRETE) ? Blocks.STONE.defaultBlockState() : Blocks.OAK_PLANKS.defaultBlockState();
         return player.getDestroySpeed(like) / 2.5F / 30F;
     }
@@ -126,13 +131,21 @@ public class CupboardBlock extends BaseEntityBlock {
         if (held.is(ModContent.SCREWDRIVERS)) return InteractionResult.PASS;
         return placeTop(held, state, level, pos, player) ? InteractionResult.SUCCESS : InteractionResult.TRY_WITH_EMPTY_HAND;
     }
-    //?} else {
+    //?} else if >=1.20.5 {
     /*@Override
     protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player,
                                               InteractionHand hand, BlockHitResult hit) {
         if (held.is(ModContent.SCREWDRIVERS)) return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         return placeTop(held, state, level, pos, player) ? ItemInteractionResult.sidedSuccess(level.isClientSide())
                 : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+    *///?} else {
+    /*@Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack held = player.getItemInHand(hand);
+        if (held.is(ModContent.SCREWDRIVERS)) return InteractionResult.PASS;
+        if (placeTop(held, state, level, pos, player)) return InteractionResult.sidedSuccess(level.isClientSide());
+        return open(state, level, pos, player);
     }
     *///?}
 
@@ -143,15 +156,24 @@ public class CupboardBlock extends BaseEntityBlock {
                 || !(level.getBlockEntity(pos) instanceof CupboardBlockEntity be) || be.hasTop()) return false;
         if (!level.isClientSide()) {
             be.setFinishes(be.body(), top);
+            //? if >=1.21 {
             held.consume(1, player);
+            //?} else
+            /*if (!player.getAbilities().instabuild) held.shrink(1);*/
             SoundType sound = Finishes.isWoodTop(top) ? SoundType.WOOD : SoundType.STONE;
             level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.0F);
         }
         return true;
     }
 
+    //? if >=1.20.5 {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        return open(state, level, pos, player);
+    }
+    //?}
+
+    private static InteractionResult open(BlockState state, Level level, BlockPos pos, Player player) {
         if (!state.getValue(ASSEMBLED)) return InteractionResult.PASS;
         if (level instanceof ServerLevel server && level.getBlockEntity(pos) instanceof CupboardBlockEntity cupboard) {
             player.openMenu(cupboard);
@@ -165,7 +187,7 @@ public class CupboardBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (!(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return;
         be.recheckOpen();
         if (!state.getValue(ASSEMBLED) && be.settleEnd > 0) {
@@ -190,7 +212,7 @@ public class CupboardBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
         List<ItemStack> out = new ArrayList<>();
         if (params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof CupboardBlockEntity be) {
             if (state.getValue(ASSEMBLED)) {
@@ -206,9 +228,12 @@ public class CupboardBlock extends BaseEntityBlock {
     //? if >=1.21.4 {
     @Override
     protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
-    //?} else {
+    //?} else if >=1.20.5 {
     /*@Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+    *///?} else {
+    /*@Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
     *///?}
         if (!(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return new ItemStack(ModContent.CUPBOARD_ITEM);
         return state.getValue(ASSEMBLED) ? ModContent.cupboard(be.body(), be.top()) : new ItemStack(ModContent.CARCASSES.get(be.body()));
@@ -221,20 +246,27 @@ public class CupboardBlock extends BaseEntityBlock {
     }
     //?} else {
     /*@Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        Containers.dropContentsOnDestroy(state, newState, level, pos);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        //? if >=1.20.5 {
+        /^Containers.dropContentsOnDestroy(state, newState, level, pos);
+        ^///?} else {
+        /^if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof net.minecraft.world.Container c) {
+            Containers.dropContents(level, pos, c);
+            level.updateNeighbourForOutputSignal(pos, state.getBlock());
+        }
+        ^///?}
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
     *///?}
 
     @Override
-    protected boolean hasAnalogOutputSignal(BlockState state) { return true; }
+    public boolean hasAnalogOutputSignal(BlockState state) { return true; }
 
     @Override
     //? if >=1.21.9 {
     protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
     //?} else
-    /*protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {*/
+    /*public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {*/
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
     }
 }

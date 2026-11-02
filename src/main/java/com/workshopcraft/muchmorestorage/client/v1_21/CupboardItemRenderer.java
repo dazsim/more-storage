@@ -49,11 +49,11 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         }
         Quads q = new Quads(pose.last(), vc, light, overlay);
         boolean carcass = stack.getItem() instanceof CarcassItem;
-        String body = carcass ? ((CarcassItem) stack.getItem()).body : stack.getOrDefault(ModContent.BODY, "oak");
+        String body = carcass ? ((CarcassItem) stack.getItem()).body : ModContent.bodyOf(stack);
         CupboardModel.Body b = CupboardModel.Body.of(body);
         CupboardModel.carcass(q, b);
         CupboardModel.door(q, b, false);
-        String top = carcass ? "" : stack.getOrDefault(ModContent.TOP, "oak");
+        String top = carcass ? "" : ModContent.cupboardTopOf(stack);
         if (!top.isEmpty()) CupboardModel.worktop(q, CupboardModel.top(top));
     }
 }
