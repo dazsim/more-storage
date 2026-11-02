@@ -17,6 +17,15 @@ val requiredJava = when {
     else -> JavaVersion.VERSION_21
 }
 
+// json whose format changed between versions, written per era by tools/gen_resources.py
+val era = when {
+    sc.current.parsed >= "26.3" -> "26.3"
+    sc.current.parsed >= "26.1" -> "26.1"
+    sc.current.parsed >= "1.21" -> "1.21.1"
+    else -> "1.20.1"
+}
+sourceSets.main { resources.srcDir(rootProject.file("src/eras/$era")) }
+
 neoForge {
     version = sc.properties.get<String>("deps.neo_loader")
     accessTransformers.from(rootProject.file("src/main/resources/META-INF/accesstransformer.cfg"))
@@ -56,6 +65,8 @@ tasks {
             "minecraft" to sc.properties.get<String>("mod.mc_compat"),
             "neoforge" to sc.properties.get<String>("deps.neo_compat"),
             "fml" to sc.properties.get<String>("deps.neo_fml_compat"),
+            "pack_min" to sc.properties.get<String>("mod.pack_min"),
+            "pack_max" to sc.properties.get<String>("mod.pack_max"),
         )
         inputs.properties(props)
         filesMatching(listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")) { expand(props) }

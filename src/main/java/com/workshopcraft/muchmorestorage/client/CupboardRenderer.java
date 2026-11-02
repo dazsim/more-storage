@@ -5,8 +5,15 @@ import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.math.Axis;
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
+//? if >=26.3 {
+/*import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.util.LightCoordsUtil;
+*///?} else {
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.Sheets;
+//?}
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -19,6 +26,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 
 import java.util.function.Consumer;
 
@@ -26,6 +34,8 @@ import java.util.function.Consumer;
 // the whole cupboard is drawn here since the finishes come from the block entity
 public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity, CupboardRenderer.State> {
     private static final float MAX_ANGLE = 100F;
+    //? if >=26.3
+    /*private static final RenderType CUTOUT_BLOCK_SHEET = RenderTypes.entityCutoutCull(TextureAtlas.LOCATION_BLOCKS);*/
 
     public static class State extends BlockEntityRenderState {
         Direction facing = Direction.NORTH;
@@ -58,12 +68,20 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         s.settle = be.settleProgress(partialTick);
         float o = 1F - be.getOpenNess(partialTick);
         s.open = 1F - o * o * o;
+        //? if >=26.3 {
+        /*s.frontLight = be.getLevel() == null ? s.lightCoords : LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
+        s.topLight = be.getLevel() == null ? s.lightCoords : LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos().above());
+        *///?} else {
         s.frontLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
         s.topLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().above());
+        //?}
     }
 
     private static void submit(State s, PoseStack pose, SubmitNodeCollector out,
                                int light, Consumer<Quads> draw) {
+        //? if >=26.3 {
+        /*out.submitCustomGeometry(pose, CUTOUT_BLOCK_SHEET, (p, vc) -> draw.accept(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY)));
+        *///?} else
         out.submitCustomGeometry(pose, Sheets.cutoutBlockSheet(), (p, vc) -> draw.accept(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY)));
         if (s.breakProgress != null) {
             ModelFeatureRenderer.CrumblingOverlay c = s.breakProgress;
@@ -77,13 +95,13 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         CupboardModel.Body body = CupboardModel.Body.of(s.body);
         pose.pushPose();
         pose.translate(0.5F, 0, 0.5F);
-        pose.mulPose(Axis.YP.rotationDegrees(180F - s.facing.toYRot()));
+        rotate(pose, Axis.YP.rotationDegrees(180F - s.facing.toYRot()));
         pose.translate(-0.5F, 0, -0.5F);
         submit(s, pose, out, s.lightCoords, q -> CupboardModel.carcass(q, body));
         if (!s.top.isEmpty()) submitWorktop(s, pose, out);
         float hingeX = s.rightHinge ? 0F : 1F;
         pose.translate(hingeX, 0, 1 / 16F);
-        pose.mulPose(Axis.YP.rotationDegrees((s.rightHinge ? MAX_ANGLE : -MAX_ANGLE) * s.open));
+        rotate(pose, Axis.YP.rotationDegrees((s.rightHinge ? MAX_ANGLE : -MAX_ANGLE) * s.open));
         pose.translate(-hingeX, 0, -1 / 16F);
         submit(s, pose, out, s.frontLight, q -> CupboardModel.door(q, body, s.rightHinge));
         pose.popPose();
@@ -95,11 +113,18 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         float k = s.assembled ? 0F : 1F - s.settle * s.settle;
         pose.pushPose();
         pose.translate(0.5F + 0.6F / 16 * k, 15 / 16F + 1.5F / 16 * k, 0.5F + 0.4F / 16 * k);
-        pose.mulPose(Axis.YP.rotationDegrees(4F * k));
-        pose.mulPose(Axis.ZP.rotationDegrees(-2F * k));
-        pose.mulPose(Axis.XP.rotationDegrees(1F * k));
+        rotate(pose, Axis.YP.rotationDegrees(4F * k));
+        rotate(pose, Axis.ZP.rotationDegrees(-2F * k));
+        rotate(pose, Axis.XP.rotationDegrees(1F * k));
         pose.translate(-0.5F, -15 / 16F, -0.5F);
         submit(s, pose, out, s.topLight, q -> CupboardModel.worktop(q, top));
         pose.popPose();
+    }
+
+    private static void rotate(PoseStack pose, Quaternionf q) {
+        //? if >=26.3 {
+        /*pose.rotate(q);
+        *///?} else
+        pose.mulPose(q);
     }
 }

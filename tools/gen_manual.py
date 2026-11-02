@@ -388,7 +388,7 @@ def page_cover(pg):
 # ---------- recipe legends, read from the recipe files gen_resources.py just wrote ----------
 
 def recipe_files():
-    d = f"{ROOT}/data/{MOD}/recipe"
+    d = f"src/eras/26.1/data/{MOD}/recipe"
     out = {}
     for f in sorted(os.listdir(d)):
         with open(f"{d}/{f}") as fh: out[f[:-5]] = json.load(fh)
@@ -680,27 +680,31 @@ GUARD = {"fabric:load_conditions": [{"condition": "fabric:all_mods_loaded", "val
 BOOK = {"simplebooks:book": f"{MOD}:manual", "minecraft:item_model": f"{MOD}:manual"}
 SCREWDRIVERS = "#c:tools/screwdriver"
 
-def data():
-    D = f"{ROOT}/data/{MOD}"
+def data(era, e):
+    D = f"src/eras/{era}/data/{MOD}"
     # any mod's screwdriver works and comes back, see KeepToolShapelessRecipe
     w(f"{D}/recipe/manual.json", {**GUARD, "type": f"{MOD}:crafting_shapeless_keep_tool", "category": "misc",
         "ingredients": ["minecraft:book", SCREWDRIVERS, "#c:chests/wooden"], "keep": SCREWDRIVERS,
         "result": {"id": "simplebooks:guide", "components": BOOK}})
-    unlock = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": f"{MOD}:manual"}},
+    unlock = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {e.get("unlock", "recipe"): f"{MOD}:manual"}},
               "has_screwdriver": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": SCREWDRIVERS}]}}}
     w(f"{D}/advancement/recipes/misc/manual.json", {**GUARD, "parent": "minecraft:recipes/root", "criteria": unlock,
         "requirements": [list(unlock)], "rewards": {"recipes": [f"{MOD}:manual"]}})
     w(f"{D}/advancement/got_manual.json", {**GUARD, "criteria": {"screwdriver": {"trigger": "minecraft:inventory_changed",
         "conditions": {"items": [{"items": SCREWDRIVERS}]}}}, "requirements": [["screwdriver"]],
         "rewards": {"loot": [f"{MOD}:manual"]}})
-    w(f"{D}/loot_table/manual.json", {**GUARD, "type": "minecraft:advancement_reward", "pools": [{"rolls": 1, "entries": [
-        {"type": "minecraft:item", "name": "simplebooks:guide", "functions": [{"function": "minecraft:set_components", "components": BOOK}]}]}]})
-    w(f"{A}/items/manual.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/manual"}})
+    if e.get("modifier"):
+        entry = {"type": "minecraft:item", "name": "simplebooks:guide", "modifier": {"type": "minecraft:set_components", "components": BOOK}}
+    else:
+        entry = {"type": "minecraft:item", "name": "simplebooks:guide", "functions": [{"function": "minecraft:set_components", "components": BOOK}]}
+    w(f"{D}/loot_table/manual.json", {**GUARD, "type": "minecraft:advancement_reward", "pools": [{"rolls": 1, "entries": [entry]}]})
+    w(f"src/eras/{era}/assets/{MOD}/items/manual.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/manual"}})
     w(f"{A}/models/item/manual.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MOD}:item/manual"}})
 
-def main(only=None):
+def main(eras):
     global RECIPES
-    data()
+    for era, e in eras.items():
+        data(era, e)
     RECIPES = recipe_files()
     with open(f"{A}/lang/en_us.json") as f: lang = json.load(f)
     lang.update({legend(k): v for k, v in LEGENDS.items()})
@@ -735,4 +739,4 @@ def main(only=None):
     manual_icon()
 
 if __name__ == "__main__":
-    main()
+    import gen_resources

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:oak_slab"
+  },
+  "result": {
+    "id": "muchmorestorage:oak_worktop",
+    "count": 1
+  }
+}

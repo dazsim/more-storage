@@ -1,5 +1,6 @@
 package com.workshopcraft.muchmorestorage.block;
 
+//? if <26.3
 import com.mojang.serialization.MapCodec;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.registry.Finishes;
@@ -49,6 +50,7 @@ import java.util.List;
 
 // one block for every finish, the body and top live in the block entity
 public class CupboardBlock extends BaseEntityBlock {
+    //? if <26.3
     public static final MapCodec<CupboardBlock> CODEC = simpleCodec(CupboardBlock::new);
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
@@ -61,8 +63,10 @@ public class CupboardBlock extends BaseEntityBlock {
                 .setValue(ASSEMBLED, true).setValue(CONCRETE, false));
     }
 
+    //? if <26.3 {
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    //?}
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> b) { b.add(FACING, HINGE, ASSEMBLED, CONCRETE); }

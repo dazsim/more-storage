@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:jungle_slab"
+  },
+  "result": {
+    "id": "muchmorestorage:jungle_worktop",
+    "count": 1
+  }
+}

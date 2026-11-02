@@ -17,6 +17,15 @@ val requiredJava = when {
     else -> JavaVersion.VERSION_17
 }
 
+// json whose format changed between versions, written per era by tools/gen_resources.py
+val era = when {
+    sc.current.parsed >= "26.3" -> "26.3"
+    sc.current.parsed >= "26.1" -> "26.1"
+    sc.current.parsed >= "1.21" -> "1.21.1"
+    else -> "1.20.1"
+}
+sourceSets.main { resources.srcDir(rootProject.file("src/eras/$era")) }
+
 dependencies {
     minecraft("com.mojang:minecraft:${sc.current.version}")
     loomx.applyMojangMappings()
@@ -51,6 +60,8 @@ tasks {
             "minecraft" to sc.properties.get<String>("mod.mc_compat"),
             "loader" to sc.properties.get<String>("deps.fabric_loader"),
             "java" to requiredJava.majorVersion,
+            "pack_min" to sc.properties.get<String>("mod.pack_min"),
+            "pack_max" to sc.properties.get<String>("mod.pack_max"),
         )
         inputs.properties(props)
         filesMatching(listOf("fabric.mod.json", "pack.mcmeta")) { expand(props) }

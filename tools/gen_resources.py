@@ -4,7 +4,15 @@ import json, os, shutil
 
 MOD = "muchmorestorage"
 ROOT = "src/main/resources"
-A, D = f"{ROOT}/assets/{MOD}", f"{ROOT}/data/{MOD}"
+A = f"{ROOT}/assets/{MOD}"
+# data and item model files whose format moved between versions go to src/eras/<era>, each node picks one
+ERAS = {
+    "26.1": {},
+    "26.3": {"unlock": "recipes", "modifier": True, "tool_category": "equipment"},
+}
+
+def era_root(era):
+    return f"src/eras/{era}"
 
 WOODS = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak", "bamboo", "crimson", "warped"]
 COLOURS = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan",
@@ -22,14 +30,16 @@ def w(path, obj):
         json.dump(obj, f, indent=2)
         f.write("\n")
 
-for sub in ["assets/" + MOD + "/blockstates", "assets/" + MOD + "/items", "assets/" + MOD + "/models",
-            "data/" + MOD + "/recipe", "data/" + MOD + "/advancement", "data/" + MOD + "/loot_table",
-            "data/" + MOD + "/tags", "data/minecraft"]:
+for sub in ["assets/" + MOD + "/blockstates", "assets/" + MOD + "/items", "assets/" + MOD + "/models", "data"]:
     shutil.rmtree(f"{ROOT}/{sub}", ignore_errors=True)
+shutil.rmtree("src/eras", ignore_errors=True)
 
-def advancement(path, recipe, unlock):
+def unlocked(era, recipe):
+    return {"trigger": "minecraft:recipe_unlocked", "conditions": {ERAS[era].get("unlock", "recipe"): recipe}}
+
+def advancement(era, path, recipe, unlock):
     # unlock is one item or tag, or a list of them where any one will do
-    crit = {"has_the_recipe": {"trigger": "minecraft:recipe_unlocked", "conditions": {"recipe": recipe}}}
+    crit = {"has_the_recipe": unlocked(era, recipe)}
     items = unlock if isinstance(unlock, list) else [unlock]
     for n, item in enumerate(items):
         crit["has_item" if n == 0 else f"has_item_{n + 1}"] = {"trigger": "minecraft:inventory_changed",
@@ -37,9 +47,20 @@ def advancement(path, recipe, unlock):
     w(path, {"parent": "minecraft:recipes/root", "criteria": crit, "requirements": [list(crit)], "rewards": {"recipes": [recipe]}})
 
 def recipe(name, pattern, key, count=1, category="misc", unlock=None):
-    w(f"{D}/recipe/{name}.json", {"type": "minecraft:crafting_shaped", "category": category, "pattern": pattern,
-        "key": key, "result": {"id": f"{MOD}:{name}", "count": count}})
-    advancement(f"{D}/advancement/recipes/{category}/{name}.json", f"{MOD}:{name}", unlock)
+    for era, e in ERAS.items():
+        D = f"{era_root(era)}/data/{MOD}"
+        cat = e.get("tool_category", category) if category == "tools" else category
+        w(f"{D}/recipe/{name}.json", {"type": "minecraft:crafting_shaped", "category": cat, "pattern": pattern,
+            "key": key, "result": {"id": f"{MOD}:{name}", "count": count}})
+        advancement(era, f"{D}/advancement/recipes/{category}/{name}.json", f"{MOD}:{name}", unlock)
+
+def item_model(name, model):
+    for era in ERAS:
+        w(f"{era_root(era)}/assets/{MOD}/items/{name}.json", {"model": model})
+
+def tag(path, values):
+    for era in ERAS:
+        w(f"{era_root(era)}/data/{path}.json", {"values": values})
 
 # the renderer draws everything, the block models only carry the break particles
 w(f"{A}/blockstates/cupboard.json", {"variants": {
@@ -50,8 +71,7 @@ w(f"{A}/models/block/cupboard_concrete.json", {"textures": {"particle": "minecra
 w(f"{A}/models/item/cupboard.json", {"parent": "minecraft:block/block", "textures": {"particle": "minecraft:block/oak_planks"}})
 
 def special(name):
-    w(f"{A}/items/{name}.json", {"model": {"type": "minecraft:special", "base": f"{MOD}:item/cupboard",
-        "model": {"type": f"{MOD}:cupboard"}}})
+    item_model(name, {"type": "minecraft:special", "base": f"{MOD}:item/cupboard", "model": {"type": f"{MOD}:cupboard"}})
 
 lang = {f"itemGroup.{MOD}": "Much More Storage", f"container.{MOD}.cupboard": "Cupboard",
         f"block.{MOD}.cupboard": "Cupboard", f"item.{MOD}.cupboard": "Cupboard",
@@ -80,12 +100,11 @@ for top in TOPS:
 for f in dict.fromkeys(BODIES + TOPS):
     lang[f"finish.{MOD}.{f}"] = label(f)
 
-w(f"{D}/tags/item/carcasses.json", {"values": [f"{MOD}:{b}_carcass" for b in BODIES]})
-w(f"{ROOT}/data/c/tags/item/worktops.json", {"values": [f"{MOD}:{t}_worktop" for t in TOPS]})
-w(f"{ROOT}/data/c/tags/item/tools/screwdriver.json", {"values": [{"id": f"{m}:screwdriver", "required": False}
-                                                           for m in [MOD, "simplemachines", "morelighting"]]})
+tag(f"{MOD}/tags/item/carcasses", [f"{MOD}:{b}_carcass" for b in BODIES])
+tag("c/tags/item/worktops", [f"{MOD}:{t}_worktop" for t in TOPS])
+tag("c/tags/item/tools/screwdriver", [{"id": f"{m}:screwdriver", "required": False} for m in [MOD, "simplemachines", "morelighting"]])
 w(f"{A}/models/item/screwdriver.json", {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{MOD}:item/screwdriver"}})
-w(f"{A}/items/screwdriver.json", {"model": {"type": "minecraft:model", "model": f"{MOD}:item/screwdriver"}})
+item_model("screwdriver", {"type": "minecraft:model", "model": f"{MOD}:item/screwdriver"})
 recipe("screwdriver", ["I", "S"], {"I": "#c:ingots/iron", "S": "minecraft:stick"}, category="tools",
        unlock=["#c:ingots/iron", "minecraft:stick"])
 lang[f"item.{MOD}.screwdriver"] = "Screwdriver"
@@ -96,4 +115,4 @@ lang["tag.item.c.tools.screwdriver"] = "Screwdrivers"
 w(f"{A}/lang/en_us.json", lang)
 
 import gen_manual
-gen_manual.main()
+gen_manual.main(ERAS)
