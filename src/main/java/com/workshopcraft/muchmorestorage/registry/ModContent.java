@@ -19,6 +19,7 @@ import com.workshopcraft.muchmorestorage.item.CupboardItem;
 import com.workshopcraft.muchmorestorage.item.FlatpackItem;
 import com.workshopcraft.muchmorestorage.item.InsertItem;
 import com.workshopcraft.muchmorestorage.item.KubhalaItem;
+import com.workshopcraft.muchmorestorage.item.SakksakkItem;
 import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
 import net.minecraft.core.Registry;
@@ -62,6 +63,7 @@ public final class ModContent {
     public static KubhalaItem KUBHALA_ITEM;
     public static InsertItem DRAWER_INSERT;
     public static InsertItem DOOR_INSERT;
+    public static final Map<String, SakksakkItem> SAKKSAKKS = new LinkedHashMap<>();
     public static BlockEntityType<KubhalaBlockEntity> KUBHALA_BE;
     //? if >=1.20.5 {
     public static DataComponentType<String> BODY;
@@ -75,6 +77,9 @@ public final class ModContent {
             {"green_concrete", "oak"}, {"birch", "polished_granite"}};
 
     private static final String[] KUBHALA_EXAMPLES = {"white_concrete", "black_concrete", "oak", "birch", "dark_oak"};
+
+    public static final java.util.List<String> SAKKSAKK_COLOURS = new java.util.ArrayList<>(Finishes.COLOURS);
+    static { SAKKSAKK_COLOURS.add("wicker"); }
 
     private ModContent() {}
 
@@ -141,6 +146,11 @@ public final class ModContent {
         r.accept(MuchMoreStorage.id("kubhala_drawer"), DRAWER_INSERT);
         DOOR_INSERT = new InsertItem(Insert.DOOR, item("kubhala_door"));
         r.accept(MuchMoreStorage.id("kubhala_door"), DOOR_INSERT);
+        for (String c : SAKKSAKK_COLOURS) {
+            SakksakkItem box = new SakksakkItem(c, item(c + "_sakksakk").stacksTo(1));
+            SAKKSAKKS.put(c, box);
+            r.accept(MuchMoreStorage.id(c + "_sakksakk"), box);
+        }
         //? if >=1.20.5 {
         KUBHALA_ITEM = new KubhalaItem(KUBHALA, item("kubhala").component(BODY, "white_concrete"));
         //?} else
@@ -258,6 +268,7 @@ public final class ModContent {
                     for (String body : KUBHALA_EXAMPLES) out.accept(kubhala(body));
                     out.accept(DRAWER_INSERT);
                     out.accept(DOOR_INSERT);
+                    SAKKSAKKS.values().forEach(out::accept);
                     FLATPACKS.values().forEach(out::accept);
                 })
                 .build();

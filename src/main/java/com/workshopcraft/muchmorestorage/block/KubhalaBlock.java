@@ -4,6 +4,7 @@ package com.workshopcraft.muchmorestorage.block;
 import com.mojang.serialization.MapCodec;
 import com.workshopcraft.muchmorestorage.item.FlatpackItem;
 import com.workshopcraft.muchmorestorage.item.InsertItem;
+import com.workshopcraft.muchmorestorage.item.SakksakkItem;
 import com.workshopcraft.muchmorestorage.registry.Finishes;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -157,6 +158,7 @@ public class KubhalaBlock extends BaseEntityBlock {
 
     // an insert pushed into an empty cube sits loose until it is screwed in
     private static boolean fitInsert(ItemStack held, BlockState state, Level level, BlockPos pos, Player player) {
+        if (held.getItem() instanceof SakksakkItem box) return fitBox(held, box, state, level, pos);
         if (!(held.getItem() instanceof InsertItem insert) || !state.getValue(ASSEMBLED) || state.getValue(INSERT) != Insert.NONE) return false;
         if (!level.isClientSide()) {
             level.setBlock(pos, state.setValue(INSERT, insert.kind).setValue(FITTED, false), 3);
@@ -165,6 +167,20 @@ public class KubhalaBlock extends BaseEntityBlock {
             //?} else
             /*if (!player.getAbilities().instabuild) held.shrink(1);*/
             level.playSound(null, pos, SoundType.WOOD.getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.2F);
+        }
+        return true;
+    }
+
+    // a SAKKSÄKK goes into an empty cube with its contents and is fitted straight away
+    private static boolean fitBox(ItemStack held, SakksakkItem box, BlockState state, Level level, BlockPos pos) {
+        if (!state.getValue(ASSEMBLED) || state.getValue(INSERT) != Insert.NONE) return false;
+        if (!(level.getBlockEntity(pos) instanceof KubhalaBlockEntity be) || !be.isEmpty()) return false;
+        if (!level.isClientSide()) {
+            var contents = SakksakkItem.contents(held);
+            held.shrink(1);
+            level.setBlock(pos, state.setValue(INSERT, Insert.BOX).setValue(FITTED, true), 3);
+            be.fillBox(box.colour, contents);
+            level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.0F);
         }
         return true;
     }
@@ -201,6 +217,10 @@ public class KubhalaBlock extends BaseEntityBlock {
             be.startSettle();
         } else if (insert != Insert.NONE && !state.getValue(FITTED) && !sneaking) {
             level.setBlock(pos, state.setValue(FITTED, true), 3);
+        } else if (insert == Insert.BOX) {
+            ItemStack out = be.takeBox();
+            level.setBlock(pos, state.setValue(INSERT, Insert.NONE).setValue(FITTED, false), 3);
+            popResource(level, pos.relative(state.getValue(FACING)), out);
         } else if (insert != Insert.NONE) {
             popResource(level, pos.relative(state.getValue(FACING)), ModContent.insert(insert));
             level.setBlock(pos, state.setValue(INSERT, Insert.NONE).setValue(FITTED, false), 3);
@@ -233,7 +253,7 @@ public class KubhalaBlock extends BaseEntityBlock {
         if (params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof KubhalaBlockEntity be) {
             if (state.getValue(ASSEMBLED)) {
                 out.add(ModContent.kubhala(be.body()));
-                ItemStack insert = ModContent.insert(state.getValue(INSERT));
+                ItemStack insert = state.getValue(INSERT) == Insert.BOX ? be.boxItem() : ModContent.insert(state.getValue(INSERT));
                 if (!insert.isEmpty()) out.add(insert);
             } else {
                 out.add(new ItemStack(ModContent.FLATPACKS.get(be.body())));
@@ -265,10 +285,11 @@ public class KubhalaBlock extends BaseEntityBlock {
     /*@Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         //? if >=1.20.5 {
-        /^Containers.dropContentsOnDestroy(state, newState, level, pos);
+        /^if (state.getValue(INSERT) == Insert.BOX) level.updateNeighbourForOutputSignal(pos, state.getBlock());
+        else Containers.dropContentsOnDestroy(state, newState, level, pos);
         ^///?} else {
         /^if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof net.minecraft.world.Container c) {
-            Containers.dropContents(level, pos, c);
+            if (state.getValue(INSERT) != Insert.BOX) Containers.dropContents(level, pos, c);
             level.updateNeighbourForOutputSignal(pos, state.getBlock());
         }
         ^///?}

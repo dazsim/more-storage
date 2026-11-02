@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S S",
+    "W W",
+    "WWW"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "W": {
+      "item": "minecraft:sugar_cane"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:wicker_sakksakk",
+    "count": 1
+  }
+}

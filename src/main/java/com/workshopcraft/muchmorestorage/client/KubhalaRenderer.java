@@ -7,6 +7,7 @@ import com.mojang.math.Axis;
 import com.workshopcraft.muchmorestorage.block.Insert;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlock;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlockEntity;
+import com.workshopcraft.muchmorestorage.item.SakksakkItem;
 //? if >=26.3 {
 /*import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -46,6 +47,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
     public static class State extends BlockEntityRenderState {
         Direction facing = Direction.NORTH;
         String body = "oak";
+        String box = "white";
         boolean assembled;
         Insert insert = Insert.NONE;
         boolean fitted;
@@ -72,6 +74,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
         var state = be.getBlockState();
         s.facing = state.getValue(KubhalaBlock.FACING);
         s.body = be.body();
+        s.box = be.box();
         s.assembled = state.getValue(KubhalaBlock.ASSEMBLED);
         s.insert = state.getValue(KubhalaBlock.INSERT);
         s.fitted = state.getValue(KubhalaBlock.FITTED);
@@ -84,7 +87,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
         s.frontLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
         s.shown.clear();
         s.blocks.clear();
-        boolean visible = s.assembled && (s.insert == Insert.NONE || s.insert == Insert.DOOR && s.open > 0.05F);
+        boolean visible = s.assembled && (s.insert == Insert.NONE || s.insert.closes() && s.open > 0.05F);
         int seed = (int) be.getBlockPos().asLong();
         for (int i = 0; visible && i < be.getContainerSize() && s.shown.size() < 3; i++) {
             ItemStack stack = be.getItem(i);
@@ -121,13 +124,21 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
             return;
         }
         submit(s, pose, out, s.lightCoords, q -> KubhalaModel.frame(q, body, s.join));
-        submitItems(s, pose, out);
+        if (s.insert != Insert.DRAWER) submitItems(s, pose, out);
+        if (s.insert == Insert.BOX) {
+            pose.pushPose();
+            pose.translate(0, 0, -3 / 16F * s.open);
+            var fabric = CupboardModel.sprite(SakksakkItem.texture(s.box));
+            submit(s, pose, out, s.frontLight, q -> KubhalaModel.sakksakk(q, fabric, s.join));
+            pose.popPose();
+        }
         if (s.insert.closes()) {
             pose.pushPose();
             if (!s.fitted) loose(pose);
             if (s.insert == Insert.DRAWER) {
                 pose.translate(0, 0, -9 / 16F * s.open);
                 submit(s, pose, out, s.frontLight, q -> KubhalaModel.drawer(q, body, s.join));
+                submitDrawerItems(s, pose, out);
             } else {
                 float hx = KubhalaModel.doorHinge(s.join);
                 pose.translate(hx, 0, 0.1F / 16);
@@ -165,6 +176,28 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
             pose.scale(sc, sc, sc);
             pose.translate(0, -box.minY, 0);
             r.submit(pose, out, s.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+            pose.popPose();
+        }
+    }
+
+    // up to three stacks lying in the front of the drawer box
+    private void submitDrawerItems(State s, PoseStack pose, SubmitNodeCollector out) {
+        int n = s.shown.size();
+        if (n == 0) return;
+        float[] xs = n == 1 ? new float[]{8} : n == 2 ? new float[]{6, 10} : new float[]{5, 8, 11};
+        float scale = n == 1 ? 0.42F : n == 2 ? 0.32F : 0.26F;
+        float floor = (s.join.y0() + KubhalaModel.GAP + 0.75F) / 16F;
+        for (int i = 0; i < n; i++) {
+            ItemStackRenderState r = s.shown.get(i);
+            float sc = s.blocks.get(i) ? scale * 1.4F : scale;
+            AABB box = r.getModelBoundingBox();
+            pose.pushPose();
+            pose.translate(xs[i] / 16F, floor + 0.01F / 16, (4.5F + (i % 2) * 0.75F) / 16F);
+            rotate(pose, Axis.YP.rotationDegrees(180F + (i - 1) * 9F));
+            rotate(pose, Axis.XP.rotationDegrees(-90F));
+            pose.scale(sc, sc, sc);
+            pose.translate(0, 0, -box.minZ);
+            r.submit(pose, out, s.frontLight, OverlayTexture.NO_OVERLAY, 0);
             pose.popPose();
         }
     }

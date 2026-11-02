@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S S",
+    "W W",
+    "WWW"
+  ],
+  "key": {
+    "S": "minecraft:string",
+    "W": "minecraft:magenta_wool"
+  },
+  "result": {
+    "id": "muchmorestorage:magenta_sakksakk",
+    "count": 1
+  }
+}

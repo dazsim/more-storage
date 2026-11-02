@@ -1,0 +1,125 @@
+{
+  "section": "kubhala",
+  "sort": 8,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/sakksakk_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/sakksakk_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/sakksakk_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/sakksakk_r_stand.png",
+  "drawn_recipes": [
+    {
+      "side": "left",
+      "text": [
+        50,
+        262,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:black_sakksakk",
+          "muchmorestorage:blue_sakksakk",
+          "muchmorestorage:brown_sakksakk",
+          "muchmorestorage:cyan_sakksakk",
+          "muchmorestorage:gray_sakksakk",
+          "muchmorestorage:green_sakksakk",
+          "muchmorestorage:light_blue_sakksakk",
+          "muchmorestorage:light_gray_sakksakk",
+          "muchmorestorage:lime_sakksakk",
+          "muchmorestorage:magenta_sakksakk",
+          "muchmorestorage:orange_sakksakk",
+          "muchmorestorage:pink_sakksakk",
+          "muchmorestorage:purple_sakksakk",
+          "muchmorestorage:red_sakksakk",
+          "muchmorestorage:white_sakksakk",
+          "muchmorestorage:yellow_sakksakk"
+        ],
+        "count": 1,
+        "box": [
+          350,
+          60,
+          220,
+          172
+        ]
+      },
+      "title": "book.muchmorestorage.manual.wool_sakksakk",
+      "grid": {
+        "at": [
+          50,
+          50
+        ],
+        "cell": 64,
+        "pattern": [
+          "S S",
+          "W W",
+          "WWW"
+        ]
+      },
+      "key": {
+        "S": {
+          "item": "minecraft:string",
+          "name": "book.muchmorestorage.manual.string"
+        },
+        "W": {
+          "items": [
+            "minecraft:black_wool",
+            "minecraft:blue_wool",
+            "minecraft:brown_wool",
+            "minecraft:cyan_wool",
+            "minecraft:gray_wool",
+            "minecraft:green_wool",
+            "minecraft:light_blue_wool",
+            "minecraft:light_gray_wool",
+            "minecraft:lime_wool",
+            "minecraft:magenta_wool",
+            "minecraft:orange_wool",
+            "minecraft:pink_wool",
+            "minecraft:purple_wool",
+            "minecraft:red_wool",
+            "minecraft:white_wool",
+            "minecraft:yellow_wool"
+          ],
+          "name": "book.muchmorestorage.manual.wool"
+        }
+      }
+    },
+    {
+      "side": "left",
+      "text": [
+        50,
+        542,
+        560
+      ],
+      "result": {
+        "item": "muchmorestorage:wicker_sakksakk",
+        "count": 1,
+        "box": [
+          350,
+          340,
+          220,
+          172
+        ]
+      },
+      "grid": {
+        "at": [
+          50,
+          330
+        ],
+        "cell": 64,
+        "pattern": [
+          "S S",
+          "W W",
+          "WWW"
+        ]
+      },
+      "key": {
+        "S": {
+          "item": "minecraft:string",
+          "name": "book.muchmorestorage.manual.string"
+        },
+        "W": {
+          "item": "minecraft:sugar_cane",
+          "name": "book.muchmorestorage.manual.sugar_cane"
+        }
+      }
+    }
+  ]
+}

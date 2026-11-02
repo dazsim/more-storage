@@ -193,6 +193,20 @@ lang.update({f"block.{MOD}.kubhala": "KUBHÅLA", f"item.{MOD}.kubhala": "KUBHÅL
              f"tooltip.{MOD}.flatpack": "Place it, then use a screwdriver",
              f"tooltip.{MOD}.insert": "Use on an empty cube, then fix with a screwdriver",
              f"tooltip.{MOD}.insert.out": "A screwdriver pops it back out"})
+# SAKKSÄKK soft boxes, 16 wool colours and a wicker one
+SAKKSAKKS = COLOURS + ["wicker"]
+for c in SAKKSAKKS:
+    name = f"{c}_sakksakk"
+    w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MOD}:item/{name}"}})
+    item_model(name, {"type": "minecraft:model", "model": f"{MOD}:item/{name}"})
+    side = "minecraft:sugar_cane" if c == "wicker" else f"minecraft:{c}_wool"
+    recipe(name, ["S S", "W W", "WWW"], {"S": "minecraft:string", "W": side}, unlock=side)
+    lang[f"item.{MOD}.{name}"] = f"{label(c)} SAKKSÄKK"
+tag(f"{MOD}/tags/item/sakksakks", [f"{MOD}:{c}_sakksakk" for c in SAKKSAKKS])
+lang.update({f"tooltip.{MOD}.sakksakk": "Right-click to open, 9 slots",
+             f"tooltip.{MOD}.sakksakk.used": "%s/%s slots used",
+             f"tooltip.{MOD}.sakksakk.cube": "Use on an empty KUBHÅLA cube, a screwdriver pulls it out",
+             f"tag.item.{MOD}.sakksakks": "SAKKSÄKKs"})
 lang[f"book.{MOD}.manual.title"] = "Much More Storage Manual"
 lang[f"tag.item.{MOD}.carcasses"] = "Carcasses"
 lang["tag.item.c.worktops"] = "Worktops"

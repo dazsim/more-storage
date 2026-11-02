@@ -10,6 +10,7 @@ import com.workshopcraft.muchmorestorage.block.KubhalaBlockEntity;
 import com.workshopcraft.muchmorestorage.client.CupboardModel;
 import com.workshopcraft.muchmorestorage.client.KubhalaModel;
 import com.workshopcraft.muchmorestorage.client.Quads;
+import com.workshopcraft.muchmorestorage.item.SakksakkItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -59,7 +60,13 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity> 
             return;
         }
         KubhalaModel.frame(quads(pose, vc, light), body, join);
-        if (insert == Insert.NONE || insert == Insert.DOOR && open > 0.05F) items(be, join, pose, buffers, light);
+        if (insert == Insert.NONE || insert == Insert.DOOR && open > 0.05F) items(be, join, pose, buffers, light, false);
+        if (insert == Insert.BOX) {
+            pose.pushPose();
+            pose.translate(0, 0, -3 / 16F * open);
+            KubhalaModel.sakksakk(quads(pose, vc, frontLight), CupboardModel.sprite(SakksakkItem.texture(be.box())), join);
+            pose.popPose();
+        }
         if (insert.closes()) {
             pose.pushPose();
             if (!state.getValue(KubhalaBlock.FITTED)) {
@@ -71,6 +78,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity> 
             if (insert == Insert.DRAWER) {
                 pose.translate(0, 0, -9 / 16F * open);
                 KubhalaModel.drawer(quads(pose, vc, frontLight), body, join);
+                if (open > 0.05F) items(be, join, pose, buffers, frontLight, true);
             } else {
                 float hx = KubhalaModel.doorHinge(join);
                 pose.translate(hx, 0, 0.1F / 16);
@@ -87,8 +95,8 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity> 
         return new Quads(pose.last(), vc, light, OverlayTexture.NO_OVERLAY);
     }
 
-    // up to three stacks stood on the floor of the cube, facing out
-    private static void items(KubhalaBlockEntity be, KubhalaModel.Join join, PoseStack pose, MultiBufferSource buffers, int light) {
+    // up to three stacks stood on the floor of the cube facing out, or lying in the drawer
+    private static void items(KubhalaBlockEntity be, KubhalaModel.Join join, PoseStack pose, MultiBufferSource buffers, int light, boolean drawer) {
         List<ItemStack> shown = new ArrayList<>();
         for (int i = 0; i < be.getContainerSize() && shown.size() < 3; i++) {
             if (!be.getItem(i).isEmpty()) shown.add(be.getItem(i));
@@ -103,9 +111,19 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity> 
             boolean block = Minecraft.getInstance().getItemRenderer().getModel(stack, be.getLevel(), null, seed + i).isGui3d();
             float sc = block ? scale * 1.5F : scale;
             pose.pushPose();
-            pose.translate(xs[i] / 16F, join.y0() / 16F + (block ? 0.25F : 0.5F) * sc, 0.5F);
-            pose.mulPose(Axis.YP.rotationDegrees(180F));
-            pose.scale(sc, sc, sc);
+            if (drawer) {
+                sc *= 0.7F;
+                float x = n == 1 ? 8 : n == 2 ? 2 + 4 * (i + 1) : 2 + 3 * (i + 1);
+                pose.translate(x / 16F, (join.y0() + KubhalaModel.GAP + 0.76F) / 16F, (4.5F + (i % 2) * 0.75F) / 16F);
+                pose.mulPose(Axis.YP.rotationDegrees(180F + (i - 1) * 9F));
+                pose.mulPose(Axis.XP.rotationDegrees(-90F));
+                pose.scale(sc, sc, sc);
+                pose.translate(0, 0, block ? 0.25F : 1 / 32F);
+            } else {
+                pose.translate(xs[i] / 16F, join.y0() / 16F + (block ? 0.25F : 0.5F) * sc, 0.5F);
+                pose.mulPose(Axis.YP.rotationDegrees(180F));
+                pose.scale(sc, sc, sc);
+            }
             Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, light, OverlayTexture.NO_OVERLAY,
                     pose, buffers, be.getLevel(), seed + i);
             pose.popPose();

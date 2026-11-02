@@ -255,20 +255,33 @@ def cupboard(sc, at=(0, 0, 0), top=True, loose=0.0, door=0.0, hinge="left", body
               else specks(top_face, 0, 16, 0, 16, 16, 9, 10) if finish == "stone" else specks(top_face, 0, 16, 0, 16, 16, 3, 11))
         sc.box((0, 14, 0), (16, 16, 16), txf, marks=tm, bias=2)
 
-def kubhala(sc, at=(0, 0, 0), insert=None, open=0.0, loose=0.0, items=0, body="wood"):
-    """One cube shelf, open to +z. insert is None, "drawer" or "door"."""
+def kubhala(sc, at=(0, 0, 0), insert=None, open=0.0, loose=0.0, items=0, body="wood", joins=""):
+    """One cube shelf, open to +z. insert is None, "drawer", "door" or a SAKKSÄKK.
+    joins holds "e" when a cube sits to the east, it then draws the one shared wall, "w" for the cube west of a join."""
     base = [move(*at)]
     xside = lambda z, y, x: (x, y, z)
     mk = grain(xside, 1, 15, 2, 14, 16, 2, 5) if body == "wood" else specks(xside, 0, 16, 2, 14, 16, 4, 6)
+    x0 = 1 if "w" in joins else 2
+    x1 = 15 if "e" in joins else 14
     sc.box((0, 0, 0), (16, 16, 1), base, width=2.0, bias=-4)
-    sc.box((0, 0, 0), (2, 16, 16), base)
-    sc.box((14, 0, 0), (16, 16, 16), base, marks=mk)
-    sc.box((2, 0, 1), (14, 2, 16), base, width=2.0, bias=-2)
-    sc.box((2, 14, 1), (14, 16, 16), base, width=2.0)
+    if "w" not in joins:
+        sc.box((0, 0, 0), (2, 16, 16), base)
+    if "e" in joins:
+        sc.box((15, 0, 0), (17, 16, 16), base, bias=0.5)
+    else:
+        sc.box((14, 0, 0), (16, 16, 16), base, marks=mk)
+    sc.box((x0, 0, 1), (x1, 2, 16), base, width=2.0, bias=-2)
+    sc.box((x0, 14, 1), (x1, 16, 16), base, width=2.0)
     for i, x in enumerate([4, 9, 6][:items]):
         item_cube(None, sc, (x + at[0], 2 + at[1], 6 + 2 * i + at[2]), 3.5)
     if not insert: return
     lxf = [rot("y", 6 * loose, (8, 8, 16)), move(0, 0, 2 * loose)]
+    if insert == "box":
+        bxf = [move(0, 0, 3 * open)] + base
+        sc.box((2.4, 2, 1.5), (13.6, 12.8, 15.4), bxf, bias=3)
+        sc.box((2.4, 11.6, 15.4), (13.6, 12.8, 15.7), bxf, width=1.6, bias=3.2)
+        sc.box((6, 9.2, 15.4), (10, 10.4, 15.6), bxf, width=1.6, bias=3.4)
+        return
     if insert == "drawer":
         dxf = lxf + [move(0, 0, 9 * open)] + base
         sc.box((2.3, 2.3, 15), (13.7, 13.7, 16), dxf, bias=3)
@@ -378,6 +391,18 @@ def cell_icon(pg, kind, x, y, s):
         pg.line((x0 + 4, cy + 10), (x1 - 8, cy + 10), 1.6)
         pg.line((x1 - 2, cy - 6), (x1 - 2, cy - 2), 1.6)
         pg.line((x1 - 2, cy - 2), (x1 - 8, cy + 10), 1.6)
+    elif kind == "string":
+        pg.curve(lambda t: (x0 + 3 + (x1 - x0 - 6) * t, (y0 + y1) / 2 + math.sin(t * 9) * 5), 30, 1.8)
+    elif kind == "wool":
+        pg.path([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], 1.8, closed=True)
+        for k in range(3):
+            cy = y0 + (y1 - y0) * (k + 0.5) / 3
+            pg.curve(lambda t, cy=cy: (x0 + 4 + (x1 - x0 - 8) * t, cy + math.sin(t * 12) * 2), 24, 1.1)
+    elif kind == "cane":
+        for dx in (0.3, 0.55, 0.8):
+            xx = x0 + (x1 - x0) * dx
+            pg.line((xx, y1 - 1), (xx, y0 + 1), 2.2)
+            pg.line((xx - 2, y0 + (y1 - y0) * 0.45), (xx + 2, y0 + (y1 - y0) * 0.45), 1.2)
     elif kind == "nugget":
         cx, cy = (x0 + x1) / 2, (y0 + y1) / 2 + 2
         pg.path([(cx - 8, cy + 2), (cx - 4, cy - 5), (cx + 5, cy - 6), (cx + 9, cy + 1), (cx + 3, cy + 6), (cx - 5, cy + 6)], 1.8, closed=True)
@@ -468,6 +493,8 @@ LEGENDS = {"iron_ingot": "Iron Ingot", "iron_nugget": "Iron Nugget", "chest": "W
            "stone_slab": "Smooth Stone or Polished Stone Slab (all one kind)",
            "wood_carcass": "Wooden Carcass", "concrete_carcass": "Concrete Carcass",
            "wood_worktop": "Wooden Worktop", "stone_worktop": "Stone Worktop", "concrete_worktop": "Concrete Worktop",
+           "wool_sakksakk": "SAKKSÄKK (any wool colour)", "string": "String", "wool": "Wool (all one colour)",
+           "sugar_cane": "Sugar Cane",
            "wood_flatpack": "Wooden KUBHÅLA Flat Pack", "concrete_flatpack": "Concrete KUBHÅLA Flat Pack"}
 
 def fam(pred):
@@ -725,8 +752,8 @@ def page_inserts(pg):
               {"S": legend("wood_slab"), "N": legend("iron_nugget")}, at=[50, y], cell=56)
     pg.line((60, 545), (584, 545), 1.6)
     sc = Scene(0, 0, 7).at(250, 720, (0, 0, 0), (32, 16, 20))
-    kubhala(sc, insert="drawer", loose=1.0)
-    kubhala(sc, (16, 0, 0))
+    kubhala(sc, insert="drawer", loose=1.0, joins="e")
+    kubhala(sc, (16, 0, 0), joins="w")
     sc.draw(pg)
     tip = sc.proj((8, 16, 16))
     screwdriver(pg, (tip[0] + 4, tip[1] - 50), -95, 1.0, 2.4)
@@ -738,6 +765,77 @@ def page_inserts(pg):
     s3.box((5.5, 10, 16), (10.5, 11, 17), [], width=1.8, bias=3.5)
     s3.draw(pg)
 
+def sakksakk(sc, at=(0, 0, 0), xf=()):
+    """A loose SAKKSÄKK, a soft box with a rim and a hand hole on the front."""
+    base = list(xf) + [move(*at)]
+    sc.box((0, 0, 0), (12, 10, 12), base)
+    sc.box((0, 9, 12), (12, 10, 12.4), base, width=1.6, bias=0.5)
+    sc.box((4, 6.5, 12), (8, 7.5, 12.3), base, width=1.6, bias=0.7)
+
+def slots(pg, x, y, s, n, filled=()):
+    for i in range(n):
+        pg.path([(x + i * s, y), (x + i * s + s, y), (x + i * s + s, y + s), (x + i * s, y + s)], 1.6, closed=True)
+        if i in filled: cell_icon(pg, "plank" if i % 2 else "nugget", x + i * s, y, s)
+
+def page_sakksakk(pg):
+    grid(pg, 50, 50, 64, [["string", None, "string"], ["wool", None, "wool"], ["wool"] * 3])
+    pg.arrow([(270, 146), (330, 146)], 3.0)
+    sc = Scene(0, 0, 9).at(460, 146, (0, 0, 0), (12, 10, 12.4))
+    sakksakk(sc)
+    sc.draw(pg)
+    wools = fam(lambda n, r: n.endswith("_sakksakk") and n != "wicker_sakksakk")
+    drawn(pg, wools, [50, 262, 560], [350, 60, 220, 172], legend("wool_sakksakk"),
+          {"S": legend("string"), "W": legend("wool")}, at=[50, 50], cell=64)
+    grid(pg, 50, 330, 64, [["string", None, "string"], ["cane", None, "cane"], ["cane"] * 3])
+    pg.arrow([(270, 426), (330, 426)], 3.0)
+    sc = Scene(0, 0, 9).at(460, 426, (0, 0, 0), (12, 10, 12.4))
+    sakksakk(sc)
+    sc.draw(pg)
+    drawn(pg, fam(lambda n, r: n == "wicker_sakksakk"), [50, 542, 560], [350, 340, 220, 172], None,
+          {"S": legend("string"), "W": legend("sugar_cane")}, at=[50, 330], cell=64)
+    pg.line((60, 610), (584, 610), 1.6)
+    sc = Scene(0, 0, 6).at(150, 760, (0, 0, 0), (12, 10, 12.4))
+    sakksakk(sc)
+    sc.draw(pg)
+    pg.arrow([(230, 760), (290, 760)], 3.0)
+    slots(pg, 310, 735, 30, 9, filled=(0, 1, 3))
+    count(pg, (445, 820), 9, 30)
+
+def page_sakksakk_use(pg):
+    sc = Scene(0, 0, 6).at(120, 160, (0, 0, 0), (12, 10, 12.4))
+    sakksakk(sc)
+    sc.draw(pg)
+    pg.arrow([(200, 160), (270, 160)], 3.0)
+    s1 = Scene(0, 0, 7).at(430, 160)
+    kubhala(s1, insert="box", open=0.0)
+    s1.draw(pg)
+    check(pg, (560, 260), 20)
+    s2 = Scene(0, 0, 7).at(320, 460, (0, 0, 0), (48, 16, 20))
+    kubhala(s2, insert="box", joins="e")
+    kubhala(s2, (16, 0, 0), insert="box", joins="we")
+    kubhala(s2, (32, 0, 0), insert="box", open=1.0, joins="w")
+    s2.draw(pg)
+    pg.line((60, 590), (584, 590), 1.6)
+    s3 = Scene(0, 0, 7).at(170, 740)
+    kubhala(s3, insert="box", open=0.4)
+    s3.draw(pg)
+    tip = s3.proj((8, 14, 16))
+    screwdriver(pg, (tip[0] + 4, tip[1] - 40), -95, 0.9, 2.4)
+    pg.arrow([(290, 740), (350, 740)], 3.0)
+    sc = Scene(0, 0, 5).at(420, 740, (0, 0, 0), (12, 10, 12.4))
+    sakksakk(sc)
+    sc.draw(pg)
+    slots(pg, 470, 800, 26, 3, filled=(0, 1))
+    # no box inside a box
+    sc = Scene(0, 0, 3).at(470, 640, (0, 0, 0), (12, 10, 12.4))
+    sakksakk(sc)
+    sc.draw(pg)
+    slots(pg, 510, 625, 30, 1)
+    sc = Scene(0, 0, 1.6).at(525, 640, (0, 0, 0), (12, 10, 12.4))
+    sakksakk(sc)
+    sc.draw(pg)
+    check(pg, (575, 640), 14, ok=False)
+
 SPREADS = [
     ("cover", page_cover, page_tools),
     ("parts", page_parts_carcass, page_parts_worktop),
@@ -747,9 +845,10 @@ SPREADS = [
     ("hinge", page_hinge, page_break),
     ("apart", page_apart, page_loose),
     ("kubhala", page_kubhala, page_inserts),
+    ("sakksakk", page_sakksakk, page_sakksakk_use),
 ]
 SECTIONS = {"cover": "cover", "parts": "parts", "steps_a": "assembly", "steps_b": "assembly", "finishes": "assembly",
-            "hinge": "use", "apart": "apart", "kubhala": "kubhala"}
+            "hinge": "use", "apart": "apart", "kubhala": "kubhala", "sakksakk": "kubhala"}
 
 def manual_icon():
     rows = ["................", "...##########...", "...#WWWWWWWWW#..", "...#WWWWWWWWW#..", "...#WKKKKKKWW#..",

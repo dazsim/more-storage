@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S S",
+    "W W",
+    "WWW"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "W": {
+      "item": "minecraft:light_blue_wool"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:light_blue_sakksakk",
+    "count": 1
+  }
+}

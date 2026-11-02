@@ -55,6 +55,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     private long settleStart = -1;
     private String body = "oak";
     private String top = "oak";
+    protected String box = "";
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private final ChestLidController door = new ChestLidController();
     private final ContainerOpenersCounter openers = new ContainerOpenersCounter() {
@@ -71,7 +72,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
 
         @Override
         public boolean isOwnContainer(Player player) {
-            return player.containerMenu instanceof ChestMenu menu && menu.getContainer() == CupboardBlockEntity.this;
+            return ownsMenu(player.containerMenu);
         }
     };
 
@@ -86,6 +87,10 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, CupboardBlockEntity be) {
         be.door.tickLid();
+    }
+
+    protected boolean ownsMenu(AbstractContainerMenu menu) {
+        return menu instanceof ChestMenu chest && chest.getContainer() == this;
     }
 
     protected void sound(SoundEvent event) {
@@ -148,6 +153,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         super.loadAdditional(input);
         body = input.getStringOr("Body", "oak");
         top = input.getStringOr("Top", "");
+        box = input.getStringOr("Box", "");
         if (top.isEmpty()) settleStart = -1;
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         if (tryLoadLootTable(input)) return;
@@ -168,6 +174,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         super.saveAdditional(output);
         output.putString("Body", body);
         output.putString("Top", top);
+        if (!box.isEmpty()) output.putString("Box", box);
         if (!trySaveLootTable(output)) ContainerHelper.saveAllItems(output, items);
     }
     //?} else if >=1.20.5 {
@@ -176,6 +183,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         super.loadAdditional(tag, registries);
         body = tag.contains("Body") ? tag.getString("Body") : "oak";
         top = tag.getString("Top");
+        box = tag.getString("Box");
         if (top.isEmpty()) settleStart = -1;
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         if (tryLoadLootTable(tag)) return;
@@ -196,6 +204,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         super.saveAdditional(tag, registries);
         tag.putString("Body", body);
         tag.putString("Top", top);
+        if (!box.isEmpty()) tag.putString("Box", box);
         if (!trySaveLootTable(tag)) ContainerHelper.saveAllItems(tag, items, registries);
     }
     *///?} else {
@@ -204,6 +213,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         super.load(tag);
         body = tag.contains("Body") ? tag.getString("Body") : "oak";
         top = tag.getString("Top");
+        box = tag.getString("Box");
         if (top.isEmpty()) settleStart = -1;
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         if (!tryLoadLootTable(tag)) ContainerHelper.loadAllItems(tag, items);
@@ -214,6 +224,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         super.saveAdditional(tag);
         tag.putString("Body", body);
         tag.putString("Top", top);
+        if (!box.isEmpty()) tag.putString("Box", box);
         if (!trySaveLootTable(tag)) ContainerHelper.saveAllItems(tag, items);
     }
     *///?}

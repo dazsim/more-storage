@@ -222,6 +222,57 @@ def insert(rng, drawer):
         px[12, 11] = hexc(STEEL[4])
     return im
 
+WOOL = {
+    "white": "e9ecec", "orange": "f07613", "magenta": "bd44b3", "light_blue": "3aafd9", "yellow": "f8c527",
+    "lime": "70b919", "pink": "ed8dac", "gray": "3e4447", "light_gray": "8e8e86", "cyan": "158991",
+    "purple": "792aac", "blue": "35399d", "brown": "724728", "green": "546d1b", "red": "a12722", "black": "141519",
+}
+WICKER = ["dcc18a", "c8a96b", "b39056", "9a7a45", "7d6236"]
+
+def wicker():
+    # woven strands over and under upright stakes
+    rng = random.Random("wicker")
+    im = img()
+    px = im.load()
+    for y in range(16):
+        row, edge = y // 2, y % 2
+        for x in range(16):
+            over = (x // 4 + row) % 2 == 0
+            if over:
+                c = WICKER[0 if edge == 0 else 2]
+            else:
+                c = WICKER[1 if x % 4 in (1, 2) else 3]
+            if x % 4 == 0 and not over:
+                c = WICKER[4]
+            if rng.random() < 0.08:
+                c = WICKER[min(4, WICKER.index(c) + 1)]
+            px[x, y] = hexc(c)
+    return im
+
+def sakksakk(base, rng):
+    # a soft box seen from the front, rim along the top and a hand hole
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = im.load()
+    pal = [mix(base, 255, 0.18), base, mix(base, 0, 0.12), mix(base, 0, 0.3), mix(base, 0, 0.55)]
+    for x in range(2, 14):
+        for y in range(3, 15):
+            r = rng.random()
+            px[x, y] = hexc(pal[1] if r < 0.75 else pal[2] if r < 0.92 else pal[0])
+    for x in range(2, 14):
+        px[x, 3] = hexc(pal[0])
+        px[x, 4] = hexc(pal[2])
+        px[x, 14] = hexc(pal[4])
+        px[x, 13] = hexc(pal[3])
+    for y in range(3, 15):
+        px[2, y] = hexc(pal[4])
+        px[13, y] = hexc(pal[4])
+        px[12, y] = hexc(pal[3]) if 3 < y < 14 else px[12, y]
+    for x in range(6, 10):
+        px[x, 6] = hexc(pal[4])
+        px[x, 7] = hexc("2a2a2a")
+    px[5, 6] = px[10, 6] = hexc(pal[3])
+    return im
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     for name in os.listdir(OUT):
@@ -238,9 +289,13 @@ def main():
         elif seed == "white":
             granite(rng).save(f"{OUT}/granite_worktop.png")
     handle().save(f"{OUT}/cupboard_handle.png")
+    wicker().save(f"{OUT}/wicker_sakksakk.png")
     os.makedirs(ITEMS, exist_ok=True)
     screwdriver().save(f"{ITEMS}/screwdriver.png")
     insert(random.Random("drawer"), True).save(f"{ITEMS}/kubhala_drawer.png")
     insert(random.Random("door"), False).save(f"{ITEMS}/kubhala_door.png")
+    for c, base in WOOL.items():
+        sakksakk(base, random.Random(c)).save(f"{ITEMS}/{c}_sakksakk.png")
+    sakksakk(WICKER[1], random.Random("wicker")).save(f"{ITEMS}/wicker_sakksakk.png")
 
 main()

@@ -107,6 +107,19 @@ public final class KubhalaModel {
         }
     }
 
+    // the front of a SAKKSÄKK filling the cube, a soft box with a hand hole
+    public static void sakksakk(Quads q, TextureAtlasSprite fabric, Join j) {
+        float x0 = j.x0() + 0.4F, x1 = j.x1() - 0.4F, y0 = j.y0(), y1 = j.y1() - 1.2F, z0 = 0.6F;
+        box(q, x0, y0, z0, x1, y1, 15, fabric, 0xFFFFFFFF, NORTH);
+        box(q, x0, y0, z0, x1, y1, 15, fabric, SHADE, UP, WEST, EAST);
+        // a folded rim along the top and a seam down each side
+        box(q, x0, y1 - 1, z0 - 0.15F, x1, y1, z0, fabric, 0xFFDADADA, NORTH, UP, DOWN, WEST, EAST);
+        box(q, x0, y0, z0 - 0.1F, x0 + 0.5F, y1 - 1, z0, fabric, DARK, NORTH, WEST, EAST);
+        box(q, x1 - 0.5F, y0, z0 - 0.1F, x1, y1 - 1, z0, fabric, DARK, NORTH, WEST, EAST);
+        float cx = (x0 + x1) / 2, hy = y1 - 3.25F;
+        q.face(NORTH, cx - 2, hy, z0 - 0.05F, cx + 2, hy + 1.25F, z0 - 0.05F, fabric, 6, 6, 10, 7.25F, 0xFF2A2A2A);
+    }
+
     // the hinge is on the side away from the handle
     public static float doorHinge(Join j) { return (j.x1() - GAP) / 16F; }
 

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S S",
+    "W W",
+    "WWW"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "W": {
+      "item": "minecraft:orange_wool"
+    }
+  },
+  "result": {
+    "id": "muchmorestorage:orange_sakksakk",
+    "count": 1
+  }
+}
