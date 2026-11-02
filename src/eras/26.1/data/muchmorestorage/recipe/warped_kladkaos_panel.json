@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PN",
+    "PP"
+  ],
+  "key": {
+    "P": "minecraft:warped_planks",
+    "N": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "muchmorestorage:warped_kladkaos_panel",
+    "count": 1
+  }
+}

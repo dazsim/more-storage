@@ -11,6 +11,7 @@ import com.workshopcraft.muchmorestorage.client.CupboardRenderer;
 import com.workshopcraft.muchmorestorage.client.KubhalaRenderer;
 import com.workshopcraft.muchmorestorage.client.BokwurmRenderer;
 import com.workshopcraft.muchmorestorage.client.LadstapelRenderer;
+import com.workshopcraft.muchmorestorage.client.KladkaosRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 //?} else {
 /*import com.workshopcraft.muchmorestorage.client.v1_21.CupboardItemRenderer;
@@ -18,6 +19,7 @@ import com.workshopcraft.muchmorestorage.client.v1_21.CupboardRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KubhalaRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.BokwurmRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.LadstapelRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.KladkaosRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.world.item.Item;
 *///?}
@@ -29,6 +31,7 @@ public class MuchMoreStorageFabricClient implements ClientModInitializer {
         BlockEntityRenderers.register(ModContent.KUBHALA_BE, KubhalaRenderer::new);
         BlockEntityRenderers.register(ModContent.BOKWURM_BE, BokwurmRenderer::new);
         BlockEntityRenderers.register(ModContent.LADSTAPEL_BE, LadstapelRenderer::new);
+        BlockEntityRenderers.register(ModContent.KLADKAOS_BE, KladkaosRenderer::new);
         //? if >=26.1 {
         SpecialModelRenderers.ID_MAPPER.put(MuchMoreStorage.id("cupboard"), CupboardItemRenderer.Unbaked.MAP_CODEC);
         //?} else {

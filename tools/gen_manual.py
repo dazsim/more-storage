@@ -516,7 +516,8 @@ LEGENDS = {"iron_ingot": "Iron Ingot", "iron_nugget": "Iron Nugget", "chest": "W
            "sugar_cane": "Sugar Cane",
            "wood_flatpack": "Wooden KUBHALA Flat Pack", "concrete_flatpack": "Concrete KUBHALA Flat Pack",
            "wood_bokwurm": "Wooden BOKWURM Flat Pack", "concrete_bokwurm": "Concrete BOKWURM Flat Pack",
-           "wood_ladstapel": "Wooden LADSTAPEL Flat Pack", "concrete_ladstapel": "Concrete LADSTAPEL Flat Pack"}
+           "wood_ladstapel": "Wooden LADSTAPEL Flat Pack", "concrete_ladstapel": "Concrete LADSTAPEL Flat Pack",
+           "wood_kladkaos": "Wooden KLADKAOS Panel", "concrete_kladkaos": "Concrete KLADKAOS Panel"}
 
 def fam(pred):
     return [r for n, r in RECIPES.items() if pred(n, r)]
@@ -870,6 +871,67 @@ def ladstapel(sc, at=(0, 0, 0), open=None, amount=1.0):
         if d == open:
             sc.box((2, y0, 3), (14, y1 - 1, 15), dxf, width=1.8, bias=-1)
 
+def kladkaos(sc, at=(0, 0, 0), open=0):
+    """The wardrobe, two blocks tall, doors to +z swung open by open degrees."""
+    base = [move(*at)]
+    xside = lambda z, y, x: (x, y, z)
+    sc.box((0, 0, 0), (16, 32, 1), base, width=2.0, bias=-4)
+    sc.box((0, 0, 0), (1, 32, 16), base)
+    sc.box((15, 0, 0), (16, 32, 16), base, marks=grain(xside, 1, 15, 2, 30, 16, 2, 5))
+    sc.box((1, 0, 1), (15, 1, 16), base, width=2.0, bias=-2)
+    sc.box((1, 31, 1), (15, 32, 16), base, width=2.0)
+    if open:
+        sc.box((1, 6, 2), (15, 7, 15), base, width=1.6, bias=-1)
+        sc.box((1, 27, 7.5), (15, 28, 8.5), base, width=1.6, bias=-1)
+    for x0, x1, hinge, sign, hx in ((1, 7.9, 1, 1, 6.2), (8.1, 15, 15, -1, 8.8)):
+        door = [rot("y", sign * open, (hinge, 0, 16))] + base
+        sc.box((x0, 1, 15), (x1, 31, 16), door, bias=3)
+        sc.box((hx, 13, 16), (hx + 1, 19, 17), door, width=1.8, bias=3.5)
+
+def panel(sc, at=(0, 0, 0)):
+    sc.box((1, 0, 2), (15, 1.5, 14), [move(*at)], width=2.0)
+
+def page_kladkaos(pg):
+    heading(pg, "KLADKAOS", "KLÄDKAOS")
+    sc = Scene(0, 0, 5).at(90, 260, (0, 0, 0), (16, 6, 16))
+    for i in range(3): panel(sc, (i * 0.6, i * 2, -i * 0.5))
+    sc.draw(pg)
+    pg.text((150, 330), "x 3", 26, "ls")
+    screwdriver(pg, (250, 185), -60, 0.6)
+    twist(pg, (246, 150), 22, 7)
+    pg.arrow([(310, 250), (360, 250)], 3.0)
+    s1 = Scene(0, 0, 6).at(470, 270, (0, 0, 0), (16, 32, 16))
+    kladkaos(s1)
+    s1.draw(pg)
+    grid(pg, 50, 410, 70, [["plank", "plank"], ["plank", "nugget"], ["plank", "plank"]])
+    pg.arrow([(215, 515), (300, 515)], 3.0)
+    s2 = Scene(0, 0, 9).at(420, 515, (0, 0, 0), (16, 2, 16))
+    panel(s2)
+    s2.draw(pg)
+    count(pg, (500, 580), 1, 30)
+    cell_icon(pg, "plank", 60, 630, 60)
+    pg.text((140, 678), "/", 40, "ms")
+    cell_icon(pg, "concrete", 160, 630, 60)
+    panels = lambda wood: fam(lambda n, r: n.endswith("_kladkaos_panel") and is_wood(r["key"]["P"]) == wood)
+    names = {"N": legend("iron_nugget")}
+    drawn(pg, panels(True), [50, 712, 560], [350, 440, 140, 140], legend("wood_kladkaos"),
+          dict(names, P=legend("planks")), at=[50, 410], cell=70)
+    drawn(pg, panels(False), [50, 772, 560], [350, 440, 140, 140], legend("concrete_kladkaos"),
+          dict(names, P=legend("concrete")))
+
+def page_kladkaos_use(pg):
+    s1 = Scene(0, 0, 7).at(200, 250, (0, 0, 0), (16, 32, 26))
+    kladkaos(s1, open=100)
+    s1.draw(pg)
+    pg.text((390, 200), "6 x 9", 30, "ls")
+    for r in range(6): slots(pg, 330, 230 + r * 24, 24, 9)
+    pg.line((60, 510), (584, 510), 1.6)
+    sneak(pg, (130, 640))
+    pg.arrow([(260, 700), (330, 700)], 3.0)
+    s2 = Scene(0, 0, 4).at(450, 720, (0, 0, 0), (16, 32, 26))
+    kladkaos(s2, open=100)
+    s2.draw(pg)
+
 def comparator(sc, at=(0, 0, 0)):
     base = [move(*at)]
     sc.box((0, 0, 0), (16, 2, 16), base)
@@ -1020,10 +1082,11 @@ SPREADS = [
     ("sakksakk", page_sakksakk, page_sakksakk_use),
     ("bokwurm", page_bokwurm, page_bokwurm_use),
     ("ladstapel", page_ladstapel, page_ladstapel_use),
+    ("kladkaos", page_kladkaos, page_kladkaos_use),
 ]
 SECTIONS = {"cover": "cover", "parts": "parts", "steps_a": "assembly", "steps_b": "assembly", "finishes": "assembly",
             "hinge": "use", "apart": "apart", "kubhala": "kubhala", "sakksakk": "kubhala",
-            "bokwurm": "bokwurm", "ladstapel": "ladstapel"}
+            "bokwurm": "bokwurm", "ladstapel": "ladstapel", "kladkaos": "kladkaos"}
 
 def manual_icon():
     rows = ["................", "...##########...", "...#WWWWWWWWW#..", "...#WWWWWWWWW#..", "...#WKKKKKKWW#..",
@@ -1113,7 +1176,7 @@ def main(gen):
     os.makedirs(f"{A}/{TEX}", exist_ok=True)
     w(f"{books}/manual.json", {"title": f"book.{MOD}.manual.title", "default_template": f"{MOD}:leaflet",
         "style": {"page": "#ffffff", "ink": "#111111", "soft": "#555555", "cover": "#3a3a3a", "cover_edge": "#1e1e1e", "edge": "#c8c8c8"},
-        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel"]})
+        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel", "kladkaos"]})
     w(f"{A}/simplebooks/templates/leaflet.json", {"vars": {}, "slots": {
         "left.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "left_image", "frame": False},
         "right.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "right_image", "frame": False},

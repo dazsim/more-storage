@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PN",
+    "PP"
+  ],
+  "key": {
+    "P": "minecraft:gray_concrete",
+    "N": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "muchmorestorage:gray_concrete_kladkaos_panel",
+    "count": 1
+  }
+}

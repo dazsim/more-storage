@@ -10,6 +10,7 @@ import com.workshopcraft.muchmorestorage.client.KubhalaModel;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.FlatpackItem;
 import com.workshopcraft.muchmorestorage.item.KubhalaItem;
+import com.workshopcraft.muchmorestorage.item.PanelItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.client.Minecraft;
@@ -39,6 +40,8 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         out.addAll(ModContent.LADSTAPEL_FLATPACKS.values());
         out.add(ModContent.BOKWURM_ITEM);
         out.add(ModContent.LADSTAPEL_ITEM);
+        out.addAll(ModContent.KLADKAOS_PANELS.values());
+        out.add(ModContent.KLADKAOS_ITEM);
         return out;
     }
 
@@ -61,6 +64,15 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         if (stack.getItem() instanceof FlatpackItem pack) { KubhalaModel.flatpack(q, CupboardModel.Body.of(pack.body)); return; }
         if (stack.getItem() instanceof KubhalaItem) { KubhalaModel.frame(q, CupboardModel.Body.of(ModContent.bodyOf(stack)), KubhalaModel.Join.NONE); return; }
         if (stack.getItem() == ModContent.BOKWURM_ITEM) { FurnitureModel.bokwurmItem(q, CupboardModel.Body.of(ModContent.bodyOf(stack))); return; }
+        if (stack.getItem() instanceof PanelItem panel) { FurnitureModel.panel(q, CupboardModel.Body.of(panel.body)); return; }
+        if (stack.getItem() == ModContent.KLADKAOS_ITEM) {
+            pose.pushPose();
+            pose.translate(0.25F, 0, 0.25F);
+            pose.scale(0.5F, 0.5F, 0.5F);
+            FurnitureModel.kladkaosItem(new Quads(pose.last(), vc, light, overlay), CupboardModel.Body.of(ModContent.bodyOf(stack)));
+            pose.popPose();
+            return;
+        }
         if (stack.getItem() == ModContent.LADSTAPEL_ITEM) { FurnitureModel.ladstapelItem(q, CupboardModel.Body.of(ModContent.bodyOf(stack))); return; }
         boolean carcass = stack.getItem() instanceof CarcassItem;
         String body = carcass ? ((CarcassItem) stack.getItem()).body : ModContent.bodyOf(stack);

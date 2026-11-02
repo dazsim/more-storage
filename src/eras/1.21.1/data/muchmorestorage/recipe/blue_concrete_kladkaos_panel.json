@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PN",
+    "PP"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:blue_concrete"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "id": "muchmorestorage:blue_concrete_kladkaos_panel",
+    "count": 1
+  }
+}

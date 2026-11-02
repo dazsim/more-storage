@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PN",
+    "PP"
+  ],
+  "key": {
+    "P": "minecraft:acacia_planks",
+    "N": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "muchmorestorage:acacia_kladkaos_panel",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "muchmorestorage:crafting_shapeless_keep_tool",
+  "category": "misc",
+  "ingredients": [
+    "muchmorestorage:spruce_kladkaos_panel",
+    "muchmorestorage:spruce_kladkaos_panel",
+    "muchmorestorage:spruce_kladkaos_panel",
+    "#c:tools/screwdriver"
+  ],
+  "keep": "#c:tools/screwdriver",
+  "result": {
+    "id": "muchmorestorage:kladkaos",
+    "components": {
+      "muchmorestorage:body": "spruce"
+    }
+  }
+}

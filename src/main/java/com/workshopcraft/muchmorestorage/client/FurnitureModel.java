@@ -131,6 +131,69 @@ public final class FurnitureModel {
         }
     }
 
+    // the KLADKAOS wardrobe, two blocks tall, its doors are drawn on their own
+    public static void kladkaos(Quads q, CupboardModel.Body b) {
+        TextureAtlasSprite s = b.side(), in = b.inside();
+        tall(q, 0, 0, 0, 1, 32, 16, s, W, NORTH, SOUTH, WEST, UP, DOWN);
+        tall(q, 15, 0, 0, 16, 32, 16, s, W, NORTH, SOUTH, EAST, UP, DOWN);
+        tall(q, 0, 1, 0, 1, 31, 15, in, SHADE, EAST);
+        tall(q, 15, 1, 0, 16, 31, 15, in, SHADE, WEST);
+        box(q, 1, 0, 0, 15, 1, 16, s, W, NORTH, SOUTH, DOWN);
+        box(q, 1, 0, 0, 15, 1, 15, in, SHADE, UP);
+        tall(q, 1, 31, 0, 15, 32, 16, s, W, NORTH, SOUTH, UP);
+        tall(q, 1, 31, 0, 15, 32, 15, in, DARK, DOWN);
+        tall(q, 1, 1, 15, 15, 31, 16, in, SHADE, NORTH);
+        tall(q, 1, 1, 15, 15, 31, 16, s, W, SOUTH);
+        // a shoe shelf and the hanging rail
+        box(q, 1, 6, 1, 15, 7, 15, s, W, NORTH);
+        box(q, 1, 6, 1, 15, 7, 15, in, SHADE, UP);
+        box(q, 1, 6, 1, 15, 7, 15, in, DARK, DOWN);
+        for (Direction dir : new Direction[]{NORTH, SOUTH, UP, DOWN}) q.face(dir, 1, 27, 7.5F, 15, 28, 8.5F, b.handle(), 7, 5, 8, 10);
+    }
+
+    // hinge x for each door, the right one swings on x 1 and the left on x 15
+    public static float kladkaosHinge(boolean left) { return left ? 15 : 1; }
+
+    public static void kladkaosDoor(Quads q, CupboardModel.Body b, boolean left) {
+        float x0 = left ? 8 + GAP / 2 : 1, x1 = left ? 15 : 8 - GAP / 2;
+        tall(q, x0, 1, 0, x1, 31, 1, b.door(), W, NORTH);
+        tall(q, x0, 1, 0, x1, 31, 1, b.inside(), SHADE, SOUTH);
+        tall(q, x0, 1, 0, x1, 31, 1, b.side(), W, WEST, EAST, UP, DOWN);
+        float hx = left ? x0 + 0.8F : x1 - 1.8F;
+        for (Direction dir : Direction.values()) {
+            if (dir != SOUTH) q.face(dir, hx, 13, -0.9F, hx + 1, 19, 0, b.handle(), 7, 5, 8, 10);
+        }
+    }
+
+    // the item form, scaled to one block by the item renderer
+    public static void kladkaosItem(Quads q, CupboardModel.Body b) {
+        kladkaos(q, b);
+        kladkaosDoor(q, b, false);
+        kladkaosDoor(q, b, true);
+    }
+
+    // one KLADKAOS panel, a thin board
+    public static void panel(Quads q, CupboardModel.Body b) {
+        box(q, 1, 0, 2, 15, 1.5F, 14, b.door(), W, UP);
+        box(q, 1, 0, 2, 15, 1.5F, 14, b.side(), W, NORTH, SOUTH, WEST, EAST, DOWN);
+        for (Direction dir : new Direction[]{UP, NORTH, SOUTH, WEST, EAST}) q.face(dir, 3, 1.5F, 4, 9, 2, 5, b.handle(), 7, 5, 8, 10);
+    }
+
+    // a box that may run above one block, the upper part maps the texture again
+    private static void tall(Quads q, float x0, float y0, float z0, float x1, float y1, float z1, TextureAtlasSprite sp, int colour, Direction... faces) {
+        for (Direction d : faces) {
+            if (d.getAxis() == Direction.Axis.Y || y1 <= 16) {
+                box(q, x0, y0, z0, x1, y1, z1, sp, colour, d);
+                continue;
+            }
+            if (y0 < 16) box(q, x0, y0, z0, x1, 16, z1, sp, colour, d);
+            float lo = Math.max(y0, 16);
+            float u0 = switch (d) { case NORTH -> 16 - x1; case SOUTH -> x0; case WEST -> z0; default -> 16 - z1; };
+            float u1 = switch (d) { case NORTH -> 16 - x0; case SOUTH -> x1; case WEST -> z1; default -> 16 - z0; };
+            q.face(d, x0, lo, z0, x1, y1, z1, sp, u0, 32 - y1, u1, 32 - lo, colour);
+        }
+    }
+
     private static void box(Quads q, float x0, float y0, float z0, float x1, float y1, float z1, TextureAtlasSprite sp, int colour, Direction... faces) {
         KubhalaModel.box(q, x0, y0, z0, x1, y1, z1, sp, colour, faces);
     }

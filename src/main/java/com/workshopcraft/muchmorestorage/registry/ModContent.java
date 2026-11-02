@@ -10,6 +10,8 @@ import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
 import com.workshopcraft.muchmorestorage.block.Insert;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlock;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlockEntity;
+import com.workshopcraft.muchmorestorage.block.KladkaosBlock;
+import com.workshopcraft.muchmorestorage.block.KladkaosBlockEntity;
 import com.workshopcraft.muchmorestorage.block.LadstapelBlock;
 import com.workshopcraft.muchmorestorage.block.LadstapelBlockEntity;
 //? if >=26.1 {
@@ -24,6 +26,7 @@ import com.workshopcraft.muchmorestorage.item.FlatpackItem;
 import com.workshopcraft.muchmorestorage.item.FurnitureItem;
 import com.workshopcraft.muchmorestorage.item.InsertItem;
 import com.workshopcraft.muchmorestorage.item.KubhalaItem;
+import com.workshopcraft.muchmorestorage.item.PanelItem;
 import com.workshopcraft.muchmorestorage.item.SakksakkItem;
 import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
@@ -78,6 +81,10 @@ public final class ModContent {
     public static LadstapelBlock LADSTAPEL;
     public static FurnitureItem LADSTAPEL_ITEM;
     public static BlockEntityType<LadstapelBlockEntity> LADSTAPEL_BE;
+    public static final Map<String, PanelItem> KLADKAOS_PANELS = new LinkedHashMap<>();
+    public static KladkaosBlock KLADKAOS;
+    public static FurnitureItem KLADKAOS_ITEM;
+    public static BlockEntityType<KladkaosBlockEntity> KLADKAOS_BE;
     //? if >=1.20.5 {
     public static DataComponentType<String> BODY;
     public static DataComponentType<String> TOP;
@@ -138,6 +145,16 @@ public final class ModContent {
                 .strength(2.0F)
                 .noOcclusion());
         r.accept(lid, LADSTAPEL);
+        Identifier kkid = MuchMoreStorage.id("kladkaos");
+        KLADKAOS = new KladkaosBlock(BlockBehaviour.Properties.of()
+                //? if >=1.21.2
+                .setId(ResourceKey.create(Registries.BLOCK, kkid))
+                .mapColor(s -> s.getValue(KladkaosBlock.CONCRETE) ? MapColor.STONE : MapColor.WOOD)
+                .strength(2.0F)
+                //? if <26.3
+                .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)
+                .noOcclusion());
+        r.accept(kkid, KLADKAOS);
     }
 
     private static Item.Properties item(String name) {
@@ -192,16 +209,22 @@ public final class ModContent {
             FlatpackItem l = new FlatpackItem(LADSTAPEL, body, item(body + "_ladstapel_flatpack"));
             LADSTAPEL_FLATPACKS.put(body, l);
             r.accept(MuchMoreStorage.id(body + "_ladstapel_flatpack"), l);
+            PanelItem k = new PanelItem(body, item(body + "_kladkaos_panel"));
+            KLADKAOS_PANELS.put(body, k);
+            r.accept(MuchMoreStorage.id(body + "_kladkaos_panel"), k);
         }
         //? if >=1.20.5 {
         BOKWURM_ITEM = new FurnitureItem(BOKWURM, "bokwurm", item("bokwurm").component(BODY, "white_concrete"));
         LADSTAPEL_ITEM = new FurnitureItem(LADSTAPEL, "ladstapel", item("ladstapel").component(BODY, "white_concrete"));
+        KLADKAOS_ITEM = new FurnitureItem(KLADKAOS, "kladkaos", item("kladkaos").component(BODY, "white_concrete"));
         //?} else {
         /*BOKWURM_ITEM = new FurnitureItem(BOKWURM, "bokwurm", item("bokwurm"));
         LADSTAPEL_ITEM = new FurnitureItem(LADSTAPEL, "ladstapel", item("ladstapel"));
+        KLADKAOS_ITEM = new FurnitureItem(KLADKAOS, "kladkaos", item("kladkaos"));
         *///?}
         r.accept(MuchMoreStorage.id("bokwurm"), BOKWURM_ITEM);
         r.accept(MuchMoreStorage.id("ladstapel"), LADSTAPEL_ITEM);
+        r.accept(MuchMoreStorage.id("kladkaos"), KLADKAOS_ITEM);
     }
 
     public static final TagKey<Item> WORKTOP_TAG = TagKey.create(Registries.ITEM, MuchMoreStorage.id("c", "worktops"));
@@ -308,12 +331,15 @@ public final class ModContent {
         //? if >=1.21.2 {
         BOKWURM_BE = new BlockEntityType<>(BokwurmBlockEntity::new, Set.of(BOKWURM));
         LADSTAPEL_BE = new BlockEntityType<>(LadstapelBlockEntity::new, Set.of(LADSTAPEL));
+        KLADKAOS_BE = new BlockEntityType<>(KladkaosBlockEntity::new, Set.of(KLADKAOS));
         //?} else {
         /*BOKWURM_BE = BlockEntityType.Builder.of(BokwurmBlockEntity::new, BOKWURM).build(null);
         LADSTAPEL_BE = BlockEntityType.Builder.of(LadstapelBlockEntity::new, LADSTAPEL).build(null);
+        KLADKAOS_BE = BlockEntityType.Builder.of(KladkaosBlockEntity::new, KLADKAOS).build(null);
         *///?}
         r.accept(MuchMoreStorage.id("bokwurm"), BOKWURM_BE);
         r.accept(MuchMoreStorage.id("ladstapel"), LADSTAPEL_BE);
+        r.accept(MuchMoreStorage.id("kladkaos"), KLADKAOS_BE);
     }
 
     public static void registerCreativeTabs(BiConsumer<Identifier, CreativeModeTab> r) {
@@ -334,6 +360,8 @@ public final class ModContent {
                     BOKWURM_FLATPACKS.values().forEach(out::accept);
                     for (String body : KUBHALA_EXAMPLES) out.accept(furniture(LADSTAPEL_ITEM, body));
                     LADSTAPEL_FLATPACKS.values().forEach(out::accept);
+                    for (String body : KUBHALA_EXAMPLES) out.accept(furniture(KLADKAOS_ITEM, body));
+                    KLADKAOS_PANELS.values().forEach(out::accept);
                 })
                 .build();
         r.accept(MuchMoreStorage.id("main"), TAB);

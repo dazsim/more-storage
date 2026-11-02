@@ -1,0 +1,17 @@
+{
+  "type": "muchmorestorage:crafting_shapeless_keep_tool",
+  "category": "misc",
+  "ingredients": [
+    "muchmorestorage:pale_oak_kladkaos_panel",
+    "muchmorestorage:pale_oak_kladkaos_panel",
+    "muchmorestorage:pale_oak_kladkaos_panel",
+    "#c:tools/screwdriver"
+  ],
+  "keep": "#c:tools/screwdriver",
+  "result": {
+    "id": "muchmorestorage:kladkaos",
+    "components": {
+      "muchmorestorage:body": "pale_oak"
+    }
+  }
+}

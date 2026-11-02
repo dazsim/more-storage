@@ -209,6 +209,29 @@ for kind, (pattern, extra) in FURNITURE.items():
     lang[f"block.{MOD}.{kind}"] = kind.upper()
     lang[f"item.{MOD}.{kind}"] = kind.upper()
     lang[f"container.{MOD}.{kind}"] = kind.upper()
+# KLADKAOS wardrobe, panels then three panels and a screwdriver that comes back
+w(f"{A}/blockstates/kladkaos.json", {"variants": {
+    "concrete=false": {"model": f"{MOD}:block/cupboard_wood"},
+    "concrete=true": {"model": f"{MOD}:block/cupboard_concrete"}}})
+special("kladkaos")
+for body in BODIES:
+    name = f"{body}_kladkaos_panel"
+    special(name)
+    plank = f"minecraft:{body}_planks" if body in WOODS else f"minecraft:{body}"
+    recipe(name, ["PP", "PN", "PP"], {"P": plank, "N": "minecraft:iron_nugget"}, unlock=plank)
+    lang[f"item.{MOD}.{name}"] = f"{label(body)} KLADKAOS Panel"
+    for era, e in ERAS.items():
+        if not has(era, name): continue
+        D = f"{era_root(era)}/data/{MOD}"
+        out = result(era, f"{MOD}:kladkaos", nbt={"Body": body}) if e.get("nbt") else result(era, f"{MOD}:kladkaos", components={f"{MOD}:body": body})
+        w(f"{D}/{folder(era, 'recipe')}/{body}_kladkaos.json", {"type": f"{MOD}:crafting_shapeless_keep_tool", "category": "misc",
+            "ingredients": [ing(era, i) for i in [f"{MOD}:{name}"] * 3 + ["#c:tools/screwdriver"]], "keep": ing(era, "#c:tools/screwdriver"),
+            "result": out})
+        advancement(era, f"{D}/{folder(era, 'advancement')}/recipes/misc/{body}_kladkaos.json", f"{MOD}:{body}_kladkaos", f"{MOD}:{name}")
+for k in ("block", "item", "container"):
+    lang[f"{k}.{MOD}.kladkaos"] = "KLADKAOS"
+lang.update({f"tooltip.{MOD}.kladkaos": "Wardrobe, 54 slots and an armour rail",
+             f"tooltip.{MOD}.kladkaos.use": "Click with armour to hang it, sneak with an empty hand to swap outfits"})
 for d in ["top", "middle", "bottom"]:
     lang[f"container.{MOD}.ladstapel.{d}"] = f"LADSTAPEL, {d} drawer"
 lang.update({f"tooltip.{MOD}.bokwurm": "Bookcase, holds 12 books",

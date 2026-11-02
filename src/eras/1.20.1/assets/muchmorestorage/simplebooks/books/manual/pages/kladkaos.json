@@ -1,0 +1,140 @@
+{
+  "section": "kladkaos",
+  "sort": 11,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/kladkaos_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/kladkaos_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/kladkaos_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/kladkaos_r_stand.png",
+  "drawn_recipes": [
+    {
+      "side": "left",
+      "text": [
+        50,
+        712,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:acacia_kladkaos_panel",
+          "muchmorestorage:bamboo_kladkaos_panel",
+          "muchmorestorage:birch_kladkaos_panel",
+          "muchmorestorage:cherry_kladkaos_panel",
+          "muchmorestorage:crimson_kladkaos_panel",
+          "muchmorestorage:dark_oak_kladkaos_panel",
+          "muchmorestorage:jungle_kladkaos_panel",
+          "muchmorestorage:mangrove_kladkaos_panel",
+          "muchmorestorage:oak_kladkaos_panel",
+          "muchmorestorage:spruce_kladkaos_panel",
+          "muchmorestorage:warped_kladkaos_panel"
+        ],
+        "count": 1,
+        "box": [
+          350,
+          440,
+          140,
+          140
+        ]
+      },
+      "title": "book.muchmorestorage.manual.wood_kladkaos",
+      "grid": {
+        "at": [
+          50,
+          410
+        ],
+        "cell": 70,
+        "pattern": [
+          "PP",
+          "PN",
+          "PP"
+        ]
+      },
+      "key": {
+        "P": {
+          "items": [
+            "minecraft:acacia_planks",
+            "minecraft:bamboo_planks",
+            "minecraft:birch_planks",
+            "minecraft:cherry_planks",
+            "minecraft:crimson_planks",
+            "minecraft:dark_oak_planks",
+            "minecraft:jungle_planks",
+            "minecraft:mangrove_planks",
+            "minecraft:oak_planks",
+            "minecraft:spruce_planks",
+            "minecraft:warped_planks"
+          ],
+          "name": "book.muchmorestorage.manual.planks"
+        },
+        "N": {
+          "item": "minecraft:iron_nugget",
+          "name": "book.muchmorestorage.manual.iron_nugget"
+        }
+      }
+    },
+    {
+      "side": "left",
+      "text": [
+        50,
+        772,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:black_concrete_kladkaos_panel",
+          "muchmorestorage:blue_concrete_kladkaos_panel",
+          "muchmorestorage:brown_concrete_kladkaos_panel",
+          "muchmorestorage:cyan_concrete_kladkaos_panel",
+          "muchmorestorage:gray_concrete_kladkaos_panel",
+          "muchmorestorage:green_concrete_kladkaos_panel",
+          "muchmorestorage:light_blue_concrete_kladkaos_panel",
+          "muchmorestorage:light_gray_concrete_kladkaos_panel",
+          "muchmorestorage:lime_concrete_kladkaos_panel",
+          "muchmorestorage:magenta_concrete_kladkaos_panel",
+          "muchmorestorage:orange_concrete_kladkaos_panel",
+          "muchmorestorage:pink_concrete_kladkaos_panel",
+          "muchmorestorage:purple_concrete_kladkaos_panel",
+          "muchmorestorage:red_concrete_kladkaos_panel",
+          "muchmorestorage:white_concrete_kladkaos_panel",
+          "muchmorestorage:yellow_concrete_kladkaos_panel"
+        ],
+        "count": 1,
+        "box": [
+          350,
+          440,
+          140,
+          140
+        ]
+      },
+      "title": "book.muchmorestorage.manual.concrete_kladkaos",
+      "ingredients": [
+        {
+          "items": [
+            "minecraft:black_concrete",
+            "minecraft:blue_concrete",
+            "minecraft:brown_concrete",
+            "minecraft:cyan_concrete",
+            "minecraft:gray_concrete",
+            "minecraft:green_concrete",
+            "minecraft:light_blue_concrete",
+            "minecraft:light_gray_concrete",
+            "minecraft:lime_concrete",
+            "minecraft:magenta_concrete",
+            "minecraft:orange_concrete",
+            "minecraft:pink_concrete",
+            "minecraft:purple_concrete",
+            "minecraft:red_concrete",
+            "minecraft:white_concrete",
+            "minecraft:yellow_concrete"
+          ],
+          "name": "book.muchmorestorage.manual.concrete",
+          "count": 5
+        },
+        {
+          "item": "minecraft:iron_nugget",
+          "name": "book.muchmorestorage.manual.iron_nugget",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

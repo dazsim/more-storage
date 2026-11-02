@@ -1,0 +1,17 @@
+{
+  "type": "muchmorestorage:crafting_shapeless_keep_tool",
+  "category": "misc",
+  "ingredients": [
+    "muchmorestorage:red_concrete_kladkaos_panel",
+    "muchmorestorage:red_concrete_kladkaos_panel",
+    "muchmorestorage:red_concrete_kladkaos_panel",
+    "#c:tools/screwdriver"
+  ],
+  "keep": "#c:tools/screwdriver",
+  "result": {
+    "id": "muchmorestorage:kladkaos",
+    "components": {
+      "muchmorestorage:body": "red_concrete"
+    }
+  }
+}
