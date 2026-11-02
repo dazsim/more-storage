@@ -945,7 +945,7 @@ def page_kladkaos_use(pg):
     kladkaos(s2, open=100)
     s2.draw(pg)
 
-def trullborg(sc, at=(0, 0, 0)):
+def hjulborg(sc, at=(0, 0, 0)):
     """The chest on wheels, handle to +z."""
     base = [move(*at)]
     for x, z in ((2, 3), (2, 12), (13, 3), (13, 12)):
@@ -957,8 +957,8 @@ def trullborg(sc, at=(0, 0, 0)):
         sc.box((x, 5, 14), (x + 1, 16, 15), base, width=1.8, bias=2)
     sc.box((4, 15, 14), (12, 16, 15), base, width=1.8, bias=2.5)
 
-def page_trullborg(pg):
-    heading(pg, "TRULLBORG", "TRÜLLBORG")
+def page_hjulborg(pg):
+    heading(pg, "HJULBORG", "HJULBÖRG")
     sc = Scene(0, 0, 5).at(90, 250, (0, 0, 0), (16, 6, 16))
     for i in range(2): panel(sc, (i * 0.6, i * 2, -i * 0.5))
     sc.draw(pg)
@@ -969,37 +969,37 @@ def page_trullborg(pg):
     twist(pg, (246, 170), 22, 7)
     pg.arrow([(310, 270), (360, 270)], 3.0)
     s1 = Scene(0, 0, 10).at(470, 300, (0, 0, 0), (16, 16, 16))
-    trullborg(s1)
+    hjulborg(s1)
     s1.draw(pg)
     pg.line((60, 470), (584, 470), 1.6)
     s2 = Scene(0, 0, 8).at(320, 640, (0, 0, 0), (16, 16, 16))
-    trullborg(s2)
+    hjulborg(s2)
     s2.draw(pg)
     pg.text((320, 800), "2 x 9", 30, "ms")
     for r in range(2): slots(pg, 200, 820 + r * 24, 24, 9)
 
-def page_trullborg_use(pg):
+def page_hjulborg_use(pg):
     s1 = Scene(0, 0, 5).at(90, 220, (-4, 0, -2), (12, 30, 8))
     steve(s1, (0, 0, 0), yaw=90)
     s1.draw(pg)
     pg.arrow([(200, 230), (280, 230)], 3.0)
     s2 = Scene(0, 0, 7).at(420, 250, (0, 0, 0), (16, 16, 16))
-    trullborg(s2)
+    hjulborg(s2)
     s2.draw(pg)
     pg.arrow([(520, 260), (590, 260)], 3.0)
     pg.line((60, 400), (584, 400), 1.6)
     sneak(pg, (110, 540))
     s3 = Scene(0, 0, 6).at(420, 560, (0, 0, 0), (16, 16, 16))
-    trullborg(s3)
+    hjulborg(s3)
     s3.draw(pg)
     pg.arrow([(380, 640), (250, 640)], 2.6, 12)
     pg.text((400, 700), "< 7", 28, "ms")
     s4 = Scene(0, 0, 4).at(140, 800, (0, 0, 0), (16, 16, 16))
-    trullborg(s4)
+    hjulborg(s4)
     s4.draw(pg)
     check(pg, (250, 810), 20, True)
     s5 = Scene(0, 0, 4).at(400, 800, (0, 0, 0), (16, 16, 16))
-    trullborg(s5)
+    hjulborg(s5)
     s5.draw(pg)
     cell_icon(pg, "nugget", 440, 760, 30)
     check(pg, (520, 810), 20, False)
@@ -1282,13 +1282,13 @@ SPREADS = [
     ("bokwurm", page_bokwurm, page_bokwurm_use),
     ("ladstapel", page_ladstapel, page_ladstapel_use),
     ("kladkaos", page_kladkaos, page_kladkaos_use),
-    ("trullborg", page_trullborg, page_trullborg_use),
+    ("hjulborg", page_hjulborg, page_hjulborg_use),
     ("genomskada", page_genomskada, page_genomskada_use),
     ("hexhojk", page_hexhojk, page_hexhojk_help),
 ]
 SECTIONS = {"cover": "cover", "parts": "parts", "steps_a": "assembly", "steps_b": "assembly", "finishes": "assembly",
             "hinge": "use", "apart": "apart", "kubhala": "kubhala", "sakksakk": "kubhala",
-            "bokwurm": "bokwurm", "ladstapel": "ladstapel", "kladkaos": "kladkaos", "trullborg": "trullborg", "genomskada": "genomskada", "hexhojk": "hexhojk"}
+            "bokwurm": "bokwurm", "ladstapel": "ladstapel", "kladkaos": "kladkaos", "hjulborg": "hjulborg", "genomskada": "genomskada", "hexhojk": "hexhojk"}
 
 def manual_icon():
     rows = ["................", "...##########...", "...#WWWWWWWWW#..", "...#WWWWWWWWW#..", "...#WKKKKKKWW#..",
@@ -1378,7 +1378,7 @@ def main(gen):
     os.makedirs(f"{A}/{TEX}", exist_ok=True)
     w(f"{books}/manual.json", {"title": f"book.{MOD}.manual.title", "default_template": f"{MOD}:leaflet",
         "style": {"page": "#ffffff", "ink": "#111111", "soft": "#555555", "cover": "#3a3a3a", "cover_edge": "#1e1e1e", "edge": "#c8c8c8"},
-        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel", "kladkaos", "trullborg", "genomskada", "hexhojk"]})
+        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel", "kladkaos", "hjulborg", "genomskada", "hexhojk"]})
     w(f"{A}/simplebooks/templates/leaflet.json", {"vars": {}, "slots": {
         "left.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "left_image", "frame": False},
         "right.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "right_image", "frame": False},

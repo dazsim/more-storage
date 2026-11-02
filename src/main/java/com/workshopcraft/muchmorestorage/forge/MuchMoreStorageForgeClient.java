@@ -9,7 +9,7 @@ import com.workshopcraft.muchmorestorage.client.v1_21.LadstapelRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.GenomskadaRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.CrateRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KladkaosRenderer;
-import com.workshopcraft.muchmorestorage.client.v1_21.TrullborgRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.HjulborgRenderer;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -29,7 +29,7 @@ public final class MuchMoreStorageForgeClient {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.GENOMSKADA_BE, GenomskadaRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.CRATE_BE, CrateRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.KLADKAOS_BE, KladkaosRenderer::new));
-        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerEntityRenderer(ModContent.TRULLBORG, TrullborgRenderer::new));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerEntityRenderer(ModContent.HJULBORG, HjulborgRenderer::new));
     }
 
     // called from the items' initializeClient

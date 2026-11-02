@@ -35,8 +35,8 @@ import com.workshopcraft.muchmorestorage.item.KubhalaItem;
 import com.workshopcraft.muchmorestorage.item.PanelItem;
 import com.workshopcraft.muchmorestorage.item.SakksakkItem;
 import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
-import com.workshopcraft.muchmorestorage.item.TrullborgItem;
-import com.workshopcraft.muchmorestorage.entity.TrullborgEntity;
+import com.workshopcraft.muchmorestorage.item.HjulborgItem;
+import com.workshopcraft.muchmorestorage.entity.HjulborgEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
@@ -104,8 +104,8 @@ public final class ModContent {
     public static BlockEntityType<CrateBlockEntity> CRATE_BE;
     public static HexhojkItem HEXHOJK;
     public static TipItem LEFTOVER_SCREW;
-    public static TrullborgItem TRULLBORG_ITEM;
-    public static EntityType<TrullborgEntity> TRULLBORG;
+    public static HjulborgItem HJULBORG_ITEM;
+    public static EntityType<HjulborgEntity> HJULBORG;
     //? if >=1.20.5 {
     public static DataComponentType<String> BODY;
     public static DataComponentType<String> TOP;
@@ -254,21 +254,21 @@ public final class ModContent {
         BOKWURM_ITEM = new FurnitureItem(BOKWURM, "bokwurm", item("bokwurm").component(BODY, "white_concrete"));
         LADSTAPEL_ITEM = new FurnitureItem(LADSTAPEL, "ladstapel", item("ladstapel").component(BODY, "white_concrete"));
         KLADKAOS_ITEM = new FurnitureItem(KLADKAOS, "kladkaos", item("kladkaos").component(BODY, "white_concrete"));
-        TRULLBORG_ITEM = new TrullborgItem(item("trullborg").stacksTo(1).component(BODY, "oak"));
+        HJULBORG_ITEM = new HjulborgItem(item("hjulborg").stacksTo(1).component(BODY, "oak"));
         GENOMSKADA_ITEM = new FurnitureItem(GENOMSKADA, "genomskada", item("genomskada").component(BODY, "white_concrete"));
         CRATE_ITEM = new FurnitureItem(CRATE, "flatpack_crate", item("flatpack_crate").component(BODY, "oak"));
         //?} else {
         /*BOKWURM_ITEM = new FurnitureItem(BOKWURM, "bokwurm", item("bokwurm"));
         LADSTAPEL_ITEM = new FurnitureItem(LADSTAPEL, "ladstapel", item("ladstapel"));
         KLADKAOS_ITEM = new FurnitureItem(KLADKAOS, "kladkaos", item("kladkaos"));
-        TRULLBORG_ITEM = new TrullborgItem(item("trullborg").stacksTo(1));
+        HJULBORG_ITEM = new HjulborgItem(item("hjulborg").stacksTo(1));
         GENOMSKADA_ITEM = new FurnitureItem(GENOMSKADA, "genomskada", item("genomskada"));
         CRATE_ITEM = new FurnitureItem(CRATE, "flatpack_crate", item("flatpack_crate"));
         *///?}
         r.accept(MuchMoreStorage.id("bokwurm"), BOKWURM_ITEM);
         r.accept(MuchMoreStorage.id("ladstapel"), LADSTAPEL_ITEM);
         r.accept(MuchMoreStorage.id("kladkaos"), KLADKAOS_ITEM);
-        r.accept(MuchMoreStorage.id("trullborg"), TRULLBORG_ITEM);
+        r.accept(MuchMoreStorage.id("hjulborg"), HJULBORG_ITEM);
         r.accept(MuchMoreStorage.id("genomskada"), GENOMSKADA_ITEM);
         r.accept(MuchMoreStorage.id("flatpack_crate"), CRATE_ITEM);
         HEXHOJK = new HexhojkItem(item("hexhojk").stacksTo(1));
@@ -278,14 +278,14 @@ public final class ModContent {
     }
 
     public static void registerEntities(BiConsumer<Identifier, EntityType<?>> r) {
-        Identifier id = MuchMoreStorage.id("trullborg");
-        EntityType.Builder<TrullborgEntity> b = EntityType.Builder.<TrullborgEntity>of(TrullborgEntity::new, MobCategory.MISC)
+        Identifier id = MuchMoreStorage.id("hjulborg");
+        EntityType.Builder<HjulborgEntity> b = EntityType.Builder.<HjulborgEntity>of(HjulborgEntity::new, MobCategory.MISC)
                 .sized(0.85F, 1.0F).clientTrackingRange(8).updateInterval(1).fireImmune();
         //? if >=1.21.2 {
-        TRULLBORG = b.build(ResourceKey.create(Registries.ENTITY_TYPE, id));
+        HJULBORG = b.build(ResourceKey.create(Registries.ENTITY_TYPE, id));
         //?} else
-        /*TRULLBORG = b.build(id.toString());*/
-        r.accept(id, TRULLBORG);
+        /*HJULBORG = b.build(id.toString());*/
+        r.accept(id, HJULBORG);
     }
 
     public static final TagKey<Item> WORKTOP_TAG = TagKey.create(Registries.ITEM, MuchMoreStorage.id("c", "worktops"));
@@ -429,7 +429,7 @@ public final class ModContent {
                     LADSTAPEL_FLATPACKS.values().forEach(out::accept);
                     for (String body : KUBHALA_EXAMPLES) out.accept(furniture(KLADKAOS_ITEM, body));
                     KLADKAOS_PANELS.values().forEach(out::accept);
-                    for (String body : KUBHALA_EXAMPLES) out.accept(furniture(TRULLBORG_ITEM, body));
+                    for (String body : KUBHALA_EXAMPLES) out.accept(furniture(HJULBORG_ITEM, body));
                     for (String lid : GENOMSKADA_EXAMPLES) out.accept(furniture(GENOMSKADA_ITEM, lid));
                     out.accept(HEXHOJK);
                     for (String body : KUBHALA_EXAMPLES) out.accept(furniture(CRATE_ITEM, body));

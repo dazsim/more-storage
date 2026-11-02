@@ -1,0 +1,36 @@
+{
+  "type": "muchmorestorage:crafting_shapeless_keep_tool",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "muchmorestorage:mangrove_kladkaos_panel"
+    },
+    {
+      "item": "muchmorestorage:mangrove_kladkaos_panel"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "tag": "c:tools/screwdriver"
+    }
+  ],
+  "keep": {
+    "tag": "c:tools/screwdriver"
+  },
+  "result": {
+    "item": "muchmorestorage:hjulborg",
+    "nbt": {
+      "Body": "mangrove"
+    }
+  }
+}

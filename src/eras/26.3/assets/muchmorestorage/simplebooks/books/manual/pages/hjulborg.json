@@ -1,0 +1,8 @@
+{
+  "section": "hjulborg",
+  "sort": 12,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/hjulborg_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/hjulborg_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/hjulborg_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/hjulborg_r_stand.png"
+}

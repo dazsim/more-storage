@@ -179,8 +179,8 @@ public final class FurnitureModel {
         for (Direction dir : new Direction[]{UP, NORTH, SOUTH, WEST, EAST}) q.face(dir, 3, 1.5F, 4, 9, 2, 5, b.handle(), 7, 5, 8, 10);
     }
 
-    // TRULLBORG, a small chest on four wheels with the handle on the south side, lift raises the lid a little
-    public static void trullborg(Quads q, CupboardModel.Body b, float lift) {
+    // HJULBORG, a small chest on four wheels with the handle on the south side, lift raises the lid a little
+    public static void hjulborg(Quads q, CupboardModel.Body b, float lift) {
         TextureAtlasSprite s = b.side(), d = b.door(), h = b.handle();
         for (float[] w : new float[][]{{2, 3}, {2, 12}, {13, 3}, {13, 12}}) {
             for (Direction dir : Direction.values()) q.face(dir, w[0], 0, w[1], w[0] + 1, 3, w[1] + 1, h, 7, 5, 8, 10);

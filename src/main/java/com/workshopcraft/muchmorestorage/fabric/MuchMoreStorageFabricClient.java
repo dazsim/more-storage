@@ -15,7 +15,7 @@ import com.workshopcraft.muchmorestorage.client.LadstapelRenderer;
 import com.workshopcraft.muchmorestorage.client.GenomskadaRenderer;
 import com.workshopcraft.muchmorestorage.client.CrateRenderer;
 import com.workshopcraft.muchmorestorage.client.KladkaosRenderer;
-import com.workshopcraft.muchmorestorage.client.TrullborgRenderer;
+import com.workshopcraft.muchmorestorage.client.HjulborgRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 //?} else {
 /*import com.workshopcraft.muchmorestorage.client.v1_21.CupboardItemRenderer;
@@ -26,7 +26,7 @@ import com.workshopcraft.muchmorestorage.client.v1_21.LadstapelRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.GenomskadaRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.CrateRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KladkaosRenderer;
-import com.workshopcraft.muchmorestorage.client.v1_21.TrullborgRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.HjulborgRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.world.item.Item;
 *///?}
@@ -42,9 +42,9 @@ public class MuchMoreStorageFabricClient implements ClientModInitializer {
         BlockEntityRenderers.register(ModContent.CRATE_BE, CrateRenderer::new);
         BlockEntityRenderers.register(ModContent.KLADKAOS_BE, KladkaosRenderer::new);
         //? if >=26.1 {
-        EntityRenderers.register(ModContent.TRULLBORG, TrullborgRenderer::new);
+        EntityRenderers.register(ModContent.HJULBORG, HjulborgRenderer::new);
         //?} else {
-        /*net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(ModContent.TRULLBORG, TrullborgRenderer::new);
+        /*net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(ModContent.HJULBORG, HjulborgRenderer::new);
         *///?}
         //? if >=26.1 {
         SpecialModelRenderers.ID_MAPPER.put(MuchMoreStorage.id("cupboard"), CupboardItemRenderer.Unbaked.MAP_CODEC);
