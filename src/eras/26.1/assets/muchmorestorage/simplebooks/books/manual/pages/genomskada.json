@@ -1,0 +1,8 @@
+{
+  "section": "genomskada",
+  "sort": 13,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/genomskada_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/genomskada_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/genomskada_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/genomskada_r_stand.png"
+}

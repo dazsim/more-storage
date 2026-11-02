@@ -43,6 +43,7 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         out.addAll(ModContent.KLADKAOS_PANELS.values());
         out.add(ModContent.KLADKAOS_ITEM);
         out.add(ModContent.TRULLBORG_ITEM);
+        out.add(ModContent.GENOMSKADA_ITEM);
         return out;
     }
 
@@ -53,6 +54,12 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
 
     // carcasses, worktops and cupboards all draw their finish from the stack
     public static void draw(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+        if (stack.getItem() == ModContent.GENOMSKADA_ITEM) {
+            FurnitureModel.genomskadaLid(new Quads(pose.last(), buffers.getBuffer(Sheets.cutoutBlockSheet()), light, overlay),
+                    CupboardModel.top(com.workshopcraft.muchmorestorage.block.GenomskadaBlockEntity.lid(ModContent.bodyOf(stack))));
+            FurnitureModel.genomskadaWalls(new Quads(pose.last(), buffers.getBuffer(Sheets.translucentCullBlockSheet()), light, overlay));
+            return;
+        }
         VertexConsumer vc = buffers.getBuffer(Sheets.cutoutBlockSheet());
         if (stack.getItem() instanceof WorktopItem worktop) {
             pose.pushPose();

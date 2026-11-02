@@ -211,6 +211,31 @@ public final class FurnitureModel {
         }
     }
 
+    public static final float BOX_TOP = 11F;
+
+    public static TextureAtlasSprite clear() { return CupboardModel.sprite(MuchMoreStorage.id("minecraft", "block/white_stained_glass")); }
+
+    // GENOMSKADA, clear walls drawn from both sides so the far ones show, a solid lid on top
+    public static void genomskada(Quads q, TextureAtlasSprite lid) {
+        genomskadaWalls(q);
+        genomskadaLid(q, lid);
+    }
+
+    public static void genomskadaWalls(Quads q) {
+        TextureAtlasSprite c = clear();
+        box(q, 1, 0, 1, 15, BOX_TOP, 15, c, W, NORTH, SOUTH, WEST, EAST, DOWN);
+        q.face(SOUTH, 1.5F, 0.5F, 0, 14.5F, BOX_TOP, 1.5F, c, 1.5F, 5, 14.5F, 16, SHADE);
+        q.face(NORTH, 1.5F, 0.5F, 14.5F, 14.5F, BOX_TOP, 16, c, 1.5F, 5, 14.5F, 16, SHADE);
+        q.face(EAST, 0, 0.5F, 1.5F, 1.5F, BOX_TOP, 14.5F, c, 1.5F, 5, 14.5F, 16, SHADE);
+        q.face(WEST, 14.5F, 0.5F, 1.5F, 16, BOX_TOP, 14.5F, c, 1.5F, 5, 14.5F, 16, SHADE);
+        q.face(UP, 1.5F, 0, 1.5F, 14.5F, 0.5F, 14.5F, c, 1.5F, 1.5F, 14.5F, 14.5F, SHADE);
+    }
+
+    public static void genomskadaLid(Quads q, TextureAtlasSprite lid) {
+        box(q, 0.5F, BOX_TOP, 0.5F, 15.5F, 12.5F, 15.5F, lid, W, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+        box(q, 6, 12.5F, 0.5F, 10, 13, 2, lid, DARK, NORTH, WEST, EAST, UP);
+    }
+
     private static void box(Quads q, float x0, float y0, float z0, float x1, float y1, float z1, TextureAtlasSprite sp, int colour, Direction... faces) {
         KubhalaModel.box(q, x0, y0, z0, x1, y1, z1, sp, colour, faces);
     }

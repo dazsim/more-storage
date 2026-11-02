@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "G G",
+    "GSG",
+    "GGG"
+  ],
+  "key": {
+    "G": "minecraft:glass_pane",
+    "S": "minecraft:slime_ball"
+  },
+  "result": {
+    "id": "muchmorestorage:genomskada",
+    "count": 1
+  }
+}

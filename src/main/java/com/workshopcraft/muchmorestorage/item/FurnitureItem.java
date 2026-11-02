@@ -44,7 +44,7 @@ public class FurnitureItem extends BlockItem {
     *///?}
 
     private void tips(ItemStack stack, Consumer<Component> lines) {
-        lines.accept(Component.translatable("tooltip.muchmorestorage.body", CupboardItem.finishName(ModContent.bodyOf(stack))).withStyle(ChatFormatting.GRAY));
+        lines.accept(Component.translatable(kind.equals("genomskada") ? "tooltip.muchmorestorage.lid" : "tooltip.muchmorestorage.body", CupboardItem.finishName(ModContent.bodyOf(stack))).withStyle(ChatFormatting.GRAY));
         lines.accept(Component.translatable("tooltip.muchmorestorage." + kind).withStyle(ChatFormatting.GRAY));
         lines.accept(Component.translatable("tooltip.muchmorestorage." + kind + ".use").withStyle(ChatFormatting.GRAY));
         if (kind.equals("bokwurm")) lines.accept(Component.translatable("tooltip.muchmorestorage.bokwurm.enchanting").withStyle(ChatFormatting.GRAY));

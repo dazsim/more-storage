@@ -251,6 +251,16 @@ lang.update({f"tooltip.{MOD}.trullborg": "Chest on wheels, 18 slots",
              f"message.{MOD}.trullborg.pull": "Pulling the TRULLBORG",
              f"message.{MOD}.trullborg.let_go": "Let go of the TRULLBORG",
              f"message.{MOD}.trullborg.full": "Empty it first"})
+# GENOMSKADA, a clear box from glass panes held together with slime
+w(f"{A}/blockstates/genomskada.json", {"variants": {
+    "concrete=false": {"model": f"{MOD}:block/cupboard_wood"},
+    "concrete=true": {"model": f"{MOD}:block/cupboard_concrete"}}})
+special("genomskada")
+recipe("genomskada", ["G G", "GSG", "GGG"], {"G": "minecraft:glass_pane", "S": "minecraft:slime_ball"}, unlock="minecraft:glass_pane")
+for k in ("block", "item", "container"):
+    lang[f"{k}.{MOD}.genomskada"] = "GENOMSKADA"
+lang.update({f"tooltip.{MOD}.genomskada": "Clear storage box, 9 stacks", f"tooltip.{MOD}.lid": "Lid: %s",
+             f"tooltip.{MOD}.genomskada.use": "Stacks 3 high, use a dye on it to colour the lid"})
 for d in ["top", "middle", "bottom"]:
     lang[f"container.{MOD}.ladstapel.{d}"] = f"LADSTAPEL, {d} drawer"
 lang.update({f"tooltip.{MOD}.bokwurm": "Bookcase, holds 12 books",

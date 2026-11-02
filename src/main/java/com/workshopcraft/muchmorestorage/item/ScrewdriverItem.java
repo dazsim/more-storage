@@ -28,6 +28,7 @@ public class ScrewdriverItem extends Item {
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof KubhalaBlock) return kubhala(level, pos, player, state);
         if (state.getBlock() instanceof com.workshopcraft.muchmorestorage.block.KladkaosBlock) return false;
+        if (state.getBlock() instanceof com.workshopcraft.muchmorestorage.block.GenomskadaBlock) return false;
         if (state.getBlock() instanceof FurnitureBlock) return furniture(level, pos, player, state);
         if (!(state.getBlock() instanceof CupboardBlock) || !(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return false;
         if (!player.mayBuild()) return false;

@@ -12,6 +12,7 @@ import com.workshopcraft.muchmorestorage.client.CupboardRenderer;
 import com.workshopcraft.muchmorestorage.client.KubhalaRenderer;
 import com.workshopcraft.muchmorestorage.client.BokwurmRenderer;
 import com.workshopcraft.muchmorestorage.client.LadstapelRenderer;
+import com.workshopcraft.muchmorestorage.client.GenomskadaRenderer;
 import com.workshopcraft.muchmorestorage.client.KladkaosRenderer;
 import com.workshopcraft.muchmorestorage.client.TrullborgRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
@@ -21,6 +22,7 @@ import com.workshopcraft.muchmorestorage.client.v1_21.CupboardRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KubhalaRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.BokwurmRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.LadstapelRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.GenomskadaRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KladkaosRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.TrullborgRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -34,6 +36,7 @@ public class MuchMoreStorageFabricClient implements ClientModInitializer {
         BlockEntityRenderers.register(ModContent.KUBHALA_BE, KubhalaRenderer::new);
         BlockEntityRenderers.register(ModContent.BOKWURM_BE, BokwurmRenderer::new);
         BlockEntityRenderers.register(ModContent.LADSTAPEL_BE, LadstapelRenderer::new);
+        BlockEntityRenderers.register(ModContent.GENOMSKADA_BE, GenomskadaRenderer::new);
         BlockEntityRenderers.register(ModContent.KLADKAOS_BE, KladkaosRenderer::new);
         //? if >=26.1 {
         EntityRenderers.register(ModContent.TRULLBORG, TrullborgRenderer::new);

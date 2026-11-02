@@ -403,6 +403,19 @@ def cell_icon(pg, kind, x, y, s):
             xx = x0 + (x1 - x0) * dx
             pg.line((xx, y1 - 1), (xx, y0 + 1), 2.2)
             pg.line((xx - 2, y0 + (y1 - y0) * 0.45), (xx + 2, y0 + (y1 - y0) * 0.45), 1.2)
+    elif kind == "pane":
+        cx = (x0 + x1) / 2
+        pg.path([(cx - 3, y0), (cx + 3, y0), (cx + 3, y1), (cx - 3, y1)], 1.6, closed=True)
+        pg.line((cx - 1, y0 + 5), (cx + 1, y0 + 10), 1.0)
+    elif kind == "slime":
+        pg.path([(x0 + 4, y0 + 4), (x1 - 4, y0 + 4), (x1 - 4, y1 - 4), (x0 + 4, y1 - 4)], 1.8, closed=True)
+        pg.dot((x0 + (x1 - x0) * 0.38, y0 + (y1 - y0) * 0.42), 1.6)
+        pg.dot((x0 + (x1 - x0) * 0.62, y0 + (y1 - y0) * 0.42), 1.6)
+    elif kind == "dye":
+        cx = (x0 + x1) / 2
+        pg.path([(cx - 6, y1 - 2), (cx + 6, y1 - 2), (cx + 4, y0 + 8), (cx - 4, y0 + 8)], 1.8, closed=True)
+        pg.line((cx - 2, y0 + 8), (cx - 2, y0 + 3), 1.4)
+        pg.line((cx + 2, y0 + 8), (cx + 2, y0 + 3), 1.4)
     elif kind == "nugget":
         cx, cy = (x0 + x1) / 2, (y0 + y1) / 2 + 2
         pg.path([(cx - 8, cy + 2), (cx - 4, cy - 5), (cx + 5, cy - 6), (cx + 9, cy + 1), (cx + 3, cy + 6), (cx - 5, cy + 6)], 1.8, closed=True)
@@ -991,6 +1004,46 @@ def page_trullborg_use(pg):
     cell_icon(pg, "nugget", 440, 760, 30)
     check(pg, (520, 810), 20, False)
 
+def genomskada(sc, at=(0, 0, 0), items=0):
+    """The clear box, a lid on top and a few stacks seen through the walls."""
+    base = [move(*at)]
+    for i in range(items):
+        x, z = 4 + (i % 3) * 4, 4 + (i // 3) * 4
+        sc.box((x - 1.5, 0.5, z - 1.5), (x + 1.5, 2.5, z + 1.5), base, width=1.2, bias=-2)
+    sc.box((1, 0, 1), (15, 11, 15), base, width=1.4)
+    sc.box((0.5, 11, 0.5), (15.5, 12.5, 15.5), base, width=2.2, bias=1)
+    sc.box((6, 12.5, 0.5), (10, 13, 2), base, width=1.6, bias=2)
+
+def page_genomskada(pg):
+    heading(pg, "GENOMSKADA", "GENÖMSKÅDA")
+    grid(pg, 50, 200, 70, [["pane", None, "pane"], ["pane", "slime", "pane"], ["pane"] * 3])
+    pg.arrow([(280, 305), (340, 305)], 3.0)
+    s1 = Scene(0, 0, 10).at(470, 330, (0, 0, 0), (16, 13, 16))
+    genomskada(s1, items=5)
+    s1.draw(pg)
+    pg.line((60, 470), (584, 470), 1.6)
+    s2 = Scene(0, 0, 8).at(320, 620, (0, 0, 0), (16, 13, 16))
+    genomskada(s2, items=9)
+    s2.draw(pg)
+    pg.text((320, 780), "1 x 9", 30, "ms")
+    slots(pg, 212, 800, 24, 9, filled=range(9))
+
+def page_genomskada_use(pg):
+    s1 = Scene(0, 0, 4).at(150, 330, (0, 0, 0), (16, 38, 16))
+    for k in range(3): genomskada(s1, (0, k * 12.5, 0), items=3)
+    s1.draw(pg)
+    check(pg, (260, 300), 20, True)
+    s2 = Scene(0, 0, 4).at(420, 330, (0, 0, 0), (16, 50, 16))
+    for k in range(4): genomskada(s2, (0, k * 12.5, 0))
+    s2.draw(pg)
+    check(pg, (530, 260), 20, False)
+    pg.line((60, 470), (584, 470), 1.6)
+    cell_icon(pg, "dye", 90, 580, 70)
+    pg.arrow([(180, 615), (250, 615)], 3.0)
+    s3 = Scene(0, 0, 7).at(400, 640, (0, 0, 0), (16, 13, 16))
+    genomskada(s3, items=2)
+    s3.draw(pg)
+
 def comparator(sc, at=(0, 0, 0)):
     base = [move(*at)]
     sc.box((0, 0, 0), (16, 2, 16), base)
@@ -1143,10 +1196,11 @@ SPREADS = [
     ("ladstapel", page_ladstapel, page_ladstapel_use),
     ("kladkaos", page_kladkaos, page_kladkaos_use),
     ("trullborg", page_trullborg, page_trullborg_use),
+    ("genomskada", page_genomskada, page_genomskada_use),
 ]
 SECTIONS = {"cover": "cover", "parts": "parts", "steps_a": "assembly", "steps_b": "assembly", "finishes": "assembly",
             "hinge": "use", "apart": "apart", "kubhala": "kubhala", "sakksakk": "kubhala",
-            "bokwurm": "bokwurm", "ladstapel": "ladstapel", "kladkaos": "kladkaos", "trullborg": "trullborg"}
+            "bokwurm": "bokwurm", "ladstapel": "ladstapel", "kladkaos": "kladkaos", "trullborg": "trullborg", "genomskada": "genomskada"}
 
 def manual_icon():
     rows = ["................", "...##########...", "...#WWWWWWWWW#..", "...#WWWWWWWWW#..", "...#WKKKKKKWW#..",
@@ -1236,7 +1290,7 @@ def main(gen):
     os.makedirs(f"{A}/{TEX}", exist_ok=True)
     w(f"{books}/manual.json", {"title": f"book.{MOD}.manual.title", "default_template": f"{MOD}:leaflet",
         "style": {"page": "#ffffff", "ink": "#111111", "soft": "#555555", "cover": "#3a3a3a", "cover_edge": "#1e1e1e", "edge": "#c8c8c8"},
-        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel", "kladkaos", "trullborg"]})
+        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel", "kladkaos", "trullborg", "genomskada"]})
     w(f"{A}/simplebooks/templates/leaflet.json", {"vars": {}, "slots": {
         "left.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "left_image", "frame": False},
         "right.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "right_image", "frame": False},

@@ -36,6 +36,7 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
         if (stack.getItem() instanceof PanelItem panel) return new Look(panel.body, "", 5);
         if (stack.getItem() == ModContent.KLADKAOS_ITEM) return new Look(ModContent.bodyOf(stack), "", 6);
         if (stack.getItem() == ModContent.TRULLBORG_ITEM) return new Look(ModContent.bodyOf(stack), "", 7);
+        if (stack.getItem() == ModContent.GENOMSKADA_ITEM) return new Look(com.workshopcraft.muchmorestorage.block.GenomskadaBlockEntity.lid(ModContent.bodyOf(stack)), "", 8);
         if (stack.getItem() instanceof FurnitureItem) return new Look(ModContent.bodyOf(stack), "", 4);
         return new Look(ModContent.bodyOf(stack), ModContent.cupboardTopOf(stack));
     }
@@ -43,6 +44,12 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
     @Override
     public void submit(@Nullable Look look, PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
         if (look == null) return;
+        if (look.kind() == 8) {
+            var lid = CupboardModel.top(look.body());
+            out.submitCustomGeometry(pose, Sheets.cutoutBlockItemSheet(), (p, vc) -> FurnitureModel.genomskadaLid(new Quads(p, vc, light, overlay), lid));
+            out.submitCustomGeometry(pose, Sheets.translucentBlockItemSheet(), (p, vc) -> FurnitureModel.genomskadaWalls(new Quads(p, vc, light, overlay)));
+            return;
+        }
         out.submitCustomGeometry(pose, Sheets.cutoutBlockItemSheet(), (p, vc) -> {
             Quads q = new Quads(p, vc, light, overlay);
             if (look.body().isEmpty()) {
