@@ -10,7 +10,12 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 //?}
+import com.mojang.serialization.Dynamic;
+import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -31,6 +36,8 @@ import net.minecraft.world.level.block.entity.ChestLidController;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.block.state.BlockState;
 //? if >=1.21.6 {
 import net.minecraft.world.level.storage.ValueInput;
@@ -117,6 +124,18 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     @Override
     protected void setItems(NonNullList<ItemStack> items) { this.items = items; }
 
+    //? if >=1.20.5 {
+    // items saved by 1.20.4 or older are not run through the data fixer for modded block entities
+    private static Tag upgradeItem(CompoundTag tag) {
+        //? if >=1.21.6 {
+        int now = SharedConstants.getCurrentVersion().dataVersion().version();
+        //?} else {
+        /*int now = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
+        *///?}
+        return DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<Tag>(NbtOps.INSTANCE, tag), 3465, now).getValue();
+    }
+    //?}
+
     //? if >=1.21.6 {
     @Override
     protected void loadAdditional(ValueInput input) {
@@ -125,7 +144,17 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         top = input.getStringOr("Top", "");
         if (top.isEmpty()) settleStart = -1;
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
-        if (!tryLoadLootTable(input)) ContainerHelper.loadAllItems(input, items);
+        if (tryLoadLootTable(input)) return;
+        List<CompoundTag> raw = input.listOrEmpty("Items", CompoundTag.CODEC).stream().toList();
+        if (raw.stream().noneMatch(t -> t.contains("Count"))) {
+            ContainerHelper.loadAllItems(input, items);
+            return;
+        }
+        var ops = input.lookup().createSerializationContext(NbtOps.INSTANCE);
+        for (CompoundTag t : raw) {
+            int slot = t.getByteOr("Slot", (byte) 0) & 255;
+            if (slot < items.size()) ItemStack.CODEC.parse(ops, upgradeItem(t)).result().ifPresent(st -> items.set(slot, st));
+        }
     }
 
     @Override
@@ -143,7 +172,17 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         top = tag.getString("Top");
         if (top.isEmpty()) settleStart = -1;
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
-        if (!tryLoadLootTable(tag)) ContainerHelper.loadAllItems(tag, items, registries);
+        if (tryLoadLootTable(tag)) return;
+        ListTag raw = tag.getList("Items", Tag.TAG_COMPOUND);
+        if (raw.isEmpty() || !raw.getCompound(0).contains("Count")) {
+            ContainerHelper.loadAllItems(tag, items, registries);
+            return;
+        }
+        for (int i = 0; i < raw.size(); i++) {
+            CompoundTag t = raw.getCompound(i);
+            int slot = t.getByte("Slot") & 255;
+            if (slot < items.size()) ItemStack.parse(registries, upgradeItem(t)).ifPresent(st -> items.set(slot, st));
+        }
     }
 
     @Override
