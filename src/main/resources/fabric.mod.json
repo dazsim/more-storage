@@ -1,0 +1,28 @@
+{
+    "schemaVersion": 1,
+    "id": "${id}",
+    "version": "${version}",
+    "name": "${name}",
+    "description": "${description}",
+    "authors": [
+        "${author}"
+    ],
+    "license": "${license}",
+    "icon": "muchmorestorage_logo.png",
+    "environment": "*",
+    "accessWidener": "muchmorestorage.accesswidener",
+    "entrypoints": {
+        "client": [
+            "com.workshopcraft.muchmorestorage.fabric.MuchMoreStorageFabricClient"
+        ],
+        "main": [
+            "com.workshopcraft.muchmorestorage.fabric.MuchMoreStorageFabric"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=${loader}",
+        "fabric-api": "*",
+        "minecraft": "${minecraft}",
+        "java": ">=${java}"
+    }
+}
