@@ -79,6 +79,11 @@ public final class KubhalaModel {
         box(q, x0, y0, 15, x1, y1, 16, s, w, SOUTH);
     }
 
+    // how far an open drawer slides out, and the top of its tray, in pixels
+    public static final float DRAWER_OUT = 10F;
+
+    public static float drawerFloor(Join j) { return j.y1() - GAP - 4.5F; }
+
     public static void drawer(Quads q, CupboardModel.Body b, Join j) {
         float x0 = j.x0() + GAP, x1 = j.x1() - GAP, y0 = j.y0() + GAP, y1 = j.y1() - GAP;
         TextureAtlasSprite s = b.side(), in = b.inside();
@@ -89,7 +94,10 @@ public final class KubhalaModel {
         box(q, x0 + 0.5F, y0, 1.1F, x0 + 1.25F, y1 - 2, 14.5F, s, 0xFFFFFFFF, UP, WEST, EAST, SOUTH);
         box(q, x1 - 1.25F, y0, 1.1F, x1 - 0.5F, y1 - 2, 14.5F, s, 0xFFFFFFFF, UP, WEST, EAST, SOUTH);
         box(q, x0 + 1.25F, y0, 13.75F, x1 - 1.25F, y1 - 2, 14.5F, s, 0xFFFFFFFF, UP, NORTH, SOUTH);
-        box(q, x0 + 1.25F, y0, 1.1F, x1 - 1.25F, y0 + 0.75F, 13.75F, in, SHADE, UP);
+        // a shallow tray hung near the top so what sits in it shows over the front
+        float fy = drawerFloor(j);
+        box(q, x0 + 1.25F, fy - 0.75F, 1.1F, x1 - 1.25F, fy, 13.75F, in, SHADE, UP);
+        box(q, x0 + 1.25F, fy - 0.75F, 1.1F, x1 - 1.25F, fy, 13.75F, s, DARK, DOWN);
         float hy = y1 - 3.5F;
         for (Direction d : Direction.values()) {
             if (d != SOUTH) q.face(d, 5.5F, hy, -0.9F, 10.5F, hy + 1, 0.1F, b.handle(), 7, 5, 8, 10);

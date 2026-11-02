@@ -136,7 +136,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
             pose.pushPose();
             if (!s.fitted) loose(pose);
             if (s.insert == Insert.DRAWER) {
-                pose.translate(0, 0, -9 / 16F * s.open);
+                pose.translate(0, 0, -KubhalaModel.DRAWER_OUT / 16F * s.open);
                 submit(s, pose, out, s.frontLight, q -> KubhalaModel.drawer(q, body, s.join));
                 submitDrawerItems(s, pose, out);
             } else {
@@ -180,23 +180,23 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
         }
     }
 
-    // up to three stacks lying in the front of the drawer box
+    // up to three stacks stood in the drawer tray, leaning back a little so they show over the front
     private void submitDrawerItems(State s, PoseStack pose, SubmitNodeCollector out) {
         int n = s.shown.size();
         if (n == 0) return;
-        float[] xs = n == 1 ? new float[]{8} : n == 2 ? new float[]{6, 10} : new float[]{5, 8, 11};
-        float scale = n == 1 ? 0.42F : n == 2 ? 0.32F : 0.26F;
-        float floor = (s.join.y0() + KubhalaModel.GAP + 0.75F) / 16F;
+        float[] xs = n == 1 ? new float[]{8} : n == 2 ? new float[]{5.75F, 10.25F} : new float[]{4.75F, 8, 11.25F};
+        float scale = n == 1 ? 0.45F : n == 2 ? 0.38F : 0.32F;
+        float floor = KubhalaModel.drawerFloor(s.join) / 16F;
         for (int i = 0; i < n; i++) {
             ItemStackRenderState r = s.shown.get(i);
-            float sc = s.blocks.get(i) ? scale * 1.4F : scale;
+            float sc = s.blocks.get(i) ? scale * 1.2F : scale;
             AABB box = r.getModelBoundingBox();
             pose.pushPose();
-            pose.translate(xs[i] / 16F, floor + 0.01F / 16, (4.5F + (i % 2) * 0.75F) / 16F);
-            rotate(pose, Axis.YP.rotationDegrees(180F + (i - 1) * 9F));
-            rotate(pose, Axis.XP.rotationDegrees(-90F));
+            pose.translate(xs[i] / 16F, floor + 0.01F / 16, (6.5F + (i % 2)) / 16F);
+            rotate(pose, Axis.YP.rotationDegrees(180F + (i - 1) * 6F));
+            rotate(pose, Axis.XP.rotationDegrees(-15F));
             pose.scale(sc, sc, sc);
-            pose.translate(0, 0, -box.minZ);
+            pose.translate(0, -box.minY, 0);
             r.submit(pose, out, s.frontLight, OverlayTexture.NO_OVERLAY, 0);
             pose.popPose();
         }

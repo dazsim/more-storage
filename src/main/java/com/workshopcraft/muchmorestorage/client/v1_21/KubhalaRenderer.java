@@ -76,7 +76,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity> 
                 pose.translate(-0.5F, -0.5F, 0);
             }
             if (insert == Insert.DRAWER) {
-                pose.translate(0, 0, -9 / 16F * open);
+                pose.translate(0, 0, -KubhalaModel.DRAWER_OUT / 16F * open);
                 KubhalaModel.drawer(quads(pose, vc, frontLight), body, join);
                 if (open > 0.05F) items(be, join, pose, buffers, frontLight, true);
             } else {
@@ -112,13 +112,14 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity> 
             float sc = block ? scale * 1.5F : scale;
             pose.pushPose();
             if (drawer) {
-                sc *= 0.7F;
-                float x = n == 1 ? 8 : n == 2 ? 2 + 4 * (i + 1) : 2 + 3 * (i + 1);
-                pose.translate(x / 16F, (join.y0() + KubhalaModel.GAP + 0.76F) / 16F, (4.5F + (i % 2) * 0.75F) / 16F);
-                pose.mulPose(Axis.YP.rotationDegrees(180F + (i - 1) * 9F));
-                pose.mulPose(Axis.XP.rotationDegrees(-90F));
+                // stood in the tray, leaning back a little so they show over the front
+                sc = (n == 1 ? 0.45F : n == 2 ? 0.38F : 0.32F) * (block ? 1.2F : 1F);
+                float x = n == 1 ? 8 : n == 2 ? 5.75F + 4.5F * i : 4.75F + 3.25F * i;
+                pose.translate(x / 16F, KubhalaModel.drawerFloor(join) / 16F, (6.5F + (i % 2)) / 16F);
+                pose.mulPose(Axis.YP.rotationDegrees(180F + (i - 1) * 6F));
+                pose.mulPose(Axis.XP.rotationDegrees(-15F));
                 pose.scale(sc, sc, sc);
-                pose.translate(0, 0, block ? 0.25F : 1 / 32F);
+                pose.translate(0, block ? 0.25F : 0.5F, 0);
             } else {
                 pose.translate(xs[i] / 16F, join.y0() / 16F + (block ? 0.25F : 0.5F) * sc, 0.5F);
                 pose.mulPose(Axis.YP.rotationDegrees(180F));

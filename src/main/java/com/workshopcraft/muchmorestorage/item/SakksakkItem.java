@@ -95,6 +95,21 @@ public class SakksakkItem extends Item {
         return stack;
     }
 
+    // a name given in an anvil, kept while the box sits in a cube
+    public static @org.jspecify.annotations.Nullable Component customName(ItemStack stack) {
+        //? if >=1.20.5 {
+        return stack.get(DataComponents.CUSTOM_NAME);
+        //?} else
+        /*return stack.hasCustomHoverName() ? stack.getHoverName() : null;*/
+    }
+
+    public static void setCustomName(ItemStack stack, Component name) {
+        //? if >=1.20.5 {
+        stack.set(DataComponents.CUSTOM_NAME, name);
+        //?} else
+        /*stack.setHoverName(name);*/
+    }
+
     private static void open(Level level, Player player, InteractionHand hand, ItemStack stack) {
         if (level.isClientSide()) return;
         player.openMenu(new SimpleMenuProvider((id, inv, p) -> SakksakkMenu.held(id, inv, stack, hand), stack.getHoverName()));

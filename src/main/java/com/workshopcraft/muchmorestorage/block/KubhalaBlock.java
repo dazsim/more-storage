@@ -177,9 +177,10 @@ public class KubhalaBlock extends BaseEntityBlock {
         if (!(level.getBlockEntity(pos) instanceof KubhalaBlockEntity be) || !be.isEmpty()) return false;
         if (!level.isClientSide()) {
             var contents = SakksakkItem.contents(held);
+            var name = SakksakkItem.customName(held);
             held.shrink(1);
             level.setBlock(pos, state.setValue(INSERT, Insert.BOX).setValue(FITTED, true), 3);
-            be.fillBox(box.colour, contents);
+            be.fillBox(box.colour, contents, name);
             level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.0F);
         }
         return true;

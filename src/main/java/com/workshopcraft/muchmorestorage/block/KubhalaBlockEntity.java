@@ -18,9 +18,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.state.BlockState;
+//? if >=1.21.6 {
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+//?}
+import org.jspecify.annotations.Nullable;
 
 // a cupboard block entity cut down to one row, the contents go to the client so open cubes can show them
 public class KubhalaBlockEntity extends CupboardBlockEntity {
+    private @Nullable Component boxName;
+
     public KubhalaBlockEntity(BlockPos pos, BlockState state) {
         super(ModContent.KUBHALA_BE, pos, state, 9);
     }
@@ -40,8 +48,9 @@ public class KubhalaBlockEntity extends CupboardBlockEntity {
     // the colour of a fitted SAKKSÄKK, its items are this cube's items
     public String box() { return box.isEmpty() ? "white" : box; }
 
-    public void fillBox(String colour, NonNullList<ItemStack> contents) {
+    public void fillBox(String colour, NonNullList<ItemStack> contents, @Nullable Component name) {
         box = colour;
+        boxName = name;
         for (int i = 0; i < getContainerSize(); i++) setItem(i, i < contents.size() ? contents.get(i) : ItemStack.EMPTY);
         setChanged();
     }
@@ -50,13 +59,16 @@ public class KubhalaBlockEntity extends CupboardBlockEntity {
     public ItemStack boxItem() {
         NonNullList<ItemStack> list = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < getContainerSize(); i++) list.set(i, getItem(i).copy());
-        return SakksakkItem.of(box(), list);
+        ItemStack out = SakksakkItem.of(box(), list);
+        if (boxName != null) SakksakkItem.setCustomName(out, boxName);
+        return out;
     }
 
     public ItemStack takeBox() {
         ItemStack out = boxItem();
         clearContent();
         box = "";
+        boxName = null;
         setChanged();
         return out;
     }
@@ -90,9 +102,47 @@ public class KubhalaBlockEntity extends CupboardBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        if (insert() == Insert.BOX) return Component.translatable("item.muchmorestorage." + box() + "_sakksakk");
+        if (insert() == Insert.BOX) return boxName != null ? boxName : Component.translatable("item.muchmorestorage." + box() + "_sakksakk");
         return Component.translatable("container.muchmorestorage.kubhala");
     }
+
+    //? if >=1.21.6 {
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        boxName = parseCustomNameSafe(input, "BoxName");
+    }
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.storeNullable("BoxName", ComponentSerialization.CODEC, boxName);
+    }
+    //?} else if >=1.20.5 {
+    /*@Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        boxName = tag.contains("BoxName", 8) ? parseCustomNameSafe(tag.getString("BoxName"), registries) : null;
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        if (boxName != null) tag.putString("BoxName", Component.Serializer.toJson(boxName, registries));
+    }
+    *///?} else {
+    /*@Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        boxName = tag.contains("BoxName", 8) ? Component.Serializer.fromJson(tag.getString("BoxName")) : null;
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        if (boxName != null) tag.putString("BoxName", Component.Serializer.toJson(boxName));
+    }
+    *///?}
 
     @Override
     public void setChanged() {
