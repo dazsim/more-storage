@@ -1,5 +1,6 @@
 package com.workshopcraft.muchmorestorage.crafting;
 
+//? if >=26.1 {
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
@@ -106,3 +107,4 @@ public class KeepToolShapelessRecipe extends NormalCraftingRecipe {
                 new SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)));
     }
 }
+//?}

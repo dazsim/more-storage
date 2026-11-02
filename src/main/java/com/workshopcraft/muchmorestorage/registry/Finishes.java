@@ -9,7 +9,10 @@ import java.util.List;
 // keep in sync with tools/gen_resources.py
 public final class Finishes {
     public static final List<String> WOODS = List.of("oak", "spruce", "birch", "jungle", "acacia", "dark_oak",
+            //? if >=1.21.4 {
             "mangrove", "cherry", "pale_oak", "bamboo", "crimson", "warped");
+            //?} else
+            /*"mangrove", "cherry", "bamboo", "crimson", "warped");*/
     public static final List<String> COLOURS = List.of("white", "orange", "magenta", "light_blue", "yellow", "lime",
             "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black");
     public static final List<String> STONES = List.of("smooth_stone", "granite", "polished_granite", "polished_diorite", "polished_andesite");

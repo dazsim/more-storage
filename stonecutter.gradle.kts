@@ -14,4 +14,8 @@ stonecutter parameters {
     constants {
         match(loader, "fabric", "neoforge", "forge")
     }
+
+    replacements.string(current.parsed < "1.21.11") {
+        replace("Identifier", "ResourceLocation")
+    }
 }

@@ -13,7 +13,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
+//? if >=26.1 {
 import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
+//?} else
+/^import net.neoforged.neoforge.items.wrapper.InvWrapper;^/
 
 @Mod(MuchMoreStorage.MOD_ID)
 public class MuchMoreStorageNeoForge {
@@ -40,7 +43,10 @@ public class MuchMoreStorageNeoForge {
     }
 
     private static void onCapabilities(RegisterCapabilitiesEvent e) {
+        //? if >=26.1 {
         e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.CUPBOARD_BE, (be, side) -> VanillaContainerWrapper.of(be));
+        //?} else
+        /^e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.CUPBOARD_BE, (be, side) -> new InvWrapper(be));^/
     }
 }
 *///?}

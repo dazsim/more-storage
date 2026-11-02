@@ -24,12 +24,14 @@ val era = when {
     sc.current.parsed >= "1.21" -> "1.21.1"
     else -> "1.20.1"
 }
+// the access transformer only opens 26.x members
+val modern = sc.current.parsed >= "26.1"
 sourceSets.main { resources.srcDir(rootProject.file("src/eras/$era")) }
 fun packProp(key: String) = runCatching { sc.properties.get<String>(key) }.getOrDefault("")
 
 neoForge {
     version = sc.properties.get<String>("deps.neo_loader")
-    accessTransformers.from(rootProject.file("src/main/resources/META-INF/accesstransformer.cfg"))
+    if (modern) accessTransformers.from(rootProject.file("src/main/resources/META-INF/accesstransformer.cfg"))
     mods {
         register(modId) {
             sourceSet(sourceSets.main.get())
@@ -45,6 +47,10 @@ neoForge {
             server()
         }
     }
+}
+
+dependencies {
+    compileOnly("org.jspecify:jspecify:1.0.0")
 }
 
 java {
@@ -74,6 +80,7 @@ tasks {
         inputs.properties(props)
         filesMatching(listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")) { expand(props) }
         exclude("fabric.mod.json", "META-INF/mods.toml")
+        if (!modern) exclude("$modId.accesswidener", "META-INF/accesstransformer.cfg")
     }
 
     named("createMinecraftArtifacts") {

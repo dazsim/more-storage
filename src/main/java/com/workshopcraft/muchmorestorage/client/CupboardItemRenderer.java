@@ -1,5 +1,6 @@
 package com.workshopcraft.muchmorestorage.client;
 
+//? if >=26.1 {
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
@@ -61,3 +62,4 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
         public MapCodec<Unbaked> type() { return MAP_CODEC; }
     }
 }
+//?}

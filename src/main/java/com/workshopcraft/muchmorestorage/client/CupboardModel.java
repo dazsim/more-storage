@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+//? if >=26.1
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -19,7 +20,10 @@ public final class CupboardModel {
     private CupboardModel() {}
 
     public static TextureAtlasSprite sprite(Identifier id) {
+        //? if >=26.1 {
         return Minecraft.getInstance().getAtlasManager().get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, id));
+        //?} else
+        /*return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(id);*/
     }
 
     // a worktop from another mod with no texture of its own falls back to the vanilla block it is cut from

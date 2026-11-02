@@ -4,6 +4,7 @@ import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+//? if >=1.21.6
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +16,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
+//? if >=1.21.9
 import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,8 +29,10 @@ import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+//? if >=1.21.6 {
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+//?}
 
 import java.util.List;
 
@@ -110,6 +114,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     @Override
     protected void setItems(NonNullList<ItemStack> items) { this.items = items; }
 
+    //? if >=1.21.6 {
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
@@ -127,6 +132,25 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         output.putString("Top", top);
         if (!trySaveLootTable(output)) ContainerHelper.saveAllItems(output, items);
     }
+    //?} else {
+    /*@Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        body = tag.contains("Body") ? tag.getString("Body") : "oak";
+        top = tag.getString("Top");
+        if (top.isEmpty()) settleStart = -1;
+        items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+        if (!tryLoadLootTable(tag)) ContainerHelper.loadAllItems(tag, items, registries);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putString("Body", body);
+        tag.putString("Top", top);
+        if (!trySaveLootTable(tag)) ContainerHelper.saveAllItems(tag, items, registries);
+    }
+    *///?}
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder b) {
@@ -136,7 +160,10 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     }
 
     @Override
+    //? if >=1.21.6 {
     protected void applyImplicitComponents(DataComponentGetter in) {
+    //?} else
+    /*protected void applyImplicitComponents(DataComponentInput in) {*/
         super.applyImplicitComponents(in);
         String b = in.get(ModContent.BODY);
         String t = in.get(ModContent.TOP);
@@ -144,12 +171,21 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         if (t != null) top = t;
     }
 
+    //? if >=1.21.6 {
     @Override
     public void removeComponentsFromTag(ValueOutput out) {
         super.removeComponentsFromTag(out);
         out.discard("Body");
         out.discard("Top");
     }
+    //?} else {
+    /*@Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove("Body");
+        tag.remove("Top");
+    }
+    *///?}
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
@@ -177,6 +213,7 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
         return super.triggerEvent(id, value);
     }
 
+    //? if >=1.21.9 {
     @Override
     public void startOpen(ContainerUser user) {
         if (!remove && !user.getLivingEntity().isSpectator()) {
@@ -195,6 +232,17 @@ public class CupboardBlockEntity extends RandomizableContainerBlockEntity implem
     public List<ContainerUser> getEntitiesWithContainerOpen() {
         return openers.getEntitiesWithContainerOpen(getLevel(), getBlockPos());
     }
+    //?} else {
+    /*@Override
+    public void startOpen(Player player) {
+        if (!remove && !player.isSpectator()) openers.incrementOpeners(player, getLevel(), getBlockPos(), getBlockState());
+    }
+
+    @Override
+    public void stopOpen(Player player) {
+        if (!remove && !player.isSpectator()) openers.decrementOpeners(player, getLevel(), getBlockPos(), getBlockState());
+    }
+    *///?}
 
     public boolean startSettle() {
         if (level == null || settleEnd > 0) return false;

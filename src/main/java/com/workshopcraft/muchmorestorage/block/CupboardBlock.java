@@ -14,6 +14,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+//? if <1.21.2
+/*import net.minecraft.world.ItemInteractionResult;*/
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
@@ -117,22 +119,35 @@ public class CupboardBlock extends BaseEntityBlock {
         return level.isClientSide() ? createTickerHelper(type, ModContent.CUPBOARD_BE, CupboardBlockEntity::clientTick) : null;
     }
 
+    //? if >=1.21.2 {
     @Override
     protected InteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player,
                                           InteractionHand hand, BlockHitResult hit) {
         if (held.is(ModContent.SCREWDRIVERS)) return InteractionResult.PASS;
+        return placeTop(held, state, level, pos, player) ? InteractionResult.SUCCESS : InteractionResult.TRY_WITH_EMPTY_HAND;
+    }
+    //?} else {
+    /*@Override
+    protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player,
+                                              InteractionHand hand, BlockHitResult hit) {
+        if (held.is(ModContent.SCREWDRIVERS)) return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        return placeTop(held, state, level, pos, player) ? ItemInteractionResult.sidedSuccess(level.isClientSide())
+                : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+    *///?}
+
+    // a worktop dropped onto a bare carcass
+    private static boolean placeTop(ItemStack held, BlockState state, Level level, BlockPos pos, Player player) {
         String top = ModContent.topOf(held);
-        if (!top.isEmpty() && !state.getValue(ASSEMBLED)
-                && level.getBlockEntity(pos) instanceof CupboardBlockEntity be && !be.hasTop()) {
-            if (!level.isClientSide()) {
-                be.setFinishes(be.body(), top);
-                held.consume(1, player);
-                SoundType sound = Finishes.isWoodTop(top) ? SoundType.WOOD : SoundType.STONE;
-                level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.0F);
-            }
-            return InteractionResult.SUCCESS;
+        if (top.isEmpty() || state.getValue(ASSEMBLED)
+                || !(level.getBlockEntity(pos) instanceof CupboardBlockEntity be) || be.hasTop()) return false;
+        if (!level.isClientSide()) {
+            be.setFinishes(be.body(), top);
+            held.consume(1, player);
+            SoundType sound = Finishes.isWoodTop(top) ? SoundType.WOOD : SoundType.STONE;
+            level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.0F);
         }
-        return InteractionResult.TRY_WITH_EMPTY_HAND;
+        return true;
     }
 
     @Override
@@ -141,7 +156,10 @@ public class CupboardBlock extends BaseEntityBlock {
         if (level instanceof ServerLevel server && level.getBlockEntity(pos) instanceof CupboardBlockEntity cupboard) {
             player.openMenu(cupboard);
             player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
+            //? if >=1.21.2 {
             PiglinAi.angerNearbyPiglins(server, player, true);
+            //?} else
+            /*PiglinAi.angerNearbyPiglins(player, true);*/
         }
         return InteractionResult.SUCCESS;
     }
@@ -185,22 +203,38 @@ public class CupboardBlock extends BaseEntityBlock {
         return out;
     }
 
+    //? if >=1.21.4 {
     @Override
     protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+    //?} else {
+    /*@Override
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+    *///?}
         if (!(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return new ItemStack(ModContent.CUPBOARD_ITEM);
         return state.getValue(ASSEMBLED) ? ModContent.cupboard(be.body(), be.top()) : new ItemStack(ModContent.CARCASSES.get(be.body()));
     }
 
+    //? if >=1.21.5 {
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
         Containers.updateNeighboursAfterDestroy(state, level, pos);
     }
+    //?} else {
+    /*@Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        Containers.dropContentsOnDestroy(state, newState, level, pos);
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+    *///?}
 
     @Override
     protected boolean hasAnalogOutputSignal(BlockState state) { return true; }
 
     @Override
+    //? if >=1.21.9 {
     protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+    //?} else
+    /*protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {*/
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
     }
 }

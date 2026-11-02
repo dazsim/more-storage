@@ -10,4 +10,12 @@ public class CarcassItem extends BlockItem {
         super(block, props);
         this.body = body;
     }
+    //? if <1.21.2 {
+
+    /*// BlockItem would take the cupboard's name
+    @Override
+    public String getDescriptionId() {
+        return getOrCreateDescriptionId();
+    }
+    *///?}
 }

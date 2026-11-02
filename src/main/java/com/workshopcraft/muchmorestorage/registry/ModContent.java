@@ -4,7 +4,10 @@ import com.mojang.serialization.Codec;
 import com.workshopcraft.muchmorestorage.MuchMoreStorage;
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
+//? if >=26.1 {
 import com.workshopcraft.muchmorestorage.crafting.KeepToolShapelessRecipe;
+//?} else
+/*import com.workshopcraft.muchmorestorage.crafting.v1_21.KeepToolShapelessRecipe;*/
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.CupboardItem;
 import com.workshopcraft.muchmorestorage.item.ScrewdriverItem;
@@ -60,6 +63,7 @@ public final class ModContent {
     public static void registerBlocks(BiConsumer<Identifier, Block> r) {
         Identifier id = MuchMoreStorage.id("cupboard");
         CUPBOARD = new CupboardBlock(BlockBehaviour.Properties.of()
+                //? if >=1.21.2
                 .setId(ResourceKey.create(Registries.BLOCK, id))
                 .mapColor(s -> s.getValue(CupboardBlock.CONCRETE) ? MapColor.STONE : MapColor.WOOD)
                 .strength(2.5F)
@@ -68,7 +72,10 @@ public final class ModContent {
     }
 
     private static Item.Properties item(String name) {
+        //? if >=1.21.2 {
         return new Item.Properties().setId(ResourceKey.create(Registries.ITEM, MuchMoreStorage.id(name)));
+        //?} else
+        /*return new Item.Properties();*/
     }
 
     public static void registerItems(BiConsumer<Identifier, Item> r) {
@@ -121,7 +128,10 @@ public final class ModContent {
     }
 
     public static void registerBlockEntities(BiConsumer<Identifier, BlockEntityType<?>> r) {
+        //? if >=1.21.2 {
         CUPBOARD_BE = new BlockEntityType<>(CupboardBlockEntity::new, Set.of(CUPBOARD));
+        //?} else
+        /*CUPBOARD_BE = BlockEntityType.Builder.of(CupboardBlockEntity::new, CUPBOARD).build(null);*/
         r.accept(MuchMoreStorage.id("cupboard"), CUPBOARD_BE);
     }
 

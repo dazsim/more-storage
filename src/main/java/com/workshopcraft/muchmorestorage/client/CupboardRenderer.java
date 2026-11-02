@@ -1,5 +1,6 @@
 package com.workshopcraft.muchmorestorage.client;
 
+//? if >=26.1 {
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.math.Axis;
@@ -128,3 +129,4 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         pose.mulPose(q);
     }
 }
+//?}

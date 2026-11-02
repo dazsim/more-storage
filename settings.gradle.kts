@@ -24,7 +24,8 @@ stonecutter {
             for (loader in loaders) version("$project-$loader", version).buildscript("build.$loader.gradle.kts")
         }
 
-        // 1.21.1 (fabric, neoforge) and 1.20.1 (fabric, forge) go here once ported
+        // 1.20.1 (fabric, forge) goes here once ported
+        match("1.21.1", "fabric", "neoforge")
         match("26.1.2", "fabric", "neoforge")
         match("26.3", "fabric", "neoforge")
         vcsVersion = "26.1.2-fabric"
