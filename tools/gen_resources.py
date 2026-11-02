@@ -3,7 +3,7 @@
 import json, os, shutil
 
 MOD = "muchmorestorage"
-ROOT = "common/src/main/resources"
+ROOT = "src/main/resources"
 A, D = f"{ROOT}/assets/{MOD}", f"{ROOT}/data/{MOD}"
 
 WOODS = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak", "bamboo", "crimson", "warped"]

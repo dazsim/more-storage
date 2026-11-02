@@ -4,7 +4,7 @@ import json, math, os, random
 from PIL import Image, ImageDraw, ImageFont
 
 MOD = "muchmorestorage"
-ROOT = "common/src/main/resources"
+ROOT = "src/main/resources"
 A = f"{ROOT}/assets/{MOD}"
 TEX = f"textures/simplebooks/manual"
 PW, PH, SS = 644, 876, 3
