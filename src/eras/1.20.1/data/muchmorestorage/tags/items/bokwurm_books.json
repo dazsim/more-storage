@@ -1,0 +1,17 @@
+{
+  "values": [
+    "#minecraft:bookshelf_books",
+    {
+      "id": "simplebooks:guide",
+      "required": false
+    },
+    {
+      "id": "#c:books",
+      "required": false
+    },
+    {
+      "id": "#forge:books",
+      "required": false
+    }
+  ]
+}

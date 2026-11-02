@@ -1,0 +1,204 @@
+{
+  "section": "ladstapel",
+  "sort": 10,
+  "left_image": "muchmorestorage:textures/simplebooks/manual/ladstapel_l.png",
+  "right_image": "muchmorestorage:textures/simplebooks/manual/ladstapel_r.png",
+  "stand_left": "muchmorestorage:textures/simplebooks/manual/ladstapel_l_stand.png",
+  "stand_right": "muchmorestorage:textures/simplebooks/manual/ladstapel_r_stand.png",
+  "drawn_recipes": [
+    {
+      "side": "left",
+      "text": [
+        50,
+        712,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:acacia_ladstapel_flatpack",
+          "muchmorestorage:bamboo_ladstapel_flatpack",
+          "muchmorestorage:birch_ladstapel_flatpack",
+          "muchmorestorage:cherry_ladstapel_flatpack",
+          "muchmorestorage:crimson_ladstapel_flatpack",
+          "muchmorestorage:dark_oak_ladstapel_flatpack",
+          "muchmorestorage:jungle_ladstapel_flatpack",
+          "muchmorestorage:mangrove_ladstapel_flatpack",
+          "muchmorestorage:oak_ladstapel_flatpack",
+          "muchmorestorage:spruce_ladstapel_flatpack",
+          "muchmorestorage:warped_ladstapel_flatpack"
+        ],
+        "count": 1,
+        "box": [
+          410,
+          440,
+          140,
+          140
+        ]
+      },
+      "title": "book.muchmorestorage.manual.wood_ladstapel",
+      "grid": {
+        "at": [
+          50,
+          410
+        ],
+        "cell": 70,
+        "pattern": [
+          "PNP",
+          "PCP",
+          "PNP"
+        ]
+      },
+      "key": {
+        "P": {
+          "items": [
+            "minecraft:acacia_planks",
+            "minecraft:bamboo_planks",
+            "minecraft:birch_planks",
+            "minecraft:cherry_planks",
+            "minecraft:crimson_planks",
+            "minecraft:dark_oak_planks",
+            "minecraft:jungle_planks",
+            "minecraft:mangrove_planks",
+            "minecraft:oak_planks",
+            "minecraft:spruce_planks",
+            "minecraft:warped_planks"
+          ],
+          "name": "book.muchmorestorage.manual.planks"
+        },
+        "N": {
+          "item": "minecraft:iron_nugget",
+          "name": "book.muchmorestorage.manual.iron_nugget"
+        },
+        "C": {
+          "item": "#muchmorestorage:wooden_chests",
+          "name": "book.muchmorestorage.manual.chest"
+        }
+      },
+      "hover": [
+        {
+          "box": [
+            66,
+            636,
+            48,
+            48
+          ],
+          "item": {
+            "items": [
+              "minecraft:acacia_planks",
+              "minecraft:bamboo_planks",
+              "minecraft:birch_planks",
+              "minecraft:cherry_planks",
+              "minecraft:crimson_planks",
+              "minecraft:dark_oak_planks",
+              "minecraft:jungle_planks",
+              "minecraft:mangrove_planks",
+              "minecraft:oak_planks",
+              "minecraft:spruce_planks",
+              "minecraft:warped_planks"
+            ],
+            "name": "book.muchmorestorage.manual.planks"
+          }
+        },
+        {
+          "box": [
+            166,
+            636,
+            48,
+            48
+          ],
+          "item": {
+            "items": [
+              "minecraft:black_concrete",
+              "minecraft:blue_concrete",
+              "minecraft:brown_concrete",
+              "minecraft:cyan_concrete",
+              "minecraft:gray_concrete",
+              "minecraft:green_concrete",
+              "minecraft:light_blue_concrete",
+              "minecraft:light_gray_concrete",
+              "minecraft:lime_concrete",
+              "minecraft:magenta_concrete",
+              "minecraft:orange_concrete",
+              "minecraft:pink_concrete",
+              "minecraft:purple_concrete",
+              "minecraft:red_concrete",
+              "minecraft:white_concrete",
+              "minecraft:yellow_concrete"
+            ],
+            "name": "book.muchmorestorage.manual.concrete"
+          }
+        }
+      ]
+    },
+    {
+      "side": "left",
+      "text": [
+        50,
+        772,
+        560
+      ],
+      "result": {
+        "items": [
+          "muchmorestorage:black_concrete_ladstapel_flatpack",
+          "muchmorestorage:blue_concrete_ladstapel_flatpack",
+          "muchmorestorage:brown_concrete_ladstapel_flatpack",
+          "muchmorestorage:cyan_concrete_ladstapel_flatpack",
+          "muchmorestorage:gray_concrete_ladstapel_flatpack",
+          "muchmorestorage:green_concrete_ladstapel_flatpack",
+          "muchmorestorage:light_blue_concrete_ladstapel_flatpack",
+          "muchmorestorage:light_gray_concrete_ladstapel_flatpack",
+          "muchmorestorage:lime_concrete_ladstapel_flatpack",
+          "muchmorestorage:magenta_concrete_ladstapel_flatpack",
+          "muchmorestorage:orange_concrete_ladstapel_flatpack",
+          "muchmorestorage:pink_concrete_ladstapel_flatpack",
+          "muchmorestorage:purple_concrete_ladstapel_flatpack",
+          "muchmorestorage:red_concrete_ladstapel_flatpack",
+          "muchmorestorage:white_concrete_ladstapel_flatpack",
+          "muchmorestorage:yellow_concrete_ladstapel_flatpack"
+        ],
+        "count": 1,
+        "box": [
+          410,
+          440,
+          140,
+          140
+        ]
+      },
+      "title": "book.muchmorestorage.manual.concrete_ladstapel",
+      "ingredients": [
+        {
+          "items": [
+            "minecraft:black_concrete",
+            "minecraft:blue_concrete",
+            "minecraft:brown_concrete",
+            "minecraft:cyan_concrete",
+            "minecraft:gray_concrete",
+            "minecraft:green_concrete",
+            "minecraft:light_blue_concrete",
+            "minecraft:light_gray_concrete",
+            "minecraft:lime_concrete",
+            "minecraft:magenta_concrete",
+            "minecraft:orange_concrete",
+            "minecraft:pink_concrete",
+            "minecraft:purple_concrete",
+            "minecraft:red_concrete",
+            "minecraft:white_concrete",
+            "minecraft:yellow_concrete"
+          ],
+          "name": "book.muchmorestorage.manual.concrete",
+          "count": 6
+        },
+        {
+          "item": "minecraft:iron_nugget",
+          "name": "book.muchmorestorage.manual.iron_nugget",
+          "count": 2
+        },
+        {
+          "item": "#muchmorestorage:wooden_chests",
+          "name": "book.muchmorestorage.manual.chest",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

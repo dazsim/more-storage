@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PNP",
+    "PCP",
+    "PNP"
+  ],
+  "key": {
+    "P": "minecraft:yellow_concrete",
+    "N": "minecraft:iron_nugget",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "muchmorestorage:yellow_concrete_ladstapel_flatpack",
+    "count": 1
+  }
+}

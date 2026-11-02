@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.FlatpackItem;
+import com.workshopcraft.muchmorestorage.item.FurnitureItem;
 import com.workshopcraft.muchmorestorage.item.KubhalaItem;
 import com.workshopcraft.muchmorestorage.item.WorktopItem;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
@@ -30,6 +31,8 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
         if (stack.getItem() instanceof WorktopItem worktop) return new Look("", worktop.top);
         if (stack.getItem() instanceof FlatpackItem pack) return new Look(pack.body, "", 1);
         if (stack.getItem() instanceof KubhalaItem) return new Look(ModContent.bodyOf(stack), "", 2);
+        if (stack.getItem() == ModContent.BOKWURM_ITEM) return new Look(ModContent.bodyOf(stack), "", 3);
+        if (stack.getItem() instanceof FurnitureItem) return new Look(ModContent.bodyOf(stack), "", 4);
         return new Look(ModContent.bodyOf(stack), ModContent.cupboardTopOf(stack));
     }
 
@@ -48,6 +51,8 @@ public class CupboardItemRenderer implements SpecialModelRenderer<CupboardItemRe
             CupboardModel.Body body = CupboardModel.Body.of(look.body());
             if (look.kind() == 1) { KubhalaModel.flatpack(q, body); return; }
             if (look.kind() == 2) { KubhalaModel.frame(q, body, KubhalaModel.Join.NONE); return; }
+            if (look.kind() == 3) { FurnitureModel.bokwurmItem(q, body); return; }
+            if (look.kind() == 4) { FurnitureModel.ladstapelItem(q, body); return; }
             CupboardModel.carcass(q, body);
             CupboardModel.door(q, body, false);
             if (!look.top().isEmpty()) CupboardModel.worktop(q, CupboardModel.top(look.top()));

@@ -152,6 +152,18 @@ def handle():
     px[7, 6] = hexc(STEEL[0])
     return im
 
+def book(rng):
+    # greyscale spine, the renderer tints it, two light bands near each end
+    im = img()
+    px = im.load()
+    for x in range(16):
+        for y in range(16):
+            v = 205 + rng.randint(-10, 8)
+            if y in (2, 3, 12, 13): v = 245
+            if x in (0, 15): v -= 30
+            px[x, y] = (v, v, v, 255)
+    return im
+
 def screwdriver():
     im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
     px = im.load()
@@ -289,6 +301,7 @@ def main():
         elif seed == "white":
             granite(rng).save(f"{OUT}/granite_worktop.png")
     handle().save(f"{OUT}/cupboard_handle.png")
+    book(random.Random("bokwurm")).save(f"{OUT}/bokwurm_book.png")
     wicker().save(f"{OUT}/wicker_sakksakk.png")
     os.makedirs(ITEMS, exist_ok=True)
     screwdriver().save(f"{ITEMS}/screwdriver.png")

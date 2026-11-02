@@ -3,11 +3,15 @@ package com.workshopcraft.muchmorestorage.registry;
 //? if >=1.20.5
 import com.mojang.serialization.Codec;
 import com.workshopcraft.muchmorestorage.MuchMoreStorage;
+import com.workshopcraft.muchmorestorage.block.BokwurmBlock;
+import com.workshopcraft.muchmorestorage.block.BokwurmBlockEntity;
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
 import com.workshopcraft.muchmorestorage.block.Insert;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlock;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlockEntity;
+import com.workshopcraft.muchmorestorage.block.LadstapelBlock;
+import com.workshopcraft.muchmorestorage.block.LadstapelBlockEntity;
 //? if >=26.1 {
 import com.workshopcraft.muchmorestorage.crafting.KeepToolShapelessRecipe;
 //?} else if >=1.21 {
@@ -17,6 +21,7 @@ import com.workshopcraft.muchmorestorage.crafting.KeepToolShapelessRecipe;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.CupboardItem;
 import com.workshopcraft.muchmorestorage.item.FlatpackItem;
+import com.workshopcraft.muchmorestorage.item.FurnitureItem;
 import com.workshopcraft.muchmorestorage.item.InsertItem;
 import com.workshopcraft.muchmorestorage.item.KubhalaItem;
 import com.workshopcraft.muchmorestorage.item.SakksakkItem;
@@ -65,6 +70,14 @@ public final class ModContent {
     public static InsertItem DOOR_INSERT;
     public static final Map<String, SakksakkItem> SAKKSAKKS = new LinkedHashMap<>();
     public static BlockEntityType<KubhalaBlockEntity> KUBHALA_BE;
+    public static final Map<String, FlatpackItem> BOKWURM_FLATPACKS = new LinkedHashMap<>();
+    public static final Map<String, FlatpackItem> LADSTAPEL_FLATPACKS = new LinkedHashMap<>();
+    public static BokwurmBlock BOKWURM;
+    public static FurnitureItem BOKWURM_ITEM;
+    public static BlockEntityType<BokwurmBlockEntity> BOKWURM_BE;
+    public static LadstapelBlock LADSTAPEL;
+    public static FurnitureItem LADSTAPEL_ITEM;
+    public static BlockEntityType<LadstapelBlockEntity> LADSTAPEL_BE;
     //? if >=1.20.5 {
     public static DataComponentType<String> BODY;
     public static DataComponentType<String> TOP;
@@ -109,6 +122,22 @@ public final class ModContent {
                 .strength(2.0F)
                 .noOcclusion());
         r.accept(kid, KUBHALA);
+        Identifier bid = MuchMoreStorage.id("bokwurm");
+        BOKWURM = new BokwurmBlock(BlockBehaviour.Properties.of()
+                //? if >=1.21.2
+                .setId(ResourceKey.create(Registries.BLOCK, bid))
+                .mapColor(s -> s.getValue(BokwurmBlock.CONCRETE) ? MapColor.STONE : MapColor.WOOD)
+                .strength(2.0F)
+                .noOcclusion());
+        r.accept(bid, BOKWURM);
+        Identifier lid = MuchMoreStorage.id("ladstapel");
+        LADSTAPEL = new LadstapelBlock(BlockBehaviour.Properties.of()
+                //? if >=1.21.2
+                .setId(ResourceKey.create(Registries.BLOCK, lid))
+                .mapColor(s -> s.getValue(LadstapelBlock.CONCRETE) ? MapColor.STONE : MapColor.WOOD)
+                .strength(2.0F)
+                .noOcclusion());
+        r.accept(lid, LADSTAPEL);
     }
 
     private static Item.Properties item(String name) {
@@ -156,9 +185,27 @@ public final class ModContent {
         //?} else
         /*KUBHALA_ITEM = new KubhalaItem(KUBHALA, item("kubhala"));*/
         r.accept(MuchMoreStorage.id("kubhala"), KUBHALA_ITEM);
+        for (String body : Finishes.BODIES) {
+            FlatpackItem b = new FlatpackItem(BOKWURM, body, item(body + "_bokwurm_flatpack"));
+            BOKWURM_FLATPACKS.put(body, b);
+            r.accept(MuchMoreStorage.id(body + "_bokwurm_flatpack"), b);
+            FlatpackItem l = new FlatpackItem(LADSTAPEL, body, item(body + "_ladstapel_flatpack"));
+            LADSTAPEL_FLATPACKS.put(body, l);
+            r.accept(MuchMoreStorage.id(body + "_ladstapel_flatpack"), l);
+        }
+        //? if >=1.20.5 {
+        BOKWURM_ITEM = new FurnitureItem(BOKWURM, "bokwurm", item("bokwurm").component(BODY, "white_concrete"));
+        LADSTAPEL_ITEM = new FurnitureItem(LADSTAPEL, "ladstapel", item("ladstapel").component(BODY, "white_concrete"));
+        //?} else {
+        /*BOKWURM_ITEM = new FurnitureItem(BOKWURM, "bokwurm", item("bokwurm"));
+        LADSTAPEL_ITEM = new FurnitureItem(LADSTAPEL, "ladstapel", item("ladstapel"));
+        *///?}
+        r.accept(MuchMoreStorage.id("bokwurm"), BOKWURM_ITEM);
+        r.accept(MuchMoreStorage.id("ladstapel"), LADSTAPEL_ITEM);
     }
 
     public static final TagKey<Item> WORKTOP_TAG = TagKey.create(Registries.ITEM, MuchMoreStorage.id("c", "worktops"));
+    public static final TagKey<Item> BOKWURM_BOOKS = TagKey.create(Registries.ITEM, MuchMoreStorage.id("bokwurm_books"));
     public static final TagKey<Item> SCREWDRIVERS = TagKey.create(Registries.ITEM, MuchMoreStorage.id("c", "tools/screwdriver"));
 
     // own tops are short names, worktops from other mods keep their full item id
@@ -190,7 +237,11 @@ public final class ModContent {
     }
 
     public static ItemStack kubhala(String body) {
-        ItemStack stack = new ItemStack(KUBHALA_ITEM);
+        return furniture(KUBHALA_ITEM, body);
+    }
+
+    public static ItemStack furniture(Item item, String body) {
+        ItemStack stack = new ItemStack(item);
         //? if >=1.20.5 {
         stack.set(BODY, body);
         //?} else
@@ -254,6 +305,15 @@ public final class ModContent {
         //?} else
         /*KUBHALA_BE = BlockEntityType.Builder.of(KubhalaBlockEntity::new, KUBHALA).build(null);*/
         r.accept(MuchMoreStorage.id("kubhala"), KUBHALA_BE);
+        //? if >=1.21.2 {
+        BOKWURM_BE = new BlockEntityType<>(BokwurmBlockEntity::new, Set.of(BOKWURM));
+        LADSTAPEL_BE = new BlockEntityType<>(LadstapelBlockEntity::new, Set.of(LADSTAPEL));
+        //?} else {
+        /*BOKWURM_BE = BlockEntityType.Builder.of(BokwurmBlockEntity::new, BOKWURM).build(null);
+        LADSTAPEL_BE = BlockEntityType.Builder.of(LadstapelBlockEntity::new, LADSTAPEL).build(null);
+        *///?}
+        r.accept(MuchMoreStorage.id("bokwurm"), BOKWURM_BE);
+        r.accept(MuchMoreStorage.id("ladstapel"), LADSTAPEL_BE);
     }
 
     public static void registerCreativeTabs(BiConsumer<Identifier, CreativeModeTab> r) {
@@ -270,6 +330,10 @@ public final class ModContent {
                     out.accept(DOOR_INSERT);
                     SAKKSAKKS.values().forEach(out::accept);
                     FLATPACKS.values().forEach(out::accept);
+                    for (String body : KUBHALA_EXAMPLES) out.accept(furniture(BOKWURM_ITEM, body));
+                    BOKWURM_FLATPACKS.values().forEach(out::accept);
+                    for (String body : KUBHALA_EXAMPLES) out.accept(furniture(LADSTAPEL_ITEM, body));
+                    LADSTAPEL_FLATPACKS.values().forEach(out::accept);
                 })
                 .build();
         r.accept(MuchMoreStorage.id("main"), TAB);

@@ -2,6 +2,7 @@ package com.workshopcraft.muchmorestorage.item;
 
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
+import com.workshopcraft.muchmorestorage.block.FurnitureBlock;
 import com.workshopcraft.muchmorestorage.block.Insert;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlock;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlockEntity;
@@ -26,6 +27,7 @@ public class ScrewdriverItem extends Item {
         if (!held.is(ModContent.SCREWDRIVERS) || player.isSpectator()) return false;
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof KubhalaBlock) return kubhala(level, pos, player, state);
+        if (state.getBlock() instanceof FurnitureBlock) return furniture(level, pos, player, state);
         if (!(state.getBlock() instanceof CupboardBlock) || !(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return false;
         if (!player.mayBuild()) return false;
         if (level.isClientSide()) return true;
@@ -65,6 +67,18 @@ public class ScrewdriverItem extends Item {
             click(level, pos, 1.4F);
             ratchet(level, pos, assembled ? 1.3F : 1.6F);
         }
+        return true;
+    }
+
+    private static boolean furniture(Level level, BlockPos pos, Player player, BlockState state) {
+        if (!FurnitureBlock.screwdriverActs(state, player.isSecondaryUseActive()) || !player.mayBuild()
+                || !(level.getBlockEntity(pos) instanceof CupboardBlockEntity be)) return false;
+        if (level.isClientSide()) return true;
+        boolean assembled = state.getValue(FurnitureBlock.ASSEMBLED);
+        if (!assembled && be.settleEnd > 0) return true;
+        FurnitureBlock.screwdriver(level, pos, state, be);
+        click(level, pos, 1.4F);
+        ratchet(level, pos, assembled ? 1.3F : 1.6F);
         return true;
     }
 

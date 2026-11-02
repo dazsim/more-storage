@@ -193,6 +193,36 @@ lang.update({f"block.{MOD}.kubhala": "KUBHALA", f"item.{MOD}.kubhala": "KUBHALA"
              f"tooltip.{MOD}.flatpack": "Place it, then use a screwdriver",
              f"tooltip.{MOD}.insert": "Use on an empty cube, then fix with a screwdriver",
              f"tooltip.{MOD}.insert.out": "A screwdriver pops it back out"})
+# BOKWURM bookcase and LADSTAPEL chest of drawers, flat packs like the KUBHALA
+FURNITURE = {"bokwurm": (["PPP", "N N", "PPP"], {}), "ladstapel": (["PNP", "PCP", "PNP"], {"C": "#c:chests/wooden"})}
+for kind, (pattern, extra) in FURNITURE.items():
+    w(f"{A}/blockstates/{kind}.json", {"variants": {
+        "concrete=false": {"model": f"{MOD}:block/cupboard_wood"},
+        "concrete=true": {"model": f"{MOD}:block/cupboard_concrete"}}})
+    special(kind)
+    for body in BODIES:
+        name = f"{body}_{kind}_flatpack"
+        special(name)
+        panel = f"minecraft:{body}_planks" if body in WOODS else f"minecraft:{body}"
+        recipe(name, pattern, {"P": panel, "N": "minecraft:iron_nugget", **extra}, unlock=panel)
+        lang[f"item.{MOD}.{name}"] = f"{label(body)} {kind.upper()} Flat Pack"
+    lang[f"block.{MOD}.{kind}"] = kind.upper()
+    lang[f"item.{MOD}.{kind}"] = kind.upper()
+    lang[f"container.{MOD}.{kind}"] = kind.upper()
+for d in ["top", "middle", "bottom"]:
+    lang[f"container.{MOD}.ladstapel.{d}"] = f"LADSTAPEL, {d} drawer"
+lang.update({f"tooltip.{MOD}.bokwurm": "Bookcase, holds 12 books",
+             f"tooltip.{MOD}.bokwurm.use": "Click a shelf to put a book in or take one out",
+             f"tooltip.{MOD}.bokwurm.enchanting": "Counts as a bookshelf for enchanting",
+             f"tooltip.{MOD}.ladstapel": "Chest of drawers, 3 drawers of 9 stacks",
+             f"tooltip.{MOD}.ladstapel.use": "Click a drawer to open just that one",
+             f"tag.item.{MOD}.bokwurm_books": "BOKWURM Books"})
+for era in ERAS:
+    books = ["#minecraft:bookshelf_books", {"id": "simplebooks:guide", "required": False}, {"id": "#c:books", "required": False}]
+    if ERAS[era].get("plural"): books.append({"id": "#forge:books", "required": False})
+    w(f"{era_root(era)}/data/{MOD}/{folder(era, 'tags/item')}/bokwurm_books.json", {"values": books})
+    blocks = "tags/blocks" if ERAS[era].get("plural") else "tags/block"
+    w(f"{era_root(era)}/data/minecraft/{blocks}/enchantment_power_provider.json", {"replace": False, "values": [f"{MOD}:bokwurm"]})
 # SAKKSÄKK soft boxes, 16 wool colours and a wicker one
 SAKKSAKKS = COLOURS + ["wicker"]
 for c in SAKKSAKKS:

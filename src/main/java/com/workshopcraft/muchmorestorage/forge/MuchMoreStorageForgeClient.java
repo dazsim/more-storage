@@ -4,6 +4,8 @@ package com.workshopcraft.muchmorestorage.forge;
 /*import com.workshopcraft.muchmorestorage.client.v1_21.CupboardItemRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.CupboardRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KubhalaRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.BokwurmRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.LadstapelRenderer;
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -18,6 +20,8 @@ public final class MuchMoreStorageForgeClient {
     static void init(IEventBus modBus) {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.CUPBOARD_BE, CupboardRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.KUBHALA_BE, KubhalaRenderer::new));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.BOKWURM_BE, BokwurmRenderer::new));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.LADSTAPEL_BE, LadstapelRenderer::new));
     }
 
     // called from the items' initializeClient

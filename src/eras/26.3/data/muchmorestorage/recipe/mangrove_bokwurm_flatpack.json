@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "N N",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:mangrove_planks",
+    "N": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "muchmorestorage:mangrove_bokwurm_flatpack",
+    "count": 1
+  }
+}

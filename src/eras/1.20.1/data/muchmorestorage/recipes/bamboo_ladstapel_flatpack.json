@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PNP",
+    "PCP",
+    "PNP"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:bamboo_planks"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "C": {
+      "tag": "muchmorestorage:wooden_chests"
+    }
+  },
+  "result": {
+    "item": "muchmorestorage:bamboo_ladstapel_flatpack",
+    "count": 1
+  }
+}

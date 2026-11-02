@@ -99,7 +99,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
         }
     }
 
-    private static void submit(State s, PoseStack pose, SubmitNodeCollector out, int light, Consumer<Quads> draw) {
+    static void submit(BlockEntityRenderState s, PoseStack pose, SubmitNodeCollector out, int light, Consumer<Quads> draw) {
         //? if >=26.3 {
         /*out.submitCustomGeometry(pose, CUTOUT_BLOCK_SHEET, (p, vc) -> draw.accept(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY)));
         *///?} else
@@ -202,7 +202,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
         }
     }
 
-    private static void rotate(PoseStack pose, Quaternionf q) {
+    static void rotate(PoseStack pose, Quaternionf q) {
         //? if >=26.3 {
         /*pose.rotate(q);
         *///?} else

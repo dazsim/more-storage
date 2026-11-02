@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "N N",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:black_concrete",
+    "N": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "muchmorestorage:black_concrete_bokwurm_flatpack",
+    "count": 1
+  }
+}

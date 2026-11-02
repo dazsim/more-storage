@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "N N",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:light_blue_concrete"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "id": "muchmorestorage:light_blue_concrete_bokwurm_flatpack",
+    "count": 1
+  }
+}

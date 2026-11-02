@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PNP",
+    "PCP",
+    "PNP"
+  ],
+  "key": {
+    "P": "minecraft:warped_planks",
+    "N": "minecraft:iron_nugget",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "muchmorestorage:warped_ladstapel_flatpack",
+    "count": 1
+  }
+}

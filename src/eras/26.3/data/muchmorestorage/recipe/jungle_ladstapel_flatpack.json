@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PNP",
+    "PCP",
+    "PNP"
+  ],
+  "key": {
+    "P": "minecraft:jungle_planks",
+    "N": "minecraft:iron_nugget",
+    "C": "#c:chests/wooden"
+  },
+  "result": {
+    "id": "muchmorestorage:jungle_ladstapel_flatpack",
+    "count": 1
+  }
+}

@@ -7,11 +7,15 @@ import com.workshopcraft.muchmorestorage.registry.ModContent;
 import com.workshopcraft.muchmorestorage.client.CupboardItemRenderer;
 import com.workshopcraft.muchmorestorage.client.CupboardRenderer;
 import com.workshopcraft.muchmorestorage.client.KubhalaRenderer;
+import com.workshopcraft.muchmorestorage.client.BokwurmRenderer;
+import com.workshopcraft.muchmorestorage.client.LadstapelRenderer;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 //?} else {
 /^import com.workshopcraft.muchmorestorage.client.v1_21.CupboardItemRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.CupboardRenderer;
 import com.workshopcraft.muchmorestorage.client.v1_21.KubhalaRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.BokwurmRenderer;
+import com.workshopcraft.muchmorestorage.client.v1_21.LadstapelRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
@@ -27,6 +31,8 @@ public class MuchMoreStorageNeoForgeClient {
     public MuchMoreStorageNeoForgeClient(IEventBus modBus) {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.CUPBOARD_BE, CupboardRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.KUBHALA_BE, KubhalaRenderer::new));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.BOKWURM_BE, BokwurmRenderer::new));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.LADSTAPEL_BE, LadstapelRenderer::new));
         //? if >=26.1 {
         modBus.addListener((RegisterSpecialModelRendererEvent e) -> e.register(MuchMoreStorage.id("cupboard"), CupboardItemRenderer.Unbaked.MAP_CODEC));
         //?} else {

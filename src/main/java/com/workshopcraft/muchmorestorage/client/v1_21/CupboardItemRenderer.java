@@ -5,6 +5,7 @@ package com.workshopcraft.muchmorestorage.client.v1_21;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.workshopcraft.muchmorestorage.client.CupboardModel;
 import com.workshopcraft.muchmorestorage.client.Quads;
+import com.workshopcraft.muchmorestorage.client.FurnitureModel;
 import com.workshopcraft.muchmorestorage.client.KubhalaModel;
 import com.workshopcraft.muchmorestorage.item.CarcassItem;
 import com.workshopcraft.muchmorestorage.item.FlatpackItem;
@@ -34,6 +35,10 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         out.add(ModContent.CUPBOARD_ITEM);
         out.addAll(ModContent.FLATPACKS.values());
         out.add(ModContent.KUBHALA_ITEM);
+        out.addAll(ModContent.BOKWURM_FLATPACKS.values());
+        out.addAll(ModContent.LADSTAPEL_FLATPACKS.values());
+        out.add(ModContent.BOKWURM_ITEM);
+        out.add(ModContent.LADSTAPEL_ITEM);
         return out;
     }
 
@@ -55,6 +60,8 @@ public class CupboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         Quads q = new Quads(pose.last(), vc, light, overlay);
         if (stack.getItem() instanceof FlatpackItem pack) { KubhalaModel.flatpack(q, CupboardModel.Body.of(pack.body)); return; }
         if (stack.getItem() instanceof KubhalaItem) { KubhalaModel.frame(q, CupboardModel.Body.of(ModContent.bodyOf(stack)), KubhalaModel.Join.NONE); return; }
+        if (stack.getItem() == ModContent.BOKWURM_ITEM) { FurnitureModel.bokwurmItem(q, CupboardModel.Body.of(ModContent.bodyOf(stack))); return; }
+        if (stack.getItem() == ModContent.LADSTAPEL_ITEM) { FurnitureModel.ladstapelItem(q, CupboardModel.Body.of(ModContent.bodyOf(stack))); return; }
         boolean carcass = stack.getItem() instanceof CarcassItem;
         String body = carcass ? ((CarcassItem) stack.getItem()).body : ModContent.bodyOf(stack);
         CupboardModel.Body b = CupboardModel.Body.of(body);

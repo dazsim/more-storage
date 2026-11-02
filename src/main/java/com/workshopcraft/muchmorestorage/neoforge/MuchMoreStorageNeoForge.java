@@ -46,9 +46,13 @@ public class MuchMoreStorageNeoForge {
         //? if >=26.1 {
         e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.CUPBOARD_BE, (be, side) -> VanillaContainerWrapper.of(be));
         e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.KUBHALA_BE, (be, side) -> VanillaContainerWrapper.of(be));
+        e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.BOKWURM_BE, (be, side) -> VanillaContainerWrapper.of(be));
+        e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.LADSTAPEL_BE, (be, side) -> VanillaContainerWrapper.of(be));
         //?} else {
         /^e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.CUPBOARD_BE, (be, side) -> new InvWrapper(be));
         e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.KUBHALA_BE, (be, side) -> new InvWrapper(be));
+        e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.BOKWURM_BE, (be, side) -> new InvWrapper(be));
+        e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.LADSTAPEL_BE, (be, side) -> new InvWrapper(be));
         ^///?}
     }
 }

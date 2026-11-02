@@ -407,6 +407,25 @@ def cell_icon(pg, kind, x, y, s):
         cx, cy = (x0 + x1) / 2, (y0 + y1) / 2 + 2
         pg.path([(cx - 8, cy + 2), (cx - 4, cy - 5), (cx + 5, cy - 6), (cx + 9, cy + 1), (cx + 3, cy + 6), (cx - 5, cy + 6)], 1.8, closed=True)
         pg.line((cx - 2, cy - 2), (cx + 3, cy - 3), 1.1)
+    elif kind in ("book", "ebook", "wbook", "guide"):
+        # a closed book seen from the front, its spine on the left
+        bx0, bx1 = x0 + (x1 - x0) * 0.12, x1 - (x1 - x0) * 0.12
+        pg.path([(bx0, y0), (bx1, y0), (bx1, y1), (bx0, y1)], 1.8, closed=True)
+        pg.line((bx0 + 5, y0), (bx0 + 5, y1), 1.4)
+        if kind == "ebook":
+            for a in range(4):
+                c = (bx0 + 6 + (bx1 - bx0 - 6) * (0.3 + 0.4 * (a % 2)), y0 + (y1 - y0) * (0.25 + 0.17 * a))
+                pg.line((c[0] - 3, c[1]), (c[0] + 3, c[1]), 1.2)
+                pg.line((c[0], c[1] - 3), (c[0], c[1] + 3), 1.2)
+        elif kind == "wbook":
+            pg.curve(lambda t: (bx0 + 10 + (bx1 - bx0 - 16) * t, y0 + (y1 - y0) * 0.75 - math.sin(t * 3) * 3 - t * 10), 20, 1.6)
+            pg.line((bx1 - 6, y0 + (y1 - y0) * 0.35), (bx1 - 2, y0 + (y1 - y0) * 0.22), 2.2)
+        elif kind == "guide":
+            for k in range(3):
+                yy = y0 + (y1 - y0) * (0.3 + 0.15 * k)
+                pg.line((bx0 + 10, yy), (bx1 - 5, yy), 1.2)
+        else:
+            pg.line((bx0 + 10, y0 + (y1 - y0) * 0.3), (bx1 - 5, y0 + (y1 - y0) * 0.3), 1.6)
     elif kind == "stick":
         pg.line((x0 + 2, y1 - 2), (x1 - 2, y0 + 2), 3.2)
         pg.line((x0 + (x1 - x0) * 0.45, y0 + (y1 - y0) * 0.55), (x0 + (x1 - x0) * 0.4, y0 + (y1 - y0) * 0.4), 1.6)
@@ -495,7 +514,9 @@ LEGENDS = {"iron_ingot": "Iron Ingot", "iron_nugget": "Iron Nugget", "chest": "W
            "wood_worktop": "Wooden Worktop", "stone_worktop": "Stone Worktop", "concrete_worktop": "Concrete Worktop",
            "wool_sakksakk": "SAKKSAKK (any wool colour)", "string": "String", "wool": "Wool (all one colour)",
            "sugar_cane": "Sugar Cane",
-           "wood_flatpack": "Wooden KUBHALA Flat Pack", "concrete_flatpack": "Concrete KUBHALA Flat Pack"}
+           "wood_flatpack": "Wooden KUBHALA Flat Pack", "concrete_flatpack": "Concrete KUBHALA Flat Pack",
+           "wood_bokwurm": "Wooden BOKWURM Flat Pack", "concrete_bokwurm": "Concrete BOKWURM Flat Pack",
+           "wood_ladstapel": "Wooden LADSTAPEL Flat Pack", "concrete_ladstapel": "Concrete LADSTAPEL Flat Pack"}
 
 def fam(pred):
     return [r for n, r in RECIPES.items() if pred(n, r)]
@@ -801,6 +822,157 @@ def page_sakksakk(pg):
     slots(pg, 310, 735, 30, 9, filled=(0, 1, 3))
     count(pg, (445, 820), 9, 30)
 
+def heading(pg, plain, accented, y=34):
+    """The plain name the game uses, the accented spelling under it as a joke."""
+    pg.text((34, y), plain, 46)
+    pg.text((36, y + 58), accented, 22)
+
+def bokwurm(sc, at=(0, 0, 0), books=0, body="wood"):
+    """One bookcase, open to +z, books fill the top shelf from the left then the bottom one."""
+    base = [move(*at)]
+    xside = lambda z, y, x: (x, y, z)
+    mk = grain(xside, 1, 15, 2, 14, 16, 2, 5) if body == "wood" else specks(xside, 0, 16, 2, 14, 16, 4, 6)
+    sc.box((0, 0, 0), (16, 16, 1), base, width=2.0, bias=-4)
+    sc.box((0, 0, 0), (1, 16, 16), base)
+    sc.box((15, 0, 0), (16, 16, 16), base, marks=mk)
+    sc.box((1, 0, 1), (15, 1, 16), base, width=2.0, bias=-2)
+    sc.box((1, 15, 1), (15, 16, 16), base, width=2.0)
+    sc.box((1, 7.5, 1), (15, 8.5, 15.5), base, width=2.0, bias=-1)
+    bw = 14 / 6
+    for i in range(books):
+        row, col = divmod(i, 6)
+        y0 = 8.5 if row == 0 else 1
+        h = 5 + (i * 7 % 4) * 0.4
+        x0 = 1 + col * bw + 0.15
+        sc.box((x0, y0, 2), (x0 + bw - 0.3, y0 + h, 14.5), base, width=1.6, bias=1)
+
+def enchanting_table(sc, at=(0, 0, 0)):
+    base = [move(*at)]
+    sc.box((0, 0, 0), (16, 12, 16), base)
+    sc.box((4, 12, 6), (12, 13.5, 10), [rot("x", -15, (8, 12, 8))] + base, width=1.8, bias=2)
+
+def ladstapel(sc, at=(0, 0, 0), open=None, amount=1.0):
+    """The chest of drawers, open to +z, open is the drawer pulled out, 0 the top one."""
+    base = [move(*at)]
+    xside = lambda z, y, x: (x, y, z)
+    sc.box((0, 0, 0), (16, 16, 1), base, width=2.0, bias=-4)
+    sc.box((0, 0, 0), (1, 16, 16), base)
+    sc.box((15, 0, 0), (16, 16, 16), base, marks=grain(xside, 1, 15, 2, 14, 16, 2, 5))
+    sc.box((1, 0, 1), (15, 1, 16), base, width=2.0, bias=-2)
+    sc.box((1, 15, 1), (15, 16, 16), base, width=2.0)
+    for d in range(3):
+        y0 = 1 + (2 - d) * 14 / 3 + 0.15
+        y1 = y0 + 14 / 3 - 0.3
+        dxf = ([move(0, 0, 9 * amount)] if d == open else []) + base
+        sc.box((1.15, y0, 15), (14.85, y1, 16), dxf, bias=3)
+        cy = (y0 + y1) / 2
+        sc.box((5.5, cy - 0.5, 16), (10.5, cy + 0.5, 17), dxf, width=1.8, bias=3.5)
+        if d == open:
+            sc.box((2, y0, 3), (14, y1 - 1, 15), dxf, width=1.8, bias=-1)
+
+def comparator(sc, at=(0, 0, 0)):
+    base = [move(*at)]
+    sc.box((0, 0, 0), (16, 2, 16), base)
+    for x, z in ((4, 3), (12, 3), (8, 13)):
+        sc.box((x - 1, 2, z - 1), (x + 1, 6, z + 1), base, width=1.6, bias=1)
+
+def page_bokwurm(pg):
+    heading(pg, "BOKWURM", "BÖKWÜRM")
+    sc = Scene(0, 0, 7).at(110, 250, (0, 0, 0), (16, 6, 16))
+    flatpack(sc)
+    sc.draw(pg)
+    pg.arrow([(195, 250), (255, 250)], 3.0)
+    screwdriver(pg, (310, 175), -60, 0.6)
+    twist(pg, (306, 140), 22, 7)
+    s1 = Scene(0, 0, 8).at(480, 250)
+    bokwurm(s1, books=7)
+    s1.draw(pg)
+    count(pg, (560, 370), 12, 30)
+    grid(pg, 50, 410, 70, [["plank"] * 3, ["nugget", None, "nugget"], ["plank"] * 3])
+    pg.arrow([(285, 515), (350, 515)], 3.0)
+    s2 = Scene(0, 0, 7).at(480, 515, (0, 0, 0), (16, 6, 16))
+    flatpack(s2)
+    s2.draw(pg)
+    count(pg, (560, 610), 1, 30)
+    cell_icon(pg, "plank", 60, 630, 60)
+    pg.text((140, 678), "/", 40, "ms")
+    cell_icon(pg, "concrete", 160, 630, 60)
+    packs = lambda wood: fam(lambda n, r: n.endswith("_bokwurm_flatpack") and is_wood(r["key"]["P"]) == wood)
+    names = {"N": legend("iron_nugget")}
+    drawn(pg, packs(True), [50, 712, 560], [410, 440, 140, 140], legend("wood_bokwurm"),
+          dict(names, P=legend("planks")), at=[50, 410], cell=70)
+    drawn(pg, packs(False), [50, 772, 560], [410, 440, 140, 140], legend("concrete_bokwurm"),
+          dict(names, P=legend("concrete")))
+    pg.recipes[-2]["hover"] = [{"box": [66, 636, 48, 48], "item": pg.recipes[-2]["key"]["P"]},
+                               {"box": [166, 636, 48, 48], "item": {k: v for k, v in pg.recipes[-1]["ingredients"][0].items() if k != "count"}}]
+
+def page_bokwurm_use(pg):
+    for i, kind in enumerate(["book", "ebook", "wbook", "guide"]):
+        cell_icon(pg, kind, 40 + i * 62, 90, 60)
+    pg.arrow([(170, 170), (300, 230)], 3.0)
+    s1 = Scene(0, 0, 9).at(440, 230)
+    bokwurm(s1, books=9)
+    s1.draw(pg)
+    slots(pg, 60, 330, 34, 6, filled=())
+    slots(pg, 60, 364, 34, 6, filled=())
+    for i in range(9):
+        cell_icon(pg, "book", 60 + (i % 6) * 34, 330 + (i // 6) * 34, 34)
+    count(pg, (290, 395), 12, 30)
+    pg.line((60, 450), (584, 450), 1.6)
+    s2 = Scene(0, 0, 6).at(320, 660, (0, 0, 0), (48, 16, 40))
+    bokwurm(s2, books=12)
+    bokwurm(s2, (16, 0, 0), books=12)
+    bokwurm(s2, (32, 0, 0), books=12)
+    enchanting_table(s2, (16, 0, 32))
+    s2.draw(pg)
+    check(pg, (560, 800), 22)
+
+def page_ladstapel(pg):
+    heading(pg, "LADSTAPEL", "LÅDSTÄPEL")
+    sc = Scene(0, 0, 7).at(110, 250, (0, 0, 0), (16, 6, 16))
+    flatpack(sc)
+    sc.draw(pg)
+    pg.arrow([(195, 250), (255, 250)], 3.0)
+    screwdriver(pg, (310, 175), -60, 0.6)
+    twist(pg, (306, 140), 22, 7)
+    s1 = Scene(0, 0, 8).at(480, 250)
+    ladstapel(s1)
+    s1.draw(pg)
+    pg.text((520, 380), "3 x 9", 30, "ls")
+    grid(pg, 50, 410, 70, [["plank", "nugget", "plank"], ["plank", "chest", "plank"], ["plank", "nugget", "plank"]])
+    pg.arrow([(285, 515), (350, 515)], 3.0)
+    s2 = Scene(0, 0, 7).at(480, 515, (0, 0, 0), (16, 6, 16))
+    flatpack(s2)
+    s2.draw(pg)
+    count(pg, (560, 610), 1, 30)
+    cell_icon(pg, "plank", 60, 630, 60)
+    pg.text((140, 678), "/", 40, "ms")
+    cell_icon(pg, "concrete", 160, 630, 60)
+    packs = lambda wood: fam(lambda n, r: n.endswith("_ladstapel_flatpack") and is_wood(r["key"]["P"]) == wood)
+    names = {"N": legend("iron_nugget"), "C": legend("chest")}
+    drawn(pg, packs(True), [50, 712, 560], [410, 440, 140, 140], legend("wood_ladstapel"),
+          dict(names, P=legend("planks")), at=[50, 410], cell=70)
+    drawn(pg, packs(False), [50, 772, 560], [410, 440, 140, 140], legend("concrete_ladstapel"),
+          dict(names, P=legend("concrete")))
+    pg.recipes[-2]["hover"] = [{"box": [66, 636, 48, 48], "item": pg.recipes[-2]["key"]["P"]},
+                               {"box": [166, 636, 48, 48], "item": {k: v for k, v in pg.recipes[-1]["ingredients"][0].items() if k != "count"}}]
+
+def page_ladstapel_use(pg):
+    s1 = Scene(0, 0, 10).at(250, 230, (0, 0, 0), (16, 16, 26))
+    ladstapel(s1, open=1)
+    s1.draw(pg)
+    tip = s1.proj((8, 8, 26))
+    pg.arrow([(tip[0] + 150, tip[1] + 40), (tip[0] + 20, tip[1] + 8)], 3.0)
+    slots(pg, 170, 420, 34, 9, filled=(0, 1, 3))
+    count(pg, (490, 452), 9, 30)
+    pg.line((60, 510), (584, 510), 1.6)
+    s2 = Scene(0, 0, 7).at(320, 690, (0, 0, 0), (40, 16, 16))
+    ladstapel(s2, (0, 0, 0))
+    comparator(s2, (24, 0, 0))
+    s2.draw(pg)
+    a, b = s2.proj((16, 1, 8)), s2.proj((24, 1, 8))
+    pg.arrow([a, b], 2.6, 12)
+
 def page_sakksakk_use(pg):
     sc = Scene(0, 0, 6).at(120, 160, (0, 0, 0), (12, 10, 12.4))
     sakksakk(sc)
@@ -846,9 +1018,12 @@ SPREADS = [
     ("apart", page_apart, page_loose),
     ("kubhala", page_kubhala, page_inserts),
     ("sakksakk", page_sakksakk, page_sakksakk_use),
+    ("bokwurm", page_bokwurm, page_bokwurm_use),
+    ("ladstapel", page_ladstapel, page_ladstapel_use),
 ]
 SECTIONS = {"cover": "cover", "parts": "parts", "steps_a": "assembly", "steps_b": "assembly", "finishes": "assembly",
-            "hinge": "use", "apart": "apart", "kubhala": "kubhala", "sakksakk": "kubhala"}
+            "hinge": "use", "apart": "apart", "kubhala": "kubhala", "sakksakk": "kubhala",
+            "bokwurm": "bokwurm", "ladstapel": "ladstapel"}
 
 def manual_icon():
     rows = ["................", "...##########...", "...#WWWWWWWWW#..", "...#WWWWWWWWW#..", "...#WKKKKKKWW#..",
@@ -938,7 +1113,7 @@ def main(gen):
     os.makedirs(f"{A}/{TEX}", exist_ok=True)
     w(f"{books}/manual.json", {"title": f"book.{MOD}.manual.title", "default_template": f"{MOD}:leaflet",
         "style": {"page": "#ffffff", "ink": "#111111", "soft": "#555555", "cover": "#3a3a3a", "cover_edge": "#1e1e1e", "edge": "#c8c8c8"},
-        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala"]})
+        "stand_cover": f"{MOD}:{TEX}/stand_cover.png", "sections": ["cover", "parts", "assembly", "use", "apart", "kubhala", "bokwurm", "ladstapel"]})
     w(f"{A}/simplebooks/templates/leaflet.json", {"vars": {}, "slots": {
         "left.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "left_image", "frame": False},
         "right.art": {"type": "image_box", "box": [0, 0, PW, PH], "bind": "right_image", "frame": False},
