@@ -213,7 +213,7 @@ for d in ["top", "middle", "bottom"]:
     lang[f"container.{MOD}.ladstapel.{d}"] = f"LADSTAPEL, {d} drawer"
 lang.update({f"tooltip.{MOD}.bokwurm": "Bookcase, holds 12 books",
              f"tooltip.{MOD}.bokwurm.use": "Click a shelf to put a book in or take one out",
-             f"tooltip.{MOD}.bokwurm.enchanting": "Counts as a bookshelf for enchanting",
+             f"tooltip.{MOD}.bokwurm.enchanting": "Every 3 books count as one bookshelf for enchanting",
              f"tooltip.{MOD}.ladstapel": "Chest of drawers, 3 drawers of 9 stacks",
              f"tooltip.{MOD}.ladstapel.use": "Click a drawer to open just that one",
              f"tag.item.{MOD}.bokwurm_books": "BOKWURM Books"})
@@ -221,8 +221,6 @@ for era in ERAS:
     books = ["#minecraft:bookshelf_books", {"id": "simplebooks:guide", "required": False}, {"id": "#c:books", "required": False}]
     if ERAS[era].get("plural"): books.append({"id": "#forge:books", "required": False})
     w(f"{era_root(era)}/data/{MOD}/{folder(era, 'tags/item')}/bokwurm_books.json", {"values": books})
-    blocks = "tags/blocks" if ERAS[era].get("plural") else "tags/block"
-    w(f"{era_root(era)}/data/minecraft/{blocks}/enchantment_power_provider.json", {"replace": False, "values": [f"{MOD}:bokwurm"]})
 # SAKKSÄKK soft boxes, 16 wool colours and a wicker one
 SAKKSAKKS = COLOURS + ["wicker"]
 for c in SAKKSAKKS:

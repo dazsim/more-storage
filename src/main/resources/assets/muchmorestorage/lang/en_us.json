@@ -205,7 +205,7 @@
   "container.muchmorestorage.ladstapel.bottom": "LADSTAPEL, bottom drawer",
   "tooltip.muchmorestorage.bokwurm": "Bookcase, holds 12 books",
   "tooltip.muchmorestorage.bokwurm.use": "Click a shelf to put a book in or take one out",
-  "tooltip.muchmorestorage.bokwurm.enchanting": "Counts as a bookshelf for enchanting",
+  "tooltip.muchmorestorage.bokwurm.enchanting": "Every 3 books count as one bookshelf for enchanting",
   "tooltip.muchmorestorage.ladstapel": "Chest of drawers, 3 drawers of 9 stacks",
   "tooltip.muchmorestorage.ladstapel.use": "Click a drawer to open just that one",
   "tag.item.muchmorestorage.bokwurm_books": "BOKWURM Books",

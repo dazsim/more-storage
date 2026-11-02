@@ -95,6 +95,39 @@ public class BokwurmBlock extends FurnitureBlock {
         return true;
     }
 
+    // every 3 books counts as one bookshelf, an empty one gives nothing
+    public static int power(net.minecraft.world.level.BlockGetter level, BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof BokwurmBlockEntity be ? be.books() / 3 : 0;
+    }
+
+    // vanilla counts each tagged block as 1, so Fabric adds BOKWURM power here instead
+    public static boolean reaches(Level level, BlockPos table, BlockPos offset) {
+        return power(level, table.offset(offset)) > 0 && level.getBlockState(table.offset(offset.getX() / 2, offset.getY(), offset.getZ() / 2))
+                .is(net.minecraft.tags.BlockTags.ENCHANTMENT_POWER_TRANSMITTER);
+    }
+
+    public static int tablePower(Level level, BlockPos table) {
+        int n = 0;
+        for (BlockPos offset : SHELF_OFFSETS) if (reaches(level, table, offset)) n += power(level, table.offset(offset));
+        return n;
+    }
+
+    //? if >=1.20.5 {
+    public static final java.util.List<BlockPos> SHELF_OFFSETS = net.minecraft.world.level.block.EnchantingTableBlock.BOOKSHELF_OFFSETS;
+    //?} else {
+    /*public static final java.util.List<BlockPos> SHELF_OFFSETS = net.minecraft.world.level.block.EnchantmentTableBlock.BOOKSHELF_OFFSETS;
+    *///?}
+    // set while the enchanting menu works out its costs
+    public static final ThreadLocal<Integer> TABLE_EXTRA = new ThreadLocal<>();
+
+    //? if forge || (neoforge && <26.1) {
+    /*@Override
+    public float getEnchantPowerBonus(BlockState state, net.minecraft.world.level.LevelReader level, BlockPos pos) { return power(level, pos); }
+    *///?} else if neoforge {
+    /*@Override
+    public float getEnchantPowerBonus(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos) { return power(level, pos); }
+    *///?}
+
     @Override
     protected int signal(Level level, BlockPos pos) {
         return level.getBlockEntity(pos) instanceof BokwurmBlockEntity be ? be.books() : 0;

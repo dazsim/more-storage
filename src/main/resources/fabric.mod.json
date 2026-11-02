@@ -11,6 +11,9 @@
     "icon": "muchmorestorage_logo.png",
     "environment": "*",
     "accessWidener": "muchmorestorage.accesswidener",
+    "mixins": [
+        "muchmorestorage.mixins.json"
+    ],
     "entrypoints": {
         "client": [
             "com.workshopcraft.muchmorestorage.fabric.MuchMoreStorageFabricClient"

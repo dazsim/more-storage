@@ -79,7 +79,7 @@ tasks {
         )
         inputs.properties(props)
         filesMatching(listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")) { expand(props) }
-        exclude("fabric.mod.json", "META-INF/mods.toml")
+        exclude("fabric.mod.json", "muchmorestorage.mixins.json", "META-INF/mods.toml")
         if (!modern) exclude("$modId.accesswidener", "META-INF/accesstransformer.cfg")
     }
 
