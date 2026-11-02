@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -93,7 +92,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
             ItemStackRenderState r = new ItemStackRenderState();
             items.updateForTopItem(r, stack, ItemDisplayContext.FIXED, be.getLevel(), null, seed + i);
             s.shown.add(r);
-            s.blocks.add(stack.getItem() instanceof BlockItem);
+            s.blocks.add(r.usesBlockLight());
         }
     }
 

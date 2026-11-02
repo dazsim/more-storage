@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -101,7 +100,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity> 
         int seed = (int) be.getBlockPos().asLong();
         for (int i = 0; i < n; i++) {
             ItemStack stack = shown.get(i);
-            boolean block = stack.getItem() instanceof BlockItem;
+            boolean block = Minecraft.getInstance().getItemRenderer().getModel(stack, be.getLevel(), null, seed + i).isGui3d();
             float sc = block ? scale * 1.5F : scale;
             pose.pushPose();
             pose.translate(xs[i] / 16F, join.y0() / 16F + (block ? 0.25F : 0.5F) * sc, 0.5F);
