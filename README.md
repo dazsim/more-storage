@@ -32,4 +32,10 @@ Minecraft 26.1 to 26.1.2, NeoForge and Fabric.
 
 1.0.3: the manual is book + any screwdriver + chest and the screwdriver comes back, so it no longer clashes with the More Foods knife. It is named by Simple Books, and the screwdriver recipe shows once you have iron or a stick.
 
-Build with `./gradlew build`. Textures are drawn by `python3 tools/gen_textures.py` and the json files are made by `python3 tools/gen_resources.py`.
+## Building
+
+The build uses [Stonecutter](https://stonecutter.kikugie.dev/) so every Minecraft version and loader comes from the one source tree in `src`. Version specific values are in `stonecutter.properties.toml` and the versions built are listed in `settings.gradle.kts`.
+
+Build with JDK 25, one version at a time: `./gradlew :26.1.2-fabric:build` and `./gradlew :26.1.2-neoforge:build`. Jars end up in `versions/<version>-<loader>/build/libs/`. Add `-Pversion=1.0.4-alpha.1` for a test jar.
+
+Textures are drawn by `python3 tools/gen_textures.py` and the json files are made by `python3 tools/gen_resources.py`, both run from the repo root.
