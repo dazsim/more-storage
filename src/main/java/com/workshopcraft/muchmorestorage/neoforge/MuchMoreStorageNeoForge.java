@@ -50,7 +50,7 @@ public class MuchMoreStorageNeoForge {
         e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.BOKWURM_BE, (be, side) -> VanillaContainerWrapper.of(be));
         e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.LADSTAPEL_BE, (be, side) -> VanillaContainerWrapper.of(be));
         e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.GENOMSKADA_BE, (be, side) -> VanillaContainerWrapper.of(be));
-        e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.CRATE_BE, (be, side) -> VanillaContainerWrapper.of(be));
+        e.registerBlockEntity(Capabilities.Item.BLOCK, ModContent.CRATE_BE, (be, side) -> be.open() ? VanillaContainerWrapper.of(be) : null);
         e.registerBlock(Capabilities.Item.BLOCK, (level, pos, state, be, side) -> level.getBlockEntity(com.workshopcraft.muchmorestorage.block.KladkaosBlock.base(state, pos))
                 instanceof com.workshopcraft.muchmorestorage.block.KladkaosBlockEntity k ? VanillaContainerWrapper.of(k) : null, ModContent.KLADKAOS);
         //?} else {
@@ -59,7 +59,7 @@ public class MuchMoreStorageNeoForge {
         e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.BOKWURM_BE, (be, side) -> new InvWrapper(be));
         e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.LADSTAPEL_BE, (be, side) -> new InvWrapper(be));
         e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.GENOMSKADA_BE, (be, side) -> new InvWrapper(be));
-        e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.CRATE_BE, (be, side) -> new InvWrapper(be));
+        e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModContent.CRATE_BE, (be, side) -> be.open() ? new InvWrapper(be) : null);
         e.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> level.getBlockEntity(com.workshopcraft.muchmorestorage.block.KladkaosBlock.base(state, pos))
                 instanceof com.workshopcraft.muchmorestorage.block.KladkaosBlockEntity k ? new InvWrapper(k) : null, ModContent.KLADKAOS);
         ^///?}
