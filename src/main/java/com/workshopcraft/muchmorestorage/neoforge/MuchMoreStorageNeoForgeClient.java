@@ -45,6 +45,7 @@ public class MuchMoreStorageNeoForgeClient {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.CRATE_BE, CrateRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.KLADKAOS_BE, KladkaosRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerEntityRenderer(ModContent.HJULBORG, HjulborgRenderer::new));
+        modBus.addListener((net.neoforged.neoforge.client.event.RegisterMenuScreensEvent e) -> e.register(com.workshopcraft.muchmorestorage.client.KladkaosScreen.type(), com.workshopcraft.muchmorestorage.client.KladkaosScreen::new));
         //? if >=26.1 {
         modBus.addListener((RegisterSpecialModelRendererEvent e) -> e.register(MuchMoreStorage.id("cupboard"), CupboardItemRenderer.Unbaked.MAP_CODEC));
         //?} else {

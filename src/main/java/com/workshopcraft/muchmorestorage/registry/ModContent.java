@@ -95,6 +95,7 @@ public final class ModContent {
     public static KladkaosBlock KLADKAOS;
     public static FurnitureItem KLADKAOS_ITEM;
     public static BlockEntityType<KladkaosBlockEntity> KLADKAOS_BE;
+    public static net.minecraft.world.inventory.MenuType<com.workshopcraft.muchmorestorage.menu.KladkaosMenu> KLADKAOS_MENU;
     public static GenomskadaBlock GENOMSKADA;
     public static final String[] GENOMSKADA_EXAMPLES = {"white_concrete", "gray_concrete", "black_concrete", "red_concrete", "green_concrete"};
     public static FurnitureItem GENOMSKADA_ITEM;
@@ -279,6 +280,11 @@ public final class ModContent {
         r.accept(MuchMoreStorage.id("leftover_screw"), LEFTOVER_SCREW);
     }
 
+    public static void registerMenus(BiConsumer<Identifier, net.minecraft.world.inventory.MenuType<?>> r) {
+        KLADKAOS_MENU = new net.minecraft.world.inventory.MenuType<>(com.workshopcraft.muchmorestorage.menu.KladkaosMenu::new, net.minecraft.world.flag.FeatureFlags.VANILLA_SET);
+        r.accept(MuchMoreStorage.id("kladkaos"), KLADKAOS_MENU);
+    }
+
     public static void registerEntities(BiConsumer<Identifier, EntityType<?>> r) {
         Identifier id = MuchMoreStorage.id("hjulborg");
         EntityType.Builder<HjulborgEntity> b = EntityType.Builder.<HjulborgEntity>of(HjulborgEntity::new, MobCategory.MISC)
@@ -452,6 +458,7 @@ public final class ModContent {
         registerItems(direct(BuiltInRegistries.ITEM));
         registerBlockEntities(direct(BuiltInRegistries.BLOCK_ENTITY_TYPE));
         registerEntities(direct(BuiltInRegistries.ENTITY_TYPE));
+        registerMenus(direct(BuiltInRegistries.MENU));
         registerRecipeSerializers(direct(BuiltInRegistries.RECIPE_SERIALIZER));
         registerCreativeTabs(direct(BuiltInRegistries.CREATIVE_MODE_TAB));
     }

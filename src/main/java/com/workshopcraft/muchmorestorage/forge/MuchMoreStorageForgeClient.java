@@ -30,6 +30,8 @@ public final class MuchMoreStorageForgeClient {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.CRATE_BE, CrateRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerBlockEntityRenderer(ModContent.KLADKAOS_BE, KladkaosRenderer::new));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers e) -> e.registerEntityRenderer(ModContent.HJULBORG, HjulborgRenderer::new));
+        modBus.addListener((net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent e) -> e.enqueueWork(() ->
+                net.minecraft.client.gui.screens.MenuScreens.register(com.workshopcraft.muchmorestorage.client.KladkaosScreen.type(), com.workshopcraft.muchmorestorage.client.KladkaosScreen::new)));
     }
 
     // called from the items' initializeClient

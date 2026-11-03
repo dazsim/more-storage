@@ -16,7 +16,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
+import com.workshopcraft.muchmorestorage.menu.KladkaosMenu;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 //? if >=1.21
@@ -99,7 +100,47 @@ public class KladkaosBlockEntity extends FurnitureBlockEntity implements Worldly
     protected Component getDefaultName() { return Component.translatable("container.muchmorestorage.kladkaos"); }
 
     @Override
-    protected AbstractContainerMenu createMenu(int id, Inventory inventory) { return ChestMenu.sixRows(id, inventory, this); }
+    protected AbstractContainerMenu createMenu(int id, Inventory inventory) { return new KladkaosMenu(id, inventory, this, rail); }
+
+    // the rail as a container for the menu, hoppers never see it
+    public final Container rail = new Container() {
+        @Override
+        public int getContainerSize() { return RAIL.length; }
+
+        @Override
+        public boolean isEmpty() { return armour.stream().allMatch(ItemStack::isEmpty); }
+
+        @Override
+        public ItemStack getItem(int slot) { return armour.get(slot); }
+
+        @Override
+        public ItemStack removeItem(int slot, int count) {
+            ItemStack out = ContainerHelper.removeItem(armour, slot, count);
+            if (!out.isEmpty()) setChanged();
+            return out;
+        }
+
+        @Override
+        public ItemStack removeItemNoUpdate(int slot) { return ContainerHelper.takeItem(armour, slot); }
+
+        @Override
+        public void setItem(int slot, ItemStack stack) {
+            armour.set(slot, stack);
+            setChanged();
+        }
+
+        @Override
+        public int getMaxStackSize() { return 1; }
+
+        @Override
+        public void setChanged() { KladkaosBlockEntity.this.setChanged(); }
+
+        @Override
+        public boolean stillValid(Player player) { return KladkaosBlockEntity.this.stillValid(player); }
+
+        @Override
+        public void clearContent() { armour.clear(); }
+    };
 
     @Override
     public int[] getSlotsForFace(Direction side) { return SLOTS; }

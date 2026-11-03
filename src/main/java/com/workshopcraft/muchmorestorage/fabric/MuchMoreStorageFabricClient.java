@@ -41,6 +41,7 @@ public class MuchMoreStorageFabricClient implements ClientModInitializer {
         BlockEntityRenderers.register(ModContent.GENOMSKADA_BE, GenomskadaRenderer::new);
         BlockEntityRenderers.register(ModContent.CRATE_BE, CrateRenderer::new);
         BlockEntityRenderers.register(ModContent.KLADKAOS_BE, KladkaosRenderer::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(com.workshopcraft.muchmorestorage.client.KladkaosScreen.type(), com.workshopcraft.muchmorestorage.client.KladkaosScreen::new);
         //? if >=26.1 {
         EntityRenderers.register(ModContent.HJULBORG, HjulborgRenderer::new);
         //?} else {
