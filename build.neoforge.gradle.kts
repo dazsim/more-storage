@@ -76,6 +76,7 @@ tasks {
             "pack_min" to packProp("mod.pack_min"),
             "pack_max" to packProp("mod.pack_max"),
             "pack_format" to packProp("mod.pack_format"),
+            "logo_key" to if (sc.current.parsed >= "26.3") "iconFile" else "logoFile",
         )
         inputs.properties(props)
         filesMatching(listOf("META-INF/neoforge.mods.toml", "pack.mcmeta")) { expand(props) }

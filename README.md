@@ -34,6 +34,8 @@ Minecraft 1.20.1 (Forge and Fabric), 1.21.1, 26.1 to 26.1.2 and 26.3 (NeoForge a
 
 1.1.0: the KUBHÅLA cube shelf with drawer and door inserts.
 
+1.1.1: NeoForge 26.3 no longer shows the logoFile deprecation screen.
+
 ## KUBHÅLA cube shelf
 
 A square open shelf that holds 9 stacks. Cubes next to each other, above or below, facing the same way join into one grid with thin dividers. An open cube shows what is inside.
