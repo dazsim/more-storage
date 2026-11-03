@@ -172,7 +172,9 @@ public final class ModContent {
                 .setId(ResourceKey.create(Registries.BLOCK, kkid))
                 .mapColor(s -> s.getValue(KladkaosBlock.CONCRETE) ? MapColor.STONE : MapColor.WOOD)
                 .strength(2.0F)
-                //? if <26.3
+                //? if >=26.3 {
+                /*.pushReaction(net.minecraft.world.level.material.PushReaction.IMMOVEABLE)
+                *///?} else
                 .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)
                 .noOcclusion());
         r.accept(kkid, KLADKAOS);
