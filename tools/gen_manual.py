@@ -745,6 +745,7 @@ def page_loose(pg):
     count(pg, (560, 860), 1, 30)
 
 def page_kubhala(pg):
+    heading(pg, "KUBHALA", "KUBHÅLA")
     sc = Scene(0, 0, 8).at(130, 200, (0, 0, 0), (16, 6, 16))
     flatpack(sc)
     sc.draw(pg)
@@ -1015,7 +1016,7 @@ def genomskada(sc, at=(0, 0, 0), items=0):
     sc.box((6, 12.5, 0.5), (10, 13, 2), base, width=1.6, bias=2)
 
 def page_genomskada(pg):
-    heading(pg, "GENOMSKADA", "GENÖMSKÅDA")
+    heading(pg, "GENOMSKADA", "GENOMSKÅDA")
     grid(pg, 50, 200, 70, [["pane", None, "pane"], ["pane", "slime", "pane"], ["pane"] * 3])
     pg.arrow([(280, 305), (340, 305)], 3.0)
     s1 = Scene(0, 0, 10).at(470, 330, (0, 0, 0), (16, 13, 16))
@@ -1093,7 +1094,8 @@ def phone_guy(pg, c, s=1.0):
     pg.text((x - 6 * s, y - 120 * s), "?", int(54 * s), "ms")
 
 def page_hexhojk(pg):
-    hexkey(pg, (70, 160), 1.3, -20)
+    heading(pg, "HEXHOJK", "HEXHÖJK")
+    hexkey(pg, (90, 205), 1.3, -20)
     s0 = Scene(0, 0, 9).at(430, 190, (0, 0, 0), (16, 6, 16))
     crate(s0, step=0)
     s0.draw(pg)
@@ -1189,7 +1191,7 @@ def page_bokwurm_use(pg):
     check(pg, (560, 800), 22)
 
 def page_ladstapel(pg):
-    heading(pg, "LADSTAPEL", "LÅDSTÄPEL")
+    heading(pg, "LADSTAPEL", "LÅDSTAPEL")
     sc = Scene(0, 0, 7).at(110, 250, (0, 0, 0), (16, 6, 16))
     flatpack(sc)
     sc.draw(pg)
@@ -1235,14 +1237,15 @@ def page_ladstapel_use(pg):
     pg.arrow([a, b], 2.6, 12)
 
 def page_sakksakk_use(pg):
-    sc = Scene(0, 0, 6).at(120, 160, (0, 0, 0), (12, 10, 12.4))
+    heading(pg, "SAKKSAKK", "SAKKSÄKK")
+    sc = Scene(0, 0, 6).at(120, 205, (0, 0, 0), (12, 10, 12.4))
     sakksakk(sc)
     sc.draw(pg)
-    pg.arrow([(200, 160), (270, 160)], 3.0)
-    s1 = Scene(0, 0, 7).at(430, 160)
+    pg.arrow([(200, 205), (270, 205)], 3.0)
+    s1 = Scene(0, 0, 7).at(430, 205)
     kubhala(s1, insert="box", open=0.0)
     s1.draw(pg)
-    check(pg, (560, 260), 20)
+    check(pg, (560, 305), 20)
     s2 = Scene(0, 0, 7).at(320, 460, (0, 0, 0), (48, 16, 20))
     kubhala(s2, insert="box", joins="e")
     kubhala(s2, (16, 0, 0), insert="box", joins="we")
