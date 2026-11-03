@@ -33,7 +33,12 @@ public class HjulborgRenderer extends EntityRenderer<HjulborgEntity> {
         pose.mulPose(Axis.YP.rotationDegrees(-yaw));
         if (wobble > 0) pose.mulPose(Axis.ZP.rotationDegrees(Mth.sin(wobble * 1.5F) * wobble * 0.6F));
         pose.translate(-0.5F, 0, -0.5F);
-        FurnitureModel.hjulborg(new Quads(pose.last(), vc, light, OverlayTexture.NO_OVERLAY), CupboardModel.Body.of(e.body()), lift);
+        CupboardModel.Body body = CupboardModel.Body.of(e.body());
+        FurnitureModel.hjulborgBody(new Quads(pose.last(), vc, light, OverlayTexture.NO_OVERLAY), body);
+        pose.translate(0, 10 / 16F, 1.5F / 16F);
+        pose.mulPose(Axis.XP.rotationDegrees(-80F * e.lid(partialTick)));
+        pose.translate(0, -10 / 16F, -1.5F / 16F);
+        FurnitureModel.hjulborgLid(new Quads(pose.last(), vc, light, OverlayTexture.NO_OVERLAY), body, lift);
         pose.popPose();
         super.render(e, yaw, partialTick, pose, buffers, light);
     }

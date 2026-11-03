@@ -21,6 +21,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -41,6 +42,8 @@ public class HjulborgEntity extends Entity {
     public static final int SIZE = 18;
     private static final EntityDataAccessor<String> BODY = SynchedEntityData.defineId(HjulborgEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> WOBBLE = SynchedEntityData.defineId(HjulborgEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> VIEWERS = SynchedEntityData.defineId(HjulborgEntity.class, EntityDataSerializers.INT);
+    private float lid, lidO;
     private static final double PUSH = 0.3, PULL = 0.35, FOLLOW = 1.8, LET_GO = 7.0;
 
     private final SimpleContainer items = new SimpleContainer(SIZE) {
@@ -63,12 +66,14 @@ public class HjulborgEntity extends Entity {
     protected void defineSynchedData(SynchedEntityData.Builder b) {
         b.define(BODY, "oak");
         b.define(WOBBLE, 0);
+        b.define(VIEWERS, 0);
     }
     //?} else {
     /*@Override
     protected void defineSynchedData() {
         entityData.define(BODY, "oak");
         entityData.define(WOBBLE, 0);
+        entityData.define(VIEWERS, 0);
     }
     *///?}
 
@@ -77,6 +82,12 @@ public class HjulborgEntity extends Entity {
     public void setBody(String body) { entityData.set(BODY, body); }
 
     public int wobble() { return entityData.get(WOBBLE); }
+
+    // 0 shut to 1 open, eased like a chest lid
+    public float lid(float partialTick) {
+        float f = 1F - Mth.lerp(partialTick, lidO, lid);
+        return 1F - f * f * f;
+    }
 
     @Override
     public float maxUpStep() { return 0F; }
@@ -97,6 +108,8 @@ public class HjulborgEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+        lidO = lid;
+        lid = Mth.clamp(lid + (entityData.get(VIEWERS) > 0 ? 0.1F : -0.1F), 0F, 1F);
         if (level().isClientSide()) return;
         if (wobble() > 0) entityData.set(WOBBLE, wobble() - 1);
         if (!supported(getBoundingBox())) {
@@ -182,7 +195,17 @@ public class HjulborgEntity extends Entity {
             }
             return InteractionResult.SUCCESS;
         }
-        player.openMenu(new SimpleMenuProvider((id, inv, p) -> new ChestMenu(MenuType.GENERIC_9x2, id, inv, items, 2), getDisplayName()));
+        player.openMenu(new SimpleMenuProvider((id, inv, p) -> {
+            entityData.set(VIEWERS, entityData.get(VIEWERS) + 1);
+            return new ChestMenu(MenuType.GENERIC_9x2, id, inv, items, 2) {
+                @Override
+                public void removed(Player who) {
+                    super.removed(who);
+                    entityData.set(VIEWERS, Math.max(0, entityData.get(VIEWERS) - 1));
+                    if (entityData.get(VIEWERS) == 0) level().playSound(null, getX(), getY(), getZ(), SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS, 0.5F, 1.1F);
+                }
+            };
+        }, getDisplayName()));
         level().playSound(null, getX(), getY(), getZ(), SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.5F, 1.1F);
         return InteractionResult.SUCCESS;
     }

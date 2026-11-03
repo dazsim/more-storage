@@ -24,7 +24,7 @@ public class HjulborgRenderer extends EntityRenderer<HjulborgEntity, HjulborgRen
 
     public static class State extends EntityRenderState {
         String body = "oak";
-        float yaw, wobble;
+        float yaw, wobble, lid;
     }
 
     public HjulborgRenderer(EntityRendererProvider.Context ctx) {
@@ -41,6 +41,7 @@ public class HjulborgRenderer extends EntityRenderer<HjulborgEntity, HjulborgRen
         s.body = e.body();
         s.yaw = Mth.rotLerp(partialTick, e.yRotO, e.getYRot());
         s.wobble = Math.max(0F, e.wobble() - partialTick);
+        s.lid = e.lid(partialTick);
     }
 
     @Override
@@ -53,9 +54,14 @@ public class HjulborgRenderer extends EntityRenderer<HjulborgEntity, HjulborgRen
         if (s.wobble > 0) KubhalaRenderer.rotate(pose, Axis.ZP.rotationDegrees(Mth.sin(s.wobble * 1.5F) * s.wobble * 0.6F));
         pose.translate(-0.5F, 0, -0.5F);
         //? if >=26.3 {
-        /*out.submitCustomGeometry(pose, CUTOUT_BLOCK_SHEET, (p, vc) -> FurnitureModel.hjulborg(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY), body, lift));
+        /*var sheet = CUTOUT_BLOCK_SHEET;
         *///?} else
-        out.submitCustomGeometry(pose, Sheets.cutoutBlockSheet(), (p, vc) -> FurnitureModel.hjulborg(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY), body, lift));
+        var sheet = Sheets.cutoutBlockSheet();
+        out.submitCustomGeometry(pose, sheet, (p, vc) -> FurnitureModel.hjulborgBody(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY), body));
+        pose.translate(0, 10 / 16F, 1.5F / 16F);
+        KubhalaRenderer.rotate(pose, Axis.XP.rotationDegrees(-80F * s.lid));
+        pose.translate(0, -10 / 16F, -1.5F / 16F);
+        out.submitCustomGeometry(pose, sheet, (p, vc) -> FurnitureModel.hjulborgLid(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY), body, lift));
         pose.popPose();
         super.submit(s, pose, out, camera);
     }

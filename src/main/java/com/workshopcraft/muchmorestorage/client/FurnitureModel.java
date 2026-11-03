@@ -181,6 +181,18 @@ public final class FurnitureModel {
 
     // HJULBORG, a small chest on four wheels with the handle on the south side, lift raises the lid a little
     public static void hjulborg(Quads q, CupboardModel.Body b, float lift) {
+        hjulborgBody(q, b);
+        hjulborgLid(q, b, lift);
+    }
+
+    // the lid hinges on its z 1.5 edge at y 10
+    public static void hjulborgLid(Quads q, CupboardModel.Body b, float lift) {
+        TextureAtlasSprite s = b.side(), h = b.handle();
+        box(q, 1.5F, 10 + lift, 1.5F, 14.5F, 12 + lift, 14.5F, s, W, Direction.values());
+        for (Direction dir : new Direction[]{NORTH, SOUTH, WEST, EAST, UP}) q.face(dir, 7, 12 + lift, 7.5F, 9, 12.5F + lift, 8.5F, h, 7, 5, 8, 10);
+    }
+
+    public static void hjulborgBody(Quads q, CupboardModel.Body b) {
         TextureAtlasSprite s = b.side(), d = b.door(), h = b.handle();
         for (float[] w : new float[][]{{2, 3}, {2, 12}, {13, 3}, {13, 12}}) {
             for (Direction dir : Direction.values()) q.face(dir, w[0], 0, w[1], w[0] + 1, 3, w[1] + 1, h, 7, 5, 8, 10);
@@ -188,8 +200,6 @@ public final class FurnitureModel {
         box(q, 1.5F, 3, 1.5F, 14.5F, 4, 14.5F, s, DARK, Direction.values());
         box(q, 2, 4, 2, 14, 10, 14, d, W, NORTH, SOUTH);
         box(q, 2, 4, 2, 14, 10, 14, s, SHADE, WEST, EAST);
-        box(q, 1.5F, 10 + lift, 1.5F, 14.5F, 12 + lift, 14.5F, s, W, Direction.values());
-        for (Direction dir : new Direction[]{NORTH, SOUTH, WEST, EAST, UP}) q.face(dir, 7, 12 + lift, 7.5F, 9, 12.5F + lift, 8.5F, h, 7, 5, 8, 10);
         for (float x : new float[]{3, 12}) {
             for (Direction dir : Direction.values()) q.face(dir, x, 5, 14, x + 1, 16, 15, h, 7, 5, 8, 10);
         }
