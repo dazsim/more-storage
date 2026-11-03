@@ -2,6 +2,7 @@ package com.workshopcraft.muchmorestorage.entity;
 
 import com.workshopcraft.muchmorestorage.registry.ModContent;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -107,8 +108,8 @@ public class HjulborgEntity extends Entity {
         fall = 0;
         Vec3 v = getDeltaMovement().multiply(0.5, 0, 0.5);
         Player p = puller == null ? null : level().getPlayerByUUID(puller);
-        if (puller != null && (p == null || !p.isAlive() || p.isSpectator() || distanceTo(p) > LET_GO)) {
-            if (p != null) tell(p, "message.muchmorestorage.hjulborg.let_go");
+        if (p != null && (!p.isAlive() || p.isSpectator() || distanceTo(p) > LET_GO)) {
+            tell(p, "message.muchmorestorage.hjulborg.let_go");
             puller = null;
             p = null;
         }
@@ -241,11 +242,13 @@ public class HjulborgEntity extends Entity {
         NonNullList<ItemStack> list = NonNullList.withSize(SIZE, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(in, list);
         fill(list);
+        puller = in.read("Puller", UUIDUtil.CODEC).orElse(null);
     }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput out) {
         out.putString("Body", body());
+        out.storeNullable("Puller", UUIDUtil.CODEC, puller);
         ContainerHelper.saveAllItems(out, list());
     }
     //?} else if >=1.20.5 {
@@ -255,11 +258,13 @@ public class HjulborgEntity extends Entity {
         NonNullList<ItemStack> list = NonNullList.withSize(SIZE, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(tag, list, registryAccess());
         fill(list);
+        puller = tag.hasUUID("Puller") ? tag.getUUID("Puller") : null;
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putString("Body", body());
+        if (puller != null) tag.putUUID("Puller", puller);
         ContainerHelper.saveAllItems(tag, list(), registryAccess());
     }
     *///?} else {
@@ -269,11 +274,13 @@ public class HjulborgEntity extends Entity {
         NonNullList<ItemStack> list = NonNullList.withSize(SIZE, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(tag, list);
         fill(list);
+        puller = tag.hasUUID("Puller") ? tag.getUUID("Puller") : null;
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putString("Body", body());
+        if (puller != null) tag.putUUID("Puller", puller);
         ContainerHelper.saveAllItems(tag, list());
     }
     *///?}
