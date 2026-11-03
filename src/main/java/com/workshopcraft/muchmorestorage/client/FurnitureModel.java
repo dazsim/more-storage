@@ -211,7 +211,7 @@ public final class FurnitureModel {
         }
     }
 
-    public static final float BOX_TOP = 11F;
+    public static final float BOX_TOP = 14.5F;
 
     public static TextureAtlasSprite clear() { return CupboardModel.sprite(MuchMoreStorage.id("minecraft", "block/white_stained_glass")); }
 
@@ -224,16 +224,16 @@ public final class FurnitureModel {
     public static void genomskadaWalls(Quads q) {
         TextureAtlasSprite c = clear();
         box(q, 1, 0, 1, 15, BOX_TOP, 15, c, W, NORTH, SOUTH, WEST, EAST, DOWN);
-        q.face(SOUTH, 1.5F, 0.5F, 0, 14.5F, BOX_TOP, 1.5F, c, 1.5F, 5, 14.5F, 16, SHADE);
-        q.face(NORTH, 1.5F, 0.5F, 14.5F, 14.5F, BOX_TOP, 16, c, 1.5F, 5, 14.5F, 16, SHADE);
-        q.face(EAST, 0, 0.5F, 1.5F, 1.5F, BOX_TOP, 14.5F, c, 1.5F, 5, 14.5F, 16, SHADE);
-        q.face(WEST, 14.5F, 0.5F, 1.5F, 16, BOX_TOP, 14.5F, c, 1.5F, 5, 14.5F, 16, SHADE);
+        q.face(SOUTH, 1.5F, 0.5F, 0, 14.5F, BOX_TOP, 1.5F, c, 1.5F, 2, 14.5F, 16, SHADE);
+        q.face(NORTH, 1.5F, 0.5F, 14.5F, 14.5F, BOX_TOP, 16, c, 1.5F, 2, 14.5F, 16, SHADE);
+        q.face(EAST, 0, 0.5F, 1.5F, 1.5F, BOX_TOP, 14.5F, c, 1.5F, 2, 14.5F, 16, SHADE);
+        q.face(WEST, 14.5F, 0.5F, 1.5F, 16, BOX_TOP, 14.5F, c, 1.5F, 2, 14.5F, 16, SHADE);
         q.face(UP, 1.5F, 0, 1.5F, 14.5F, 0.5F, 14.5F, c, 1.5F, 1.5F, 14.5F, 14.5F, SHADE);
     }
 
     public static void genomskadaLid(Quads q, TextureAtlasSprite lid) {
-        box(q, 0.5F, BOX_TOP, 0.5F, 15.5F, 12.5F, 15.5F, lid, W, NORTH, SOUTH, WEST, EAST, UP, DOWN);
-        box(q, 6, 12.5F, 0.5F, 10, 13, 2, lid, DARK, NORTH, WEST, EAST, UP);
+        box(q, 0.5F, BOX_TOP, 0.5F, 15.5F, 16, 15.5F, lid, W, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+        box(q, 6, BOX_TOP + 0.25F, 0, 10, 15.75F, 0.5F, lid, DARK, NORTH, WEST, EAST, UP, DOWN);
     }
 
     // the flat-pack crate, a pile of boards at step 0, a wall more each turn, the lid on the last

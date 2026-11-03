@@ -41,7 +41,7 @@ public class GenomskadaBlock extends FurnitureBlock {
     public static final int MAX_STACK = 3;
     public static final Set<String> LIDS = Set.of("white", "light_gray", "gray", "black", "red", "green", "pink", "purple",
             "brown", "orange", "lime", "cyan", "magenta");
-    private static final VoxelShape SHAPE = Block.box(0.5, 0, 0.5, 15.5, 12.5, 15.5);
+    private static final VoxelShape SHAPE = Block.box(0.5, 0, 0.5, 15.5, 16, 15.5);
 
     public GenomskadaBlock(Properties props) { super(props); }
 
