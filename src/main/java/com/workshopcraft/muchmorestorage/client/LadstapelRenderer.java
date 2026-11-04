@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.workshopcraft.muchmorestorage.block.FurnitureBlock;
 import com.workshopcraft.muchmorestorage.block.LadstapelBlockEntity;
-//? if >=26.3 {
+//? if >=26.2 {
 /*import net.minecraft.util.LightCoordsUtil;
 *///?} else
 import net.minecraft.client.renderer.LevelRenderer;
@@ -64,7 +64,7 @@ public class LadstapelRenderer implements BlockEntityRenderer<LadstapelBlockEnti
         s.facing = state.getValue(FurnitureBlock.FACING);
         s.body = be.body();
         s.assembled = state.getValue(FurnitureBlock.ASSEMBLED);
-        //? if >=26.3 {
+        //? if >=26.2 {
         /*s.frontLight = be.getLevel() == null ? s.lightCoords : LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
         *///?} else
         s.frontLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));

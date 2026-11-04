@@ -6,7 +6,7 @@ import com.mojang.math.Axis;
 import com.workshopcraft.muchmorestorage.block.FurnitureBlock;
 import com.workshopcraft.muchmorestorage.block.KladkaosBlock;
 import com.workshopcraft.muchmorestorage.block.KladkaosBlockEntity;
-//? if >=26.3 {
+//? if >=26.2 {
 /*import net.minecraft.util.LightCoordsUtil;
 *///?} else
 import net.minecraft.client.renderer.LevelRenderer;
@@ -62,7 +62,7 @@ public class KladkaosRenderer implements BlockEntityRenderer<KladkaosBlockEntity
         s.facing = state.getValue(FurnitureBlock.FACING);
         s.body = be.body();
         s.assembled = state.getValue(FurnitureBlock.ASSEMBLED);
-        //? if >=26.3 {
+        //? if >=26.2 {
         /*s.frontLight = be.getLevel() == null ? s.lightCoords : LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
         *///?} else
         s.frontLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));

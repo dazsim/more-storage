@@ -8,7 +8,7 @@ import com.workshopcraft.muchmorestorage.block.Insert;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlock;
 import com.workshopcraft.muchmorestorage.block.KubhalaBlockEntity;
 import com.workshopcraft.muchmorestorage.item.SakksakkItem;
-//? if >=26.3 {
+//? if >=26.2 {
 /*import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -40,7 +40,7 @@ import java.util.function.Consumer;
 
 public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, KubhalaRenderer.State> {
     private static final float DOOR_ANGLE = 100F;
-    //? if >=26.3
+    //? if >=26.2
     /*private static final RenderType CUTOUT_BLOCK_SHEET = RenderTypes.entityCutoutCull(TextureAtlas.LOCATION_BLOCKS);*/
     private final ItemModelResolver items;
 
@@ -81,7 +81,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
         float o = 1F - be.getOpenNess(partialTick);
         s.open = 1F - o * o * o;
         s.join = be.getLevel() == null || !s.assembled ? KubhalaModel.Join.NONE : KubhalaModel.Join.of(be.getLevel(), be.getBlockPos(), state);
-        //? if >=26.3 {
+        //? if >=26.2 {
         /*s.frontLight = be.getLevel() == null ? s.lightCoords : LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
         *///?} else
         s.frontLight = be.getLevel() == null ? s.lightCoords : LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
@@ -100,7 +100,7 @@ public class KubhalaRenderer implements BlockEntityRenderer<KubhalaBlockEntity, 
     }
 
     static void submit(BlockEntityRenderState s, PoseStack pose, SubmitNodeCollector out, int light, Consumer<Quads> draw) {
-        //? if >=26.3 {
+        //? if >=26.2 {
         /*out.submitCustomGeometry(pose, CUTOUT_BLOCK_SHEET, (p, vc) -> draw.accept(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY)));
         *///?} else
         out.submitCustomGeometry(pose, Sheets.cutoutBlockSheet(), (p, vc) -> draw.accept(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY)));

@@ -4,7 +4,7 @@ package com.workshopcraft.muchmorestorage.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.workshopcraft.muchmorestorage.entity.HjulborgEntity;
-//? if >=26.3 {
+//? if >=26.2 {
 /*import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 
 public class HjulborgRenderer extends EntityRenderer<HjulborgEntity, HjulborgRenderer.State> {
-    //? if >=26.3
+    //? if >=26.2
     /*private static final RenderType CUTOUT_BLOCK_SHEET = RenderTypes.entityCutoutCull(TextureAtlas.LOCATION_BLOCKS);*/
 
     public static class State extends EntityRenderState {
@@ -53,7 +53,7 @@ public class HjulborgRenderer extends EntityRenderer<HjulborgEntity, HjulborgRen
         KubhalaRenderer.rotate(pose, Axis.YP.rotationDegrees(-s.yaw));
         if (s.wobble > 0) KubhalaRenderer.rotate(pose, Axis.ZP.rotationDegrees(Mth.sin(s.wobble * 1.5F) * s.wobble * 0.6F));
         pose.translate(-0.5F, 0, -0.5F);
-        //? if >=26.3 {
+        //? if >=26.2 {
         /*var sheet = CUTOUT_BLOCK_SHEET;
         *///?} else
         var sheet = Sheets.cutoutBlockSheet();

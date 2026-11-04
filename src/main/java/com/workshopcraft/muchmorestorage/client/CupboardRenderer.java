@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.math.Axis;
 import com.workshopcraft.muchmorestorage.block.CupboardBlock;
 import com.workshopcraft.muchmorestorage.block.CupboardBlockEntity;
-//? if >=26.3 {
+//? if >=26.2 {
 /*import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 // the whole cupboard is drawn here since the finishes come from the block entity
 public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity, CupboardRenderer.State> {
     private static final float MAX_ANGLE = 100F;
-    //? if >=26.3
+    //? if >=26.2
     /*private static final RenderType CUTOUT_BLOCK_SHEET = RenderTypes.entityCutoutCull(TextureAtlas.LOCATION_BLOCKS);*/
 
     public static class State extends BlockEntityRenderState {
@@ -69,7 +69,7 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
         s.settle = be.settleProgress(partialTick);
         float o = 1F - be.getOpenNess(partialTick);
         s.open = 1F - o * o * o;
-        //? if >=26.3 {
+        //? if >=26.2 {
         /*s.frontLight = be.getLevel() == null ? s.lightCoords : LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos().relative(s.facing));
         s.topLight = be.getLevel() == null ? s.lightCoords : LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos().above());
         *///?} else {
@@ -80,7 +80,7 @@ public class CupboardRenderer implements BlockEntityRenderer<CupboardBlockEntity
 
     private static void submit(State s, PoseStack pose, SubmitNodeCollector out,
                                int light, Consumer<Quads> draw) {
-        //? if >=26.3 {
+        //? if >=26.2 {
         /*out.submitCustomGeometry(pose, CUTOUT_BLOCK_SHEET, (p, vc) -> draw.accept(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY)));
         *///?} else
         out.submitCustomGeometry(pose, Sheets.cutoutBlockSheet(), (p, vc) -> draw.accept(new Quads(p, vc, light, OverlayTexture.NO_OVERLAY)));

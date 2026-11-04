@@ -9,7 +9,7 @@ A = f"{ROOT}/assets/{MOD}"
 # 1.20.1 has no c:chests/wooden or c:ingots/iron on both loaders, so it uses its own tags
 OLD_TAGS = {"c:chests/wooden": f"{MOD}:wooden_chests", "c:ingots/iron": f"{MOD}:iron_ingots"}
 ERAS = {
-    "26.1": {"items": True},
+    "26.1": {"items": True, "tool_category": "equipment"},
     "26.3": {"items": True, "unlock": "recipes", "modifier": True, "tool_category": "equipment"},
     "1.21.1": {"objects": True, "tool_category": "equipment", "no_pale": True},
     "1.20.1": {"objects": True, "tool_category": "equipment", "no_pale": True, "plural": True, "nbt": True, "tags": OLD_TAGS},

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.workshopcraft.muchmorestorage.block.FurnitureBlock;
 import com.workshopcraft.muchmorestorage.block.GenomskadaBlockEntity;
-//? if >=26.3 {
+//? if >=26.2 {
 /*import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -30,8 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenomskadaRenderer implements BlockEntityRenderer<GenomskadaBlockEntity, GenomskadaRenderer.State> {
-    //? if >=26.3
-    /*private static final RenderType CLEAR = RenderTypes.entityTranslucentCull(TextureAtlas.LOCATION_BLOCKS);*/
+    //? if >=26.3 {
+    /*private static final RenderType CLEAR = RenderTypes.entityTranslucentCull(TextureAtlas.LOCATION_BLOCKS);
+    *///?} else if >=26.2 {
+    /*private static final RenderType CLEAR = RenderTypes.entityTranslucentCullItemTarget(TextureAtlas.LOCATION_BLOCKS);
+    *///?}
     private final ItemModelResolver items;
 
     public static class State extends BlockEntityRenderState {
@@ -91,7 +94,7 @@ public class GenomskadaRenderer implements BlockEntityRenderer<GenomskadaBlockEn
             r.submit(pose, out, s.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             pose.popPose();
         }
-        //? if >=26.3 {
+        //? if >=26.2 {
         /*out.submitCustomGeometry(pose, CLEAR, (p, vc) -> FurnitureModel.genomskadaWalls(new Quads(p, vc, s.lightCoords, OverlayTexture.NO_OVERLAY)));
         *///?} else
         out.submitCustomGeometry(pose, Sheets.translucentBlockSheet(), (p, vc) -> FurnitureModel.genomskadaWalls(new Quads(p, vc, s.lightCoords, OverlayTexture.NO_OVERLAY)));
